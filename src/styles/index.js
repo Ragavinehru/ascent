@@ -26,12 +26,22 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         borderRadius: 30,
-        backgroundColor: COLORS.secondary,
-
+        backgroundColor: COLORS.light,
         marginLeft: 80,
         marginTop: -45,
         width: 300,
         flexDirection: 'row',
+    },
+    card: {
+        height: 200,
+        width: 330,
+        // marginHorizontal: 10,
+        // marginBottom: 20,
+        marginLeft: 30,
+        marginTop: 20,
+        borderRadius: 25,
+        elevation: 13,
+        backgroundColor: COLORS.white,
     },
 
 
