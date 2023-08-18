@@ -16,7 +16,7 @@ import {
     TextInput,
     TouchableHighlight,
     TouchableOpacity,
-} from 'react-native-gesture-handler';
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/color';
 import STYLES from '../styles';
@@ -28,32 +28,38 @@ import webs2 from '../assets/images/image2.jpg';
 import webs3 from '../assets/images/image3.jpg';
 import webs4 from '../assets/images/image4.jpg';
 import { DrawerActions } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 
 
 
-const HomeScreen = ({ navigation }) => {
+
+
+const HomeScreen = () => {
     const images = [webs, webs2, webs1, webs2, webs3, webs4]
     // require('./assets/images/images.jpeg'),
     // require('./assets/images/images1.jpg'),
     // require('./assets/images/images.jpeg'),
 
-
+    const navigation = useNavigation();
+    const openDrawer = () => {
+        navigation.dispatch(DrawerActions.openDrawer());
+      };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <ScrollView>
 
                 <Image style={{ width: 70, height: 17, marginTop: 20, marginLeft: 10 }} source={require('../assets/venzo.png')} />
-                <View >
-                    {/* <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}> */}
+                <View onPress={() => navigation.navigate('UserScreen')}>
+                 <TouchableOpacity onPress={() => navigation.navigate('User')}> 
 
-                    <Image style={{ width: 50, marginLeft: 300, marginTop: -20, marginRight: 20, height: 50, position: 'absolute' }} source={require('../assets/person.png')} />
-                    {/* </TouchableOpacity> */}
+                    <Image style={{ width: 50, marginLeft: 300, marginBottom:2, marginRight: 20, height: 50,}} source={require('../assets/person.png')} />
+                </TouchableOpacity>
                 </View>
                 <View >
-                    <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                    <TouchableOpacity onPress={openDrawer}>
 
-                        <Image source={require('../assets/menuicon.png')} style={{ width: 40, height: 40, marginTop: 60, marginLeft: 20 }} />
+                        <Image source={require('../assets/menuicon.png')} style={{ width: 25, height: 25, marginTop: 35, marginLeft: 20 }} />
                         {/* <Icon
                             name="md-menu"
                             size={30}
@@ -79,23 +85,25 @@ const HomeScreen = ({ navigation }) => {
                     <TextInput
                         style={{ flex: 1, fontSize: 18 }} placeholder="Search" />
                 </View>
-                <View style={{ flexDirection: 'row', height: 70, backgroundColor: COLORS.light, borderRadius: 0, marginTop: 20 }}>
+                <View style={{ flexDirection: 'row', height: 70, backgroundColor: COLORS.light, borderRadius: 0, marginTop: 30 }}>
                     <View>
                         <TouchableOpacity>
-                            <Image style={{ width: 50, height: 50, marginTop: 10, marginLeft: 20, marginBottom: 20 }} source={require('../assets/event.png')} />
-
-                        </TouchableOpacity>
+                       
+                              
+                            <Image  style={{ width: 35, height: 35, marginTop: 10, marginLeft: 45, marginBottom: 20 }} source={require('../assets/event.png')} />
+                            <Text style={{ marginLeft:43,marginTop:-20 }}>Events</Text>
+                         </TouchableOpacity>
                     </View>
                     <View>
-                        <TouchableOpacity >
-                            <Image style={{ width: 50, height: 50, marginTop: 10, marginLeft: 80 }} source={require('../assets/calendar.png')} />
-
+                        <TouchableOpacity  onPress={() => navigation.navigate('Atten')}>
+                            <Image style={{ width: 35, height: 35, marginTop: 10, marginLeft: 110 }} source={require('../assets/calendar.png')} />
+                            <Text style={{ marginLeft:89,marginTop:-3 }}>Attendance</Text>
                         </TouchableOpacity>
                     </View>
                     <View  >
-                        <TouchableOpacity>
-                            <Image style={{ width: 50, height: 50, marginTop: 10, marginBottom: 10, marginLeft: 90 }} source={require('../assets/group.png')} />
-
+                        <TouchableOpacity onPress={() => navigation.navigate('Group')}>
+                            <Image style={{ width: 35, height: 35, marginTop: 10, marginBottom: 10, marginLeft: 90 }} source={require('../assets/group.png')} />
+                            <Text style={{ marginLeft:89,marginTop:-13 }}>Group</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -25,7 +25,13 @@ import { Navigation } from 'react-native-navigation';
 const UserScreen = ({ navigation }) => {
 
     return (
-        <Text>hiis</Text>
+        <SafeAreaView style={{backgroundColor: COLORS.white}}>
+        <View style={STYLES.header}>
+          <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}> Back </Text>
+        </View>
+         
+      </SafeAreaView>
     )
 }
 export default UserScreen;

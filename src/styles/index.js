@@ -28,12 +28,12 @@ const STYLES = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: COLORS.light,
         marginLeft: 80,
-        marginTop: -45,
+        marginTop: -38,
         width: 300,
         flexDirection: 'row',
     },
     card: {
-        height: 200,
+        height: 180,
         width: 330,
         // marginHorizontal: 10,
         // marginBottom: 20,
@@ -43,6 +43,12 @@ const STYLES = StyleSheet.create({
         elevation: 13,
         backgroundColor: COLORS.white,
     },
+    header: {
+        paddingVertical: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 20,
+      },
 
 
 
