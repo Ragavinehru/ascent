@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useState } from 'react';
 import {
     SafeAreaView,
     View,
@@ -7,7 +7,7 @@ import {
     TextInput,
     Image,
     Button,
-    ToastAndroid,
+    ToastAndroid, Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 // import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,7 +15,23 @@ import COLORS from '../consts/color';
 import STYLES from '../styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Navigation } from 'react-native-navigation';
+
+// import auth from '@react-native-firebase/auth';
+
+
+
+
+//firebase auth
+
+
+
+
+
 const Login = ({ navigation }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+
     return (
 
         <SafeAreaView
@@ -36,29 +52,29 @@ const Login = ({ navigation }) => {
                 </View>
                 <View style={{ marginTop: 20 }}>
                     <View style={STYLES.inputContainer}>
-                        <Icon
+                        {/* <Icon
                             name="mail-outline"
                             color={COLORS.light}
                             size={20}
                             style={STYLES.inputIcon}
-                        />
+                        /> */}
                         <TextInput
                             // value={email}
-                            onChangeText={text => setEmail(text)}
+                            // onChangeText={text => setEmail(text)}
                             placeholder="Email"
                             style={STYLES.input}
                         />
                     </View>
                     <View style={STYLES.inputContainer}>
-                        <Icon
+                        {/* <Icon
                             name="lock-outline"
                             color={COLORS.light}
                             size={20}
                             style={STYLES.inputIcon}
-                        />
+                        /> */}
                         <TextInput
                             // value={password}
-                            onChangeText={text => setPassword(text)}
+                            // onChangeText={text => setPassword(text)}
                             placeholder="Password"
                             style={STYLES.input}
                             secureTextEntry

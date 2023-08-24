@@ -21,6 +21,7 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10,
         fontSize: 70,
+
     },
     search: {
         alignItems: 'center',
@@ -48,8 +49,41 @@ const STYLES = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginHorizontal: 20,
-      },
 
+    },
+    textinput: {
+        borderWidth: 1,
+        borderColor: 'black',
+        height: '50',
+        width: '80%',
+        borderRadius: 6,
+        marginLeft: 15
+    },
+    texttitle: {
+        marginLeft: 15,
+        marginTop: 10,
+
+    },
+    smallinput: {
+        borderWidth: 1,
+        borderColor: 'black',
+        // marginTop: '1%',
+        marginLeft: '4%',
+        width: '37%',
+        borderRadius: 6,
+    },
+    sidebox: {
+        borderWidth: 1,
+        borderColor: 'black',
+        marginTop: '-13%',
+        marginLeft: '47%',
+        width: '37%',
+        borderRadius: 6,
+    },
+    gender: {
+        marginLeft: '47%',
+        marginTop: '-5%'
+    },
 
 
 
