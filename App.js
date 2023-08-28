@@ -10,8 +10,10 @@ import Attendance from './src/screens/Attendance';
 import Group from "./src/screens/Group";
 import UserScreen from "./src/screens/UserScreen";
 import Profile from "./src/screens/Profile";
-
-
+import Calendar from "./src/screens/Calendar";
+import CheckIn from "./src/screens/CheckIn";
+import Topic from "./src/screens/Topic";
+import Goals from "./src/screens/Goals";
 
 
 
@@ -27,19 +29,19 @@ const DrawerNavigation = () => {
         headerShown: false,
         drawerIcon: () => null
       }} />
-      <Drawer.Screen name="Calender" component={HomeScreen} options={{
+      <Drawer.Screen name="Calender" component={Calendar} options={{
         headerShown: false,
         drawerIcon: () => null
       }} />
-      <Drawer.Screen name="CheckIn" component={HomeScreen} options={{
+      <Drawer.Screen name="CheckIn" component={CheckIn} options={{
         headerShown: false,
         drawerIcon: () => null
       }} />
-      <Drawer.Screen name="Topic for Discussion" component={HomeScreen} options={{
+      <Drawer.Screen name="Topic for Discussion" component={Topic} options={{
         headerShown: false,
         drawerIcon: () => null
       }} />
-      <Drawer.Screen name="Goals" component={HomeScreen} options={{
+      <Drawer.Screen name="Goals" component={Goals} options={{
         headerShown: false,
         drawerIcon: () => null
       }} />

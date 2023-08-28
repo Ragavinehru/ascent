@@ -23,6 +23,10 @@ const STYLES = StyleSheet.create({
         fontSize: 70,
 
     },
+    btnSecondary: {
+
+
+    },
     search: {
         alignItems: 'center',
         paddingHorizontal: 20,
@@ -36,8 +40,6 @@ const STYLES = StyleSheet.create({
     card: {
         height: 180,
         width: 330,
-        // marginHorizontal: 10,
-        // marginBottom: 20,
         marginLeft: 30,
         marginTop: 20,
         borderRadius: 25,
@@ -49,6 +51,7 @@ const STYLES = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginHorizontal: 20,
+
 
     },
     textinput: {
@@ -83,6 +86,25 @@ const STYLES = StyleSheet.create({
     gender: {
         marginLeft: '47%',
         marginTop: '-5%'
+    },
+    description: {
+        borderWidth: 1,
+        borderColor: 'black',
+        marginTop: '-20%',
+        marginLeft: '50%',
+        // marginBottom: '20',
+        width: '30%',
+        borderRadius: 6,
+    },
+    container: {
+        // flex: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        marginTop: '100'
+
+
     },
 
 

@@ -51,7 +51,8 @@ const HomeScreen = () => {
             <ScrollView>
 
                 <Image style={{ width: 70, height: 17, marginTop: 20, marginLeft: 10 }} source={require('../assets/venzo.png')} />
-                <View onPress={() => navigation.navigate('UserScreen')}>
+                {/* <View onPress={() => navigation.navigate('UserScreen')}> */}
+                <View>
                     <TouchableOpacity onPress={() => navigation.navigate('User')}>
 
                         <Image style={{ width: 50, marginLeft: 300, marginBottom: 2, marginRight: 20, height: 50, }} source={require('../assets/person.png')} />

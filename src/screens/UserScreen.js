@@ -25,7 +25,7 @@ import { Navigation } from 'react-native-navigation';
 const UserScreen = ({ navigation }) => {
 
   return (
-    <SafeAreaView style={{ backgroundColor: COLORS.white }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={STYLES.header}>
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}> Back </Text>
@@ -45,7 +45,7 @@ const UserScreen = ({ navigation }) => {
           <Text>SETTINGS</Text>
         </View>
         <View style={{ marginLeft: 30, marginTop: 10 }}>
-          <Text>LOGOUT</Text>
+          <Text onPress={() => navigation.navigate('Login')}>LOGOUT</Text>
         </View>
       </View>
     </SafeAreaView>
