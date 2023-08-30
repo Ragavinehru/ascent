@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,6 +15,7 @@ import Calendar from "./src/screens/Calendar";
 import CheckIn from "./src/screens/CheckIn";
 import Topic from "./src/screens/Topic";
 import Goals from "./src/screens/Goals";
+import NewEvent from "./src/screens/NewEvent";
 
 
 
@@ -59,6 +61,8 @@ const App = () => {
         <Stack.Screen name="User" component={UserScreen} />
         <Stack.Screen name="Atten" component={Attendance} />
         <Stack.Screen name="Group" component={Group} />
+        <Stack.Screen name="NewEvent" component={NewEvent} />
+
 
       </Stack.Navigator>
     </NavigationContainer>

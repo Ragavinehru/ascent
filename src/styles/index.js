@@ -25,7 +25,18 @@ const STYLES = StyleSheet.create({
     },
     btnSecondary: {
 
+        alignItems: 'center',
 
+
+    },
+    text: {
+        borderWidth: 1,
+        padding: 10,
+        color: COLORS.white,
+        backgroundColor: COLORS.primary,
+        borderRadius: 10,
+        marginTop: 20,
+        marginRight: 220,
     },
     search: {
         alignItems: 'center',
@@ -39,8 +50,8 @@ const STYLES = StyleSheet.create({
     },
     card: {
         height: 180,
-        width: 330,
-        marginLeft: 30,
+        width: 360,
+        marginLeft: 17,
         marginTop: 20,
         borderRadius: 25,
         elevation: 13,
@@ -97,12 +108,12 @@ const STYLES = StyleSheet.create({
         borderRadius: 6,
     },
     container: {
-        // flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
+
         width: '100%',
         height: '100%',
-        marginTop: '100'
+
+
+
 
 
     },

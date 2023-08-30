@@ -17,7 +17,7 @@ import {
     TouchableHighlight,
     TouchableOpacity,
 } from 'react-native';
-
+import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from '../consts/color';
 import STYLES from '../styles';
@@ -28,24 +28,68 @@ import webs1 from '../assets/images/images1.jpg';
 import webs2 from '../assets/images/image2.jpg';
 import webs3 from '../assets/images/image3.jpg';
 import webs4 from '../assets/images/image4.jpg';
-import { DrawerActions } from '@react-navigation/native'
+import { DrawerActions } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-
-
-
 
 
 const HomeScreen = () => {
     const images = [webs, webs2, webs1, webs2, webs3, webs4]
-    // require('./assets/images/images.jpeg'),
-    // require('./assets/images/images1.jpg'),
-    // require('./assets/images/images.jpeg'),
+    const [data, setData] = useState([]);
+    const Mydata = async () => {
+        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
+        let result = await fetch(url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        result = await result.json();
+
+        console.log("events", result)
+        const groupsArray = result.userInfo.groups;
+        console.log('Groups Array:', groupsArray);
+        setData(result);
+    };
+
+    useEffect(() => {
+        Mydata();
+    }, []);
+    // console.log('data Array:', data);
+    // const groupIds = data.userInfo.groups;
+    //  const [data, setData] = useState([]);
+    // const MyEvent = async () => {
+    //     // const [data, setData] = useState([]);
+    //     const requestBody = {
+    //         groupIds: ['PjIK87LDBDc5quWz76Ct']
+    //     };
+    //     const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
+    //     let result = await fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'multipart/form-data'
+    //         },
+    //         body: JSON.stringify(requestBody)
+    //     })
+    //     result = await result.json();
+    //     console.log("events", result)
+    //     // const groupsArray = result.userInfo.groups;
+    //     // console.log('Groups Array:', groupsArray);
+    //     // setData(result);
+    // };
+
+    // useEffect(() => {
+    //     MyEvent();
+    // }, []);
+
+
 
     const navigation = useNavigation();
     const openDrawer = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
-
+    const [showComments, setShowComments] = useState(true);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <ScrollView>
@@ -110,7 +154,7 @@ const HomeScreen = () => {
                     </View>
                 </View>
                 <View>
-                    <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>Upcoming Events</Text>
+                    <Text style={{ marginTop: 17, marginLeft: 28, fontSize: 17, color: 'black' }}>Upcoming Events</Text>
                     <SliderBox
                         images={images}
                         dotColor="red"
@@ -123,23 +167,52 @@ const HomeScreen = () => {
                         // onCurrentImagePressed={(index) => Alert(index + 1)}
                         firstItem={4}
                         paginationBoxVerticalPadding={20}
-                        style={{ width: 330, height: 200, borderRadius: 25, marginLeft: 30, marginTop: 20 }}
+                        style={{ width: 360, height: 200, borderRadius: 25, marginLeft: 17, marginTop: 20 }}
                     />
                 </View>
-                <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text>
+                {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
                 <View style={STYLES.card}>
+                    <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17, color: 'black' }}>History of Events</Text>
                     <ScrollView style={{ textalign: 'center', marginTop: 10, marginLeft: 10 }}>
+                        <View>
 
-                        <Text>hiiages of text. Material UI currently only enforces a 3:1 contrast ratio.
-                            If you would likentrast ratio as described in th</Text>
-                        <Text>hii</Text>
-                        <Text>hii</Text>
-                        <Text>hiixt. Material UI cuce,
-                            you can increase your minimu</Text>
-                        <Text>hiixt. Material UI currently only enforces a 3:1 contrast ratio.
-                            If you w minimuMaterial UI currently only enforces a 3:1 conMaterial
-                            UI currently only enforces a 3:1 conMateria
-                            l UI currently only enforces a 3:1 con</Text>
+                            <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/video.png')} />
+                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Update email of Events</Text>
+
+                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
+                            {/* <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text> */}
+                            <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+                                <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
+                            </TouchableOpacity>
+
+                            {/* Comments */}
+                            {showComments && (
+                                <ScrollView>
+                                    <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 28, color: 'black' }}>Comments</Text>
+                                    <View>
+                                        <Text style={{ marginLeft: 34 }}>Ragavi</Text>
+                                    </View>
+
+                                    {/* More comments */}
+                                </ScrollView>
+                            )}
+
+                        </View>
+                        <View>
+
+                            <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/videoeve1.png')} />
+                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Demo call</Text>
+                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
+                            <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text>
+                        </View>
+                        <View>
+
+                            <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/videoeve.png')} />
+                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Test event</Text>
+                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
+                            <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text>
+                        </View>
+
 
                     </ScrollView>
                 </View>

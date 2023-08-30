@@ -9,28 +9,18 @@ import {
     Button,
     ToastAndroid, Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from '../consts/color';
 import STYLES from '../styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Navigation } from 'react-native-navigation';
 
 // import auth from '@react-native-firebase/auth';
-
-
-
-
 //firebase auth
-
-
-
-
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
 
     return (
 
@@ -52,12 +42,13 @@ const Login = ({ navigation }) => {
                 </View>
                 <View style={{ marginTop: 20 }}>
                     <View style={STYLES.inputContainer}>
-                        {/* <Icon
-                            name="mail-outline"
+                        <Icon
+                            name="envelope"
                             color={COLORS.light}
                             size={20}
                             style={STYLES.inputIcon}
-                        /> */}
+                        />
+                        {/* <Icon name="home" size={30} color="black" /> */}
                         <TextInput
                             // value={email}
                             // onChangeText={text => setEmail(text)}
@@ -66,12 +57,12 @@ const Login = ({ navigation }) => {
                         />
                     </View>
                     <View style={STYLES.inputContainer}>
-                        {/* <Icon
-                            name="lock-outline"
+                        <Icon
+                            name="lock"
                             color={COLORS.light}
                             size={20}
                             style={STYLES.inputIcon}
-                        /> */}
+                        />
                         <TextInput
                             // value={password}
                             // onChangeText={text => setPassword(text)}
@@ -102,8 +93,6 @@ const Login = ({ navigation }) => {
         </SafeAreaView>
     )
 }
-
-
 export default Login;
 
 
