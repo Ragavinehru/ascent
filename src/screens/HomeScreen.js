@@ -41,12 +41,12 @@ const HomeScreen = () => {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'application/json'
             }
         })
         result = await result.json();
 
-        console.log("events", result)
+        console.log("user info", result)
         const groupsArray = result.userInfo.groups;
         console.log('Groups Array:', groupsArray);
         setData(result);
@@ -54,36 +54,32 @@ const HomeScreen = () => {
 
     useEffect(() => {
         Mydata();
+
     }, []);
-    // console.log('data Array:', data);
-    // const groupIds = data.userInfo.groups;
-    //  const [data, setData] = useState([]);
-    // const MyEvent = async () => {
-    //     // const [data, setData] = useState([]);
-    //     const requestBody = {
-    //         groupIds: ['PjIK87LDBDc5quWz76Ct']
-    //     };
-    //     const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
-    //     let result = await fetch(url, {
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'multipart/form-data'
-    //         },
-    //         body: JSON.stringify(requestBody)
-    //     })
-    //     result = await result.json();
-    //     console.log("events", result)
-    //     // const groupsArray = result.userInfo.groups;
-    //     // console.log('Groups Array:', groupsArray);
-    //     // setData(result);
-    // };
 
-    // useEffect(() => {
-    //     MyEvent();
-    // }, []);
+    console.log('data Array:', data);
+    const MyEvent = async () => {
+        const groupIds = data.userInfo.groups;
+        console.log("groupidsssssssssssss", groupIds)
+        const requestBody = {
+            groupIds: groupIds
+        };
+        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
+        let result = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        })
+        result = await result.json();
+        console.log("events", result)
+    };
 
-
+    useEffect(() => {
+        MyEvent();
+    }, []);
 
     const navigation = useNavigation();
     const openDrawer = () => {
