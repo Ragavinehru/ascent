@@ -16,7 +16,7 @@ import CheckIn from "./src/screens/CheckIn";
 import Topic from "./src/screens/Topic";
 import Goals from "./src/screens/Goals";
 import NewEvent from "./src/screens/NewEvent";
-
+// import PopupEvent from "./src/screens/PopupEvent";
 
 
 

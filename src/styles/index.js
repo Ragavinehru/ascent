@@ -49,7 +49,7 @@ const STYLES = StyleSheet.create({
         flexDirection: 'row',
     },
     card: {
-        height: 180,
+        height: 200,
         width: 360,
         marginLeft: 17,
         marginTop: 20,
@@ -111,12 +111,28 @@ const STYLES = StyleSheet.create({
 
         width: '100%',
         height: '100%',
+        marginTop: 50
 
     },
     space: {
         width: 70,
         height: 50
-      },
+    },
+    table: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 100,
+    },
+    row: {
+        flexDirection: 'row',
+    },
+    cell: {
+        width: 90,
+        height: 40,
+        borderWidth: 0.3,
+        borderColor: 'grey',
+    },
 
 
 

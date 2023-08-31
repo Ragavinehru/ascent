@@ -64,12 +64,12 @@ const Profile = ({ navigation }) => {
         <SafeAreaView style={{ backgroundColor: COLORS.white }}>
             <ScrollView>
                 <View style={STYLES.header}>
-                <TouchableOpacity onPress={navigation.goBack}>
-            <Image  style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
-        
-            {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
-            <Text style={{fontSize: 20, fontWeight: 'bold',marginLeft:20,marginTop:10}}> Back </Text>
-            </TouchableOpacity>
+                    <TouchableOpacity onPress={navigation.goBack}>
+                        <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
+
+                        {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
+                    </TouchableOpacity>
 
                 </View>
                 <View>
@@ -77,12 +77,12 @@ const Profile = ({ navigation }) => {
                     <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Personal Info</Text>
                     <Text style={STYLES.texttitle}>Name *</Text>
                     <TextInput
-                        value={textValue}
+                        // value={textValue}
                         onChangeText={text => setTextvalue(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Mobile *</Text>
                     <TextInput
-                        value={mobile}
+                        // value={mobile}
                         onChangeText={text => setMobile(text)}
                         style={STYLES.textinput} />
                     <View stye={{ flexDirection: 'row' }}>
@@ -90,40 +90,40 @@ const Profile = ({ navigation }) => {
                         <Text style={{ marginLeft: 15, marginTop: 7 }}>Blood Group *</Text>
                         <Text style={STYLES.gender}>Sex *</Text>
                         <TextInput
-                            value={bloodgroup}
+                            // value={bloodgroup}
                             onChangeText={text => setBloodgroup(text)}
                             style={STYLES.smallinput} />
 
 
                         <TextInput
-                            value={textValue}
+                            // value={textValue}
                             onChangeText={text => setTextvalue(text)}
                             style={STYLES.sidebox} />
                     </View>
                     <Text style={STYLES.texttitle}>Date of Birth *</Text>
                     <TextInput
-                        value={textValue}
+                        // value={textValue}
                         onChangeText={text => setTextvalue(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Emergency Contact:</Text>
                     <TextInput
-                        value={Emergencycon}
+                        // value={Emergencycon}
                         onChangeText={text => setemergencycon(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Emergency Contact Number:</Text>
                     <TextInput
-                        value={mobile}
+                        // value={mobile}
                         onChangeText={text => setMobile(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Marital Status</Text>
                     <TextInput
-                        value={textValue}
+                        // value={textValue}
                         onChangeText={text => setTextvalue(text)}
                         style={STYLES.textinput} />
                     <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Family Info</Text>
                     <Text style={STYLES.texttitle}>Mobile *</Text>
                     <TextInput
-                        value={mobile}
+                        // value={mobile}
                         onChangeText={text => setMobile(text)}
                         style={STYLES.textinput} />
                     <View stye={{ flexDirection: 'row' }}>
@@ -131,18 +131,18 @@ const Profile = ({ navigation }) => {
                         <Text style={{ marginLeft: 15, marginTop: 7 }}>Blood Group *</Text>
                         <Text style={STYLES.gender}>Sex *</Text>
                         <TextInput
-                            value={bloodgroup}
+                            // value={bloodgroup}
                             onChangeText={text => setBloodgroup(text)}
                             style={STYLES.smallinput} />
                         <TextInput
-                            value={textValue}
+                            // value={textValue}
                             onChangeText={text => setTextvalue(text)}
                             style={STYLES.sidebox} />
 
                         <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Children Info</Text>
                         <Text style={STYLES.texttitle}>Child 1 Name*</Text>
                         <TextInput
-                            value={mobile}
+                            // value={mobile}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
@@ -150,11 +150,11 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 7 }}>Child 1 Gender *</Text>
                             <Text style={STYLES.gender}>Child 1 DOB*</Text>
                             <TextInput
-                                value={bloodgroup}
+                                // value={bloodgroup}
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
                             <TextInput
-                                value={textValue}
+                                // value={textValue}
                                 onChangeText={text => setTextvalue(text)}
                                 style={STYLES.sidebox} />
                         </View>

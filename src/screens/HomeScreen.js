@@ -30,10 +30,27 @@ import webs3 from '../assets/images/image3.jpg';
 import webs4 from '../assets/images/image4.jpg';
 import { DrawerActions } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+// import PopupEvent from "./src/screens/PopupEvent";
 
 
 const HomeScreen = () => {
+
+    //event images
     const images = [webs, webs2, webs1, webs2, webs3, webs4]
+    // history of evnt icons
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const openEventModal = (event) => {
+        setSelectedEvent(event);
+        setShowModal(true);
+    };
+
+    const closeEventModal = () => {
+        setSelectedEvent(null);
+        setShowModal(false);
+    };
+
+
     const [userData, setUserData] = useState({});
     const [eventData, setEventData] = useState([]);
     const Mydata = async () => {
@@ -49,9 +66,10 @@ const HomeScreen = () => {
 
         console.log("user info", result)
         const groupsArray = result.userInfo.groups;
+
         console.log('Groups Array:', groupsArray);
         setUserData(result);
-       
+
     };
 
     useEffect(() => {
@@ -59,9 +77,10 @@ const HomeScreen = () => {
 
     }, []);
 
-     console.log('data Array:', userData);
+    console.log('data Array:', userData);
 
     const MyEvent = async () => {
+        // console.log("inside event");
         const groupIds = userData.userInfo.groups;
         console.log("groupidsssssssssssss", groupIds)
         const requestBody = {
@@ -78,8 +97,9 @@ const HomeScreen = () => {
         })
         result = await result.json();
         console.log("events", result)
+
         setEventData(result);
-       
+
 
     };
 
@@ -93,8 +113,8 @@ const HomeScreen = () => {
     };
     const [showComments, setShowComments] = useState(true);
     console.log('eventData:', eventData)
-    console.log('eventData name:', eventData.label)
-    
+    // console.log('eventData name:', eventData.label)
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <ScrollView>
@@ -177,64 +197,109 @@ const HomeScreen = () => {
                 </View>
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
                 <View style={STYLES.card}>
-                <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17, color: 'black' }}>History of Events</Text>
-                <FlatList 
-                    data={eventData.events}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <View>
+                    <Text style={{ marginTop: 10, marginLeft: 15, fontSize: 17, color: 'black' }}>History of Events</Text>
+                    <FlatList
+                        data={eventData.events}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <View>
+                                <TouchableOpacity onPress={() => openEventModal(item)}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, marginTop: 10 }}>
+                                        <Image style={{ width: 23, height: 23, marginRight: 10 }} source={require('../assets/video.png')} />
+                                        <Text style={{ fontSize: 16, color: 'black' }}>{item.label}</Text>
+                                    </View>
+                                </TouchableOpacity>
 
-                             <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/video.png')} />
-                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>{item.label}</Text>
 
-                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text> 
-                             {/* <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text> */}
-                             <TouchableOpacity onPress={() => setShowComments(!showComments)}>
-                                <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
-                            </TouchableOpacity>
+                                <Text style={{ marginLeft: 49, fontSize: 12 }}>{item.date}| {item.startHour}-{item.endHour}</Text>
 
-                        
-                            {showComments && (
-                                <View>
-                                    <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 28, color: 'black' }}>Comments</Text>
+                                <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+                                    <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
+                                </TouchableOpacity>
+
+
+                                {showComments && (
                                     <View>
-                                        <Text style={{ marginLeft: 34 }}>Ragavi</Text>
-                                    </View> 
+                                        <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 38, color: 'black' }}>Comments</Text>
+                                        <View>
+                                            <Text style={{ marginLeft: 48 }}>Ragavi</Text>
+                                        </View>
 
-                                   
-                                 </View>
-                            )}
-                        </View>
-                        
-                        )}/>
-                    
-                 <Text>old</Text>
-                    <ScrollView style={{ textalign: 'center', marginTop: 10, marginLeft: 10 }}>
+
+                                    </View>
+                                )}
+                            </View>
+
+                        )}
+                        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+                    />
+
+                    <Modal visible={showModal} animationType="slide" >
+                        {/* Display Event Details in the Modal */}
+                        {selectedEvent && (
+                            <View style={{ flex: 1 }}>
+                                <TouchableOpacity onPress={closeEventModal} style={{ marginLeft: 330, marginTop: 10 }}>
+                                    <Text style={{ color: 'red' }}>Close</Text>
+                                </TouchableOpacity>
+                                <Text style={{ fontSize: 23, color: 'black', marginTop: 17, marginLeft: 50 }}>{selectedEvent.label}</Text>
+                                <Image style={{ width: 23, height: 23, marginLeft: 10, marginTop: -25 }} source={require('../assets/video.png')} />
+                                <Text style={{ marginLeft: 12, marginTop: 17 }}>{selectedEvent.type}|{selectedEvent.date}|{selectedEvent.startHour}-{selectedEvent.endHour}</Text>
+                                <Text style={{ marginLeft: 12, marginTop: 10 }}>{selectedEvent.format}|{selectedEvent.groupName}</Text>
+                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Agenda/Description</Text>
+                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Attendees</Text>
+                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Vasanth</Text>
+                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
+
+                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Vasanth + 1</Text>
+                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
+
+                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Vasanth Personal Gmail</Text>
+                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
+
+                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Sulthan</Text>
+                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
+
+                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Comments</Text>
+                                <View style={{ marginTop: 200 }}>
+                                    <TextInput
+                                        // value={textValue}
+                                        // onChangeText={text => setTextvalue(text)}
+                                        placeholder="Post"
+                                        style={STYLES.textinput} />
+                                    <Image style={{ width: 23, height: 27, marginLeft: 340, marginTop: -35 }} source={require('../assets/attachment.png')} />
+                                </View>
+
+                            </View>
+                        )}
+                    </Modal>
+
+                    {/* <Text>old</Text> */}
+                    {/* <ScrollView style={{ textalign: 'center', marginTop: 10, marginLeft: 10 }}>
                         <View>
 
                             <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/video.png')} />
                             <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>hi</Text>
 
-                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text> 
-                             {/* <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text> */}
-                             <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
+                           
+                            <TouchableOpacity onPress={() => setShowComments(!showComments)}>
                                 <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
                             </TouchableOpacity>
 
-                        
+
                             {showComments && (
                                 <View>
                                     <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 28, color: 'black' }}>Comments</Text>
                                     <View>
                                         <Text style={{ marginLeft: 34 }}>Ragavi</Text>
-                                    </View> 
+                                    </View>
 
-                                   
-                                 </View>
+
+                                </View>
                             )}
 
                         </View>
-                        <View> 
+                        <View>
 
                             <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/videoeve1.png')} />
                             <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Demo call</Text>
@@ -251,8 +316,8 @@ const HomeScreen = () => {
 
 
                     </ScrollView>
-                    
-       
+ */}
+
                 </View>
 
 

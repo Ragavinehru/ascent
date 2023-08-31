@@ -31,26 +31,28 @@ const Calendarr = ({ navigation }) => {
             style={{ paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white }}>
 
             <ScrollView showsVerticalScrollIndicator={true}>
-                <View style={STYLES.header}>
+
                 <TouchableOpacity onPress={navigation.goBack}>
-                    <Image  style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
-                
+                    <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
+
                     {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
-                    <Text style={{fontSize: 20, fontWeight: 'bold',marginLeft:20,marginTop:10}}> Back </Text>
-                    </TouchableOpacity>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
+                </TouchableOpacity>
+
+                <View style={STYLES.header}>
+                    <View>
+                        <TouchableOpacity onPress={() => navigation.navigate('User')}>
+
+                            <Image style={{ width: 50, marginLeft: 260, marginTop: 30, marginRight: 40, height: 50, }} source={require('../assets/person.png')} />
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
 
 
-                <View>
-                    <TouchableOpacity onPress={() => navigation.navigate('User')}>
-
-                        <Image style={{ width: 50, marginLeft: 280, marginBottom: 34, marginRight: 40, height: 50, }} source={require('../assets/person.png')} />
-                    </TouchableOpacity>
-                </View>
 
 
-                <View style={{ marginTop: 70 }}>
+                <View style={{ marginTop: -65 }}>
                     <Text style={{ fontSize: 19, marginLeft: 17, marginBottom: 10, fontWeight: 'bold', color: COLORS.dark }}>
                         Hi,Welcome Back
                     </Text>
