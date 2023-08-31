@@ -42,12 +42,7 @@ const Login = ({ navigation }) => {
                 </View>
                 <View style={{ marginTop: 20 }}>
                     <View style={STYLES.inputContainer}>
-                        <Icon
-                            name="envelope"
-                            color={COLORS.light}
-                            size={20}
-                            style={STYLES.inputIcon}
-                        />
+                    <Image  style={STYLES.inputIcon} source={require('../assets/email.png')} />
                         {/* <Icon name="home" size={30} color="black" /> */}
                         <TextInput
                             // value={email}
@@ -57,12 +52,13 @@ const Login = ({ navigation }) => {
                         />
                     </View>
                     <View style={STYLES.inputContainer}>
-                        <Icon
+                        {/* <Icon
                             name="lock"
                             color={COLORS.light}
                             size={20}
                             style={STYLES.inputIcon}
-                        />
+                        /> */}
+                         <Image  style={STYLES.inputIcon} source={require('../assets/lock.png')} />
                         <TextInput
                             // value={password}
                             // onChangeText={text => setPassword(text)}

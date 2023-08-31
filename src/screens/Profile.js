@@ -64,8 +64,12 @@ const Profile = ({ navigation }) => {
         <SafeAreaView style={{ backgroundColor: COLORS.white }}>
             <ScrollView>
                 <View style={STYLES.header}>
-                    <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}> Back </Text>
+                <TouchableOpacity onPress={navigation.goBack}>
+            <Image  style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
+        
+            {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
+            <Text style={{fontSize: 20, fontWeight: 'bold',marginLeft:20,marginTop:10}}> Back </Text>
+            </TouchableOpacity>
 
                 </View>
                 <View>
@@ -187,15 +191,15 @@ const Profile = ({ navigation }) => {
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
 
-                            <Text style={{ marginLeft: 15, marginTop: 7 }}>Company Description*</Text>
+                            {/* <Text style={{ marginLeft: 150, marginTop: 90 }}>Company Description*</Text>
                             <TextInput
                                 value={textValue}
                                 onChangeText={text => setTextvalue(text)}
-                                style={STYLES.description} />
+                                style={STYLES.description} /> */}
 
                         </View>
                     </View>
-
+                    <View style={STYLES.space} />
                     <Button title="Update Profile"> </Button>
 
                 </View>

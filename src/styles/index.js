@@ -3,7 +3,7 @@ import COLORS from '../consts/color';
 import { Navigation } from 'react-native-navigation';
 const STYLES = StyleSheet.create({
     inputContainer: { flexDirection: 'row', marginTop: 20, },
-    inputIcon: { marginTop: 15, width: 30, height: 20, position: 'absolute' },
+    inputIcon: { marginTop: 15, width: 15, height: 15, position: 'absolute' },
     input: {
         color: COLORS.light,
         paddingLeft: 30,
@@ -101,7 +101,7 @@ const STYLES = StyleSheet.create({
     description: {
         borderWidth: 1,
         borderColor: 'black',
-        marginTop: '-20%',
+        marginTop: '-34%',
         marginLeft: '50%',
         // marginBottom: '20',
         width: '30%',
@@ -112,11 +112,11 @@ const STYLES = StyleSheet.create({
         width: '100%',
         height: '100%',
 
-
-
-
-
     },
+    space: {
+        width: 70,
+        height: 50
+      },
 
 
 

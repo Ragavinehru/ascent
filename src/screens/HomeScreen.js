@@ -34,7 +34,8 @@ import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
     const images = [webs, webs2, webs1, webs2, webs3, webs4]
-    const [data, setData] = useState([]);
+    const [userData, setUserData] = useState({});
+    const [eventData, setEventData] = useState([]);
     const Mydata = async () => {
         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
         let result = await fetch(url, {
@@ -49,7 +50,8 @@ const HomeScreen = () => {
         console.log("user info", result)
         const groupsArray = result.userInfo.groups;
         console.log('Groups Array:', groupsArray);
-        setData(result);
+        setUserData(result);
+       
     };
 
     useEffect(() => {
@@ -57,9 +59,10 @@ const HomeScreen = () => {
 
     }, []);
 
-    console.log('data Array:', data);
+     console.log('data Array:', userData);
+
     const MyEvent = async () => {
-        const groupIds = data.userInfo.groups;
+        const groupIds = userData.userInfo.groups;
         console.log("groupidsssssssssssss", groupIds)
         const requestBody = {
             groupIds: groupIds
@@ -75,6 +78,9 @@ const HomeScreen = () => {
         })
         result = await result.json();
         console.log("events", result)
+        setEventData(result);
+       
+
     };
 
     useEffect(() => {
@@ -86,6 +92,9 @@ const HomeScreen = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
     const [showComments, setShowComments] = useState(true);
+    console.log('eventData:', eventData)
+    console.log('eventData name:', eventData.label)
+    
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <ScrollView>
@@ -168,33 +177,64 @@ const HomeScreen = () => {
                 </View>
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
                 <View style={STYLES.card}>
-                    <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17, color: 'black' }}>History of Events</Text>
+                <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17, color: 'black' }}>History of Events</Text>
+                <FlatList 
+                    data={eventData.events}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <View>
+
+                             <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/video.png')} />
+                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>{item.label}</Text>
+
+                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text> 
+                             {/* <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text> */}
+                             <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+                                <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
+                            </TouchableOpacity>
+
+                        
+                            {showComments && (
+                                <View>
+                                    <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 28, color: 'black' }}>Comments</Text>
+                                    <View>
+                                        <Text style={{ marginLeft: 34 }}>Ragavi</Text>
+                                    </View> 
+
+                                   
+                                 </View>
+                            )}
+                        </View>
+                        
+                        )}/>
+                    
+                 <Text>old</Text>
                     <ScrollView style={{ textalign: 'center', marginTop: 10, marginLeft: 10 }}>
                         <View>
 
                             <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/video.png')} />
-                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Update email of Events</Text>
+                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>hi</Text>
 
-                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
-                            {/* <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text> */}
-                            <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text> 
+                             {/* <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text> */}
+                             <TouchableOpacity onPress={() => setShowComments(!showComments)}>
                                 <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
                             </TouchableOpacity>
 
-                            {/* Comments */}
+                        
                             {showComments && (
-                                <ScrollView>
+                                <View>
                                     <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 28, color: 'black' }}>Comments</Text>
                                     <View>
                                         <Text style={{ marginLeft: 34 }}>Ragavi</Text>
-                                    </View>
+                                    </View> 
 
-                                    {/* More comments */}
-                                </ScrollView>
+                                   
+                                 </View>
                             )}
 
                         </View>
-                        <View>
+                        <View> 
 
                             <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/videoeve1.png')} />
                             <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Demo call</Text>
@@ -211,6 +251,8 @@ const HomeScreen = () => {
 
 
                     </ScrollView>
+                    
+       
                 </View>
 
 

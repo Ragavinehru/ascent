@@ -28,8 +28,13 @@ const UserScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={STYLES.header}>
-        <Icon name="home" size={20} color="black" style={{ marginRight: 5 }} onPress={navigation.goBack} />
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}> Back </Text>
+        {/* <Icon name="home" size={20} color="black" style={{ marginRight: 5 }} onPress={navigation.goBack} /> */}
+        <View >
+          <TouchableOpacity onPress={navigation.goBack}>
+        <Image  style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
+        <Text style={{ fontSize: 20, fontWeight: 'bold' ,marginTop:10,marginLeft:17}}> Back </Text>
+        </TouchableOpacity>
+        </View>
       </View>
       <View>
         <Image source={require('../assets/person.png')} style={{ width: 100, height: 100, marginLeft: 140 }} />

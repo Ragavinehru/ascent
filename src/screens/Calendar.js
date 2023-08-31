@@ -32,8 +32,12 @@ const Calendarr = ({ navigation }) => {
 
             <ScrollView showsVerticalScrollIndicator={true}>
                 <View style={STYLES.header}>
-                    <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}> Back </Text>
+                <TouchableOpacity onPress={navigation.goBack}>
+                    <Image  style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
+                
+                    {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
+                    <Text style={{fontSize: 20, fontWeight: 'bold',marginLeft:20,marginTop:10}}> Back </Text>
+                    </TouchableOpacity>
 
                 </View>
 
