@@ -160,7 +160,7 @@ const Profile = ({ navigation }) => {
                         </View>
                         <Text style={STYLES.texttitle}>Child 2 Name*</Text>
                         <TextInput
-                            value={mobile}
+                            // value={mobile}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
@@ -168,18 +168,18 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 7 }}>Child 2 Gender *</Text>
                             <Text style={STYLES.gender}>Child 2 DOB*</Text>
                             <TextInput
-                                value={bloodgroup}
+                                // value={bloodgroup}
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
                             <TextInput
-                                value={textValue}
+                                // value={textValue}
                                 onChangeText={text => setTextvalue(text)}
                                 style={STYLES.sidebox} />
                         </View>
                         <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Personal Info</Text>
                         <Text style={STYLES.texttitle}>Company Name*</Text>
                         <TextInput
-                            value={mobile}
+                            // value={mobile}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
@@ -187,7 +187,7 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 7 }}>Company Website*</Text>
 
                             <TextInput
-                                value={bloodgroup}
+                                // value={bloodgroup}
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
 

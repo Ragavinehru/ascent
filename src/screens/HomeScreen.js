@@ -50,70 +50,80 @@ const HomeScreen = () => {
         setShowModal(false);
     };
 
-
     const [userData, setUserData] = useState({});
     const [eventData, setEventData] = useState([]);
-    const Mydata = async () => {
-        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
-        let result = await fetch(url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        result = await result.json();
 
-        console.log("user info", result)
-        const groupsArray = result.userInfo.groups;
-
-        console.log('Groups Array:', groupsArray);
-        setUserData(result);
-
+    const fetchUserData = async () => {
+        try {
+            const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = await response.json();
+            console.log("user info", result);
+            setUserData(result);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+    const fetchEventData = async () => {
+        try {
+            const groupIds = userData.userInfo.groups;
+            const requestBody = {
+                groupIds: groupIds
+            };
+            const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+            const result = await response.json();
+            console.log("events", result);
+            setEventData(result);
+        } catch (error) {
+            console.error('Error fetching event data:', error);
+        }
     };
 
     useEffect(() => {
-        Mydata();
-
+        fetchUserData();
     }, []);
-
-    console.log('data Array:', userData);
-
-    const MyEvent = async () => {
-        // console.log("inside event");
-        const groupIds = userData.userInfo.groups;
-        console.log("groupidsssssssssssss", groupIds)
-        const requestBody = {
-            groupIds: groupIds
-        };
-        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
-        let result = await fetch(url, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        })
-        result = await result.json();
-        console.log("events", result)
-
-        setEventData(result);
-
-
-    };
 
     useEffect(() => {
-        MyEvent();
-    }, []);
+        if (userData.userInfo) {
+            fetchEventData();
+        }
+    }, [userData]);
+
+
 
     const navigation = useNavigation();
     const openDrawer = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
     const [showComments, setShowComments] = useState(true);
-    console.log('eventData:', eventData)
-    // console.log('eventData name:', eventData.label)
+    console.log('eventData:::::::::::::::::', eventData)
+    // console.log("members", eventData.events[0].members)
+    const eventsarray = eventData.events;
+    console.log("selected eventsss", selectedEvent)
+    // if (!selectedEvent.members) {
+    //     return (
+    //         <View>
+    //             <Text>No members found for this event.</Text>
+    //         </View>
+    //     );
+    // }
+
+    // const memberNames = eventData.members.map((member) => member.name);
+    // console.log("kkkkkkkkkkkkkkkKKK", memberNames)
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -131,25 +141,10 @@ const HomeScreen = () => {
                     <TouchableOpacity onPress={openDrawer}>
 
                         <Image source={require('../assets/menuicon.png')} style={{ width: 25, height: 25, marginTop: 35, marginLeft: 20 }} />
-                        {/* <Icon
-                            name="md-menu"
-                            size={30}
-                            style={{ marginTop: 45 }} /> */}
-                        {/* onPress={() => setState(true)} /> */}
+
                     </TouchableOpacity>
                 </View>
-                {/* <View>
-                <TouchableOpacity>
-                    {/* <Icon
-                        name="person-outline"
-                        color={COLORS.primary}
-                        size={50}
-                        style={{ marginLeft: 50 }}
-                    // onPress={() => navigation.navigate('UserScreen')}
-                    /> */}
-                {/* <Image source={require('../assets/person.png')} style={{ width: 30, height: 35, marginLeft: 260, marginTop: -10, }} />
-                </TouchableOpacity>
-            </View> */}
+
 
                 <View style={STYLES.search}>
                     {/* <Icon name="search" size={28} /> */}
@@ -198,6 +193,7 @@ const HomeScreen = () => {
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
                 <View style={STYLES.card}>
                     <Text style={{ marginTop: 10, marginLeft: 15, fontSize: 17, color: 'black' }}>History of Events</Text>
+
                     <FlatList
                         data={eventData.events}
                         keyExtractor={(item) => item.id.toString()}
@@ -247,26 +243,96 @@ const HomeScreen = () => {
                                 <Text style={{ marginLeft: 12, marginTop: 10 }}>{selectedEvent.format}|{selectedEvent.groupName}</Text>
                                 <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Agenda/Description</Text>
                                 <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Attendees</Text>
-                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Vasanth</Text>
-                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
 
-                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Vasanth + 1</Text>
-                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
+                                {/* <Text>{[selectedEvent].length}</Text> */}
+                                <FlatList
+                                    data={[selectedEvent]}
+                                    renderItem={({ item }) => {
+                                        let Set1 = [];
 
-                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Vasanth Personal Gmail</Text>
-                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
+                                        if (item?.members) {
+                                            Set1 = item.members.map((set1, index1) => {
+                                                return (
+                                                    <View >
+                                                        <Text style={{ fontSize: 15, marginLeft: 26, marginTop: 10 }}>{set1?.name}</Text>
+                                                    </View>
+                                                )
+                                            })
+                                        }
 
-                                <Text style={{ fontSize: 15, marginLeft: 23, marginTop: 19 }}>Sulthan</Text>
-                                <Text style={{ fontSize: 15, marginLeft: 250, marginTop: -19, color: 'green' }}>IN PERSON</Text>
+                                        let Set2 = [];
 
-                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Comments</Text>
+                                        if (item?.attendance) {
+                                            Set2 = item.attendance.map((set1, index1) => {
+                                                return (
+                                                    <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10 }}>
+                                                        <Text style={{ color: 'green' }}>{set1.mode}</Text>
+                                                        <Text> | </Text>
+                                                        <Text style={{ color: 'blue' }}>{set1.punctualityMark}</Text>
+                                                    </View>
+                                                )
+                                            })
+                                        }
+
+
+                                        return (
+                                            <View style={{ flexDirection: "row", width: '100%' }}>
+                                                <View style={{ width: '50%', }}>
+                                                    {Set1}
+                                                </View>
+
+                                                <View style={{ width: '50%' }}>
+                                                    {Set2}
+                                                </View>
+                                            </View>
+                                        )
+                                    }
+                                    }
+                                />
+                                {/* <FlatList
+                                    data={[...selectedEvent.members, ...selectedEvent.attendance]}
+                                    // keyExtractor={(item) => item.id.toString()}
+                                    // numColumns={1}
+                                    // horizontal={false}
+                                    renderItem={({ item }) => (
+                                        <View style={{ flexDirection: 'row' }}>
+
+                                            <Text style={{ fontSize: 15, marginLeft: 26, marginTop: 10 }}>{item.name}</Text>
+
+
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ color: 'green' }}>{item.mode} </Text>
+                                                <Text style={{ color: 'blue' }}>{item.punctualityMark}</Text>
+                                            </View>
+
+                                        </View>
+
+                                    )}
+                                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+                                /> */}
+                                {/* <FlatList
+                                    data={selectedEvent.attendance.map((atten) => atten)}
+                                    // keyExtractor={(item) => item.id.toString()}
+                                    renderItem={({ item }) => (
+                                        <View style={{ flexDirection: 'row', marginLeft: 220 }}>
+                                            <Text style={{ color: 'green' }}>{item.mode} |</Text><Text style={{ color: 'blue' }} > {item.punctualityMark}</Text>
+
+                                        </View>
+
+                                    )}
+                                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+                                /> */}
+
+
+
+                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginBottom: 50 }}>Comments</Text>
                                 <View style={{ marginTop: 200 }}>
                                     <TextInput
                                         // value={textValue}
                                         // onChangeText={text => setTextvalue(text)}
                                         placeholder="Post"
-                                        style={STYLES.textinput} />
-                                    <Image style={{ width: 23, height: 27, marginLeft: 340, marginTop: -35 }} source={require('../assets/attachment.png')} />
+                                        style={STYLES.postinput} />
+                                    <Image style={{ width: 23, position: 'absolute', height: 27, marginLeft: 340, marginTop: 10 }} source={require('../assets/attachment.png')} />
                                 </View>
 
                             </View>
@@ -322,7 +388,7 @@ const HomeScreen = () => {
 
 
 
-            </ScrollView>
+            </ScrollView >
         </SafeAreaView >
 
     )

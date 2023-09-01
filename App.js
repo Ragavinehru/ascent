@@ -29,7 +29,8 @@ const DrawerNavigation = () => {
     <Drawer.Navigator initialRouteName="Home">
       <Drawer.Screen name="Dashboard" component={HomeScreen} options={{
         headerShown: false,
-        drawerIcon: () => null
+        drawerIcon: () => null,
+
       }} />
       <Drawer.Screen name="Calender" component={Calendar} options={{
         headerShown: false,
