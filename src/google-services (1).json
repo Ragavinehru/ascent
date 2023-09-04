@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "70834123",
+    "project_id": "ascent-app-9e1ae",
+    "storage_bucket": "ascent-app-9e1ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70834123:android:891538f360a5ac775b884e",
+        "android_client_info": {
+          "package_name": "com.ascent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70834123-3b7ni5f5ling5a6kqkclt4uuuu0u1n62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0TNkNhYthnTAjT85KXAg_ulequZsx-O8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70834123-3b7ni5f5ling5a6kqkclt4uuuu0u1n62.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

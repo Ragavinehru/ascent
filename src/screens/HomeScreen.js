@@ -52,6 +52,7 @@ const HomeScreen = () => {
 
     const [userData, setUserData] = useState({});
     const [eventData, setEventData] = useState([]);
+    const [commentData, setCommentData] = useState([]);
 
     const fetchUserData = async () => {
         try {
@@ -92,6 +93,28 @@ const HomeScreen = () => {
             console.error('Error fetching event data:', error);
         }
     };
+ // comments
+    // const fetchComments = async () => {
+    //     try {
+    //         const eventId = eventData.id;
+    //         const commentBody = {
+    //             eventId: eventId
+    //         };
+    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getComments';
+    //         const response = await fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(commentBody)
+    //         });
+    //         const result = await response.json();
+    //         console.log("comments", result);
+    //         setCommentData(result);
+    //     } catch (error) {
+    //         console.error('Error fetching event data:', error);
+    //     }};
 
     useEffect(() => {
         fetchUserData();
@@ -102,6 +125,11 @@ const HomeScreen = () => {
             fetchEventData();
         }
     }, [userData]);
+    // useEffect(() => {
+    //     if (userData.userInfo) {
+    //         fetchComments();
+    //     }
+    // }, []);
 
 
 
@@ -114,6 +142,7 @@ const HomeScreen = () => {
     // console.log("members", eventData.events[0].members)
     const eventsarray = eventData.events;
     console.log("selected eventsss", selectedEvent)
+    // console.log("comments data",commentData)
     // if (!selectedEvent.members) {
     //     return (
     //         <View>
