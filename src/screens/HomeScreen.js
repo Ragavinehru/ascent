@@ -18,10 +18,10 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { useState, useEffect } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import COLORS from '../consts/color';
 import STYLES from '../styles';
-import { Navigation } from 'react-native-navigation';
+
 import { SliderBox } from 'react-native-image-slider-box';
 import webs from '../assets/images/images.jpeg';
 import webs1 from '../assets/images/images1.jpg';
@@ -54,46 +54,131 @@ const HomeScreen = () => {
     const [eventData, setEventData] = useState([]);
     const [commentData, setCommentData] = useState([]);
 
-    const fetchUserData = async () => {
+
+
+    const fetchData = async () => {
         try {
-            const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
-            const response = await fetch(url, {
+            // Fetch user data
+            const userResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com', {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 }
             });
-            const result = await response.json();
-            console.log("user info", result);
-            setUserData(result);
+            const userDataResult = await userResponse.json();
+            console.log("user info", userDataResult);
+            setUserData(userDataResult);
+
+            if (userDataResult.userInfo) {
+                const groupIds = userDataResult.userInfo.groups;
+                const eventRequestBody = {
+                    groupIds: groupIds
+                };
+                // Fetch event data
+                const eventResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getEvents', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(eventRequestBody)
+                });
+                const eventResult = await eventResponse.json();
+                console.log("events", eventResult);
+                setEventData(eventResult);
+
+                if (eventResult.events) {
+                    const allComments = [];
+                    for (const event of eventResult.events) {
+                        const eventId = event.id;
+                        const commentBody = {
+                            eventId: eventId
+                        };
+                        // Fetch comments for each event
+                        const commentResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getComments', {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(commentBody)
+                        });
+                        const commentResult = await commentResponse.json();
+                        const commentvalue = commentResult.comments;
+                        // const value = commentvalue.name;
+                        console.log("value", commentvalue);
+                        console.log("comments for event", eventId, ":", commentResult);
+                        // Store comments for each event in the same order as events
+                        allComments.push(commentResult);
+                    }
+                    // Set all comments in state
+                    setCommentData(allComments);
+
+
+                }
+            }
         } catch (error) {
-            console.error('Error fetching user data:', error);
+            console.error('Error fetching data:', error);
         }
     };
-    const fetchEventData = async () => {
-        try {
-            const groupIds = userData.userInfo.groups;
-            const requestBody = {
-                groupIds: groupIds
-            };
-            const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
-            });
-            const result = await response.json();
-            console.log("events", result);
-            setEventData(result);
-        } catch (error) {
-            console.error('Error fetching event data:', error);
-        }
-    };
- // comments
+
+    useEffect(() => {
+        fetchData();
+    }, []);;
+
+    // const fetchUserData = async () => {
+    //     try {
+    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
+    //         const response = await fetch(url, {
+    //             method: 'GET',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+    //         const result = await response.json();
+    //         console.log("user info", result);
+    //         setUserData(result);
+    //     } catch (error) {
+    //         console.error('Error fetching user data:', error);
+    //     }
+    // };
+    // const fetchEventData = async () => {
+    //     try {
+    //         const groupIds = userData.userInfo.groups;
+    //         const requestBody = {
+    //             groupIds: groupIds
+    //         };
+    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
+    //         const response = await fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(requestBody)
+    //         });
+    //         const result = await response.json();
+    //         console.log("events", result);
+    //         setEventData(result);
+    //     } catch (error) {
+    //         console.error('Error fetching event data:', error);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     fetchUserData();
+    // }, []);
+
+    // useEffect(() => {
+    //     if (userData.userInfo) {
+    //         fetchEventData();
+    //     }
+    // }, [userData]);
+
+
+    // comments
     // const fetchComments = async () => {
     //     try {
     //         const eventId = eventData.id;
@@ -114,21 +199,43 @@ const HomeScreen = () => {
     //         setCommentData(result);
     //     } catch (error) {
     //         console.error('Error fetching event data:', error);
-    //     }};
-
-    useEffect(() => {
-        fetchUserData();
-    }, []);
-
-    useEffect(() => {
-        if (userData.userInfo) {
-            fetchEventData();
-        }
-    }, [userData]);
-    // useEffect(() => {
-    //     if (userData.userInfo) {
-    //         fetchComments();
     //     }
+    // };
+
+    // useEffect(() => {
+
+    //     fetchComments();
+
+    // }, [commentData]);
+
+    // comments
+    // const fetchComments = async () => {
+    //     try {
+    //         const eventId = eventData.id;
+    //         const commentBody = {
+    //             eventId: eventId
+    //         };
+    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getComments';
+    //         const response = await fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(commentBody)
+    //         });
+    //         const result = await response.json();
+    //         console.log("comments", result);
+    //         setCommentData(result);
+    //     } catch (error) {
+    //         console.error('Error fetching event data:', error);
+    //     }
+    // };
+
+    // useEffect(() => {
+
+    //     fetchComments();
+
     // }, []);
 
 
@@ -138,21 +245,11 @@ const HomeScreen = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
     const [showComments, setShowComments] = useState(true);
-    console.log('eventData:::::::::::::::::', eventData)
+    // console.log('eventData:::::::::::::::::', eventData)
     // console.log("members", eventData.events[0].members)
     const eventsarray = eventData.events;
-    console.log("selected eventsss", selectedEvent)
-    // console.log("comments data",commentData)
-    // if (!selectedEvent.members) {
-    //     return (
-    //         <View>
-    //             <Text>No members found for this event.</Text>
-    //         </View>
-    //     );
-    // }
+    // console.log("selected eventsss", selectedEvent)
 
-    // const memberNames = eventData.members.map((member) => member.name);
-    // console.log("kkkkkkkkkkkkkkkKKK", memberNames)
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -246,11 +343,12 @@ const HomeScreen = () => {
                                 {showComments && (
                                     <View>
                                         <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 38, color: 'black' }}>Comments</Text>
-                                        <View>
-                                            <Text style={{ marginLeft: 48 }}>Ragavi</Text>
-                                        </View>
-
-
+                                        {commentvalue.map((comment, index) => (
+                                            <View key={comment.id}>
+                                                <Text style={{ marginLeft: 48 }}>{comment.name}</Text>
+                                                <Text style={{ marginLeft: 48 }}>{comment.comment}</Text>
+                                            </View>
+                                        ))}
                                     </View>
                                 )}
                             </View>
@@ -368,50 +466,8 @@ const HomeScreen = () => {
                         )}
                     </Modal>
 
-                    {/* <Text>old</Text> */}
-                    {/* <ScrollView style={{ textalign: 'center', marginTop: 10, marginLeft: 10 }}>
-                        <View>
-
-                            <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/video.png')} />
-                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>hi</Text>
-
-                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
-                           
-                            <TouchableOpacity onPress={() => setShowComments(!showComments)}>
-                                <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
-                            </TouchableOpacity>
 
 
-                            {showComments && (
-                                <View>
-                                    <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 28, color: 'black' }}>Comments</Text>
-                                    <View>
-                                        <Text style={{ marginLeft: 34 }}>Ragavi</Text>
-                                    </View>
-
-
-                                </View>
-                            )}
-
-                        </View>
-                        <View>
-
-                            <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/videoeve1.png')} />
-                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Demo call</Text>
-                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
-                            <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text>
-                        </View>
-                        <View>
-
-                            <Image style={{ width: 23, height: 23, marginTop: 10 }} source={require('../assets/videoeve.png')} />
-                            <Text style={{ marginTop: -24, marginLeft: 32, fontSize: 16, color: 'black' }}>Test event</Text>
-                            <Text style={{ marginLeft: 32, fontSize: 12 }}>09 jul 2023| 12:00 PM-01:00 PM</Text>
-                            <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>View Comments</Text>
-                        </View>
-
-
-                    </ScrollView>
- */}
 
                 </View>
 

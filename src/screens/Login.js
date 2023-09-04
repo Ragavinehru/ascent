@@ -7,7 +7,7 @@ import {
     TextInput,
     Image,
     Button,
-    ToastAndroid, Alert,KeyboardAvoidingView
+    ToastAndroid, Alert, KeyboardAvoidingView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from '../consts/color';
@@ -18,7 +18,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import { FIREBASE_AUTH } from '../firebase/firebaseConfig';
 import { ActivityIndicator } from 'react-native-paper';
-import {signInWithEmailAndPassword} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
 
@@ -29,42 +29,42 @@ import {signInWithEmailAndPassword} from 'firebase/auth';
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-     const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
 
-    const signIn = async ()=>{
+    const signIn = async () => {
         setLoading(true);
-        try{
-            const response = await signInWithEmailAndPassword(auth,email,password);
-            console.log('succes',response);
-            
-        }catch(error){
+        try {
+            const response = await signInWithEmailAndPassword(auth, email, password);
+            console.log('succes', response);
+
+        } catch (error) {
             console.log(error);
-            Alert('reg failed'+error.message);
-        }finally{
+            Alert('reg failed' + error.message);
+        } finally {
             setLoading(false);
         }
         navigation.navigate('HomeScreen');
-        }
+    }
     ////start 12 minutes
-        // const signUp = async ()=>{
-        //     setLoading(true);
-        //     try{
-        //         const response = await auth.createUserWithEmailAndPassword(auth,email,password);
-        //         console.log(response);
-        //         Alert('chck ur emails')
-        //     }catch(error){
-        //         console.log(error);
-        //         Alert('signup failed'+error.message);  
-        //     }finally{
-        //         setLoading(false);
-        //     }
-        //     }
-        
+    // const signUp = async ()=>{
+    //     setLoading(true);
+    //     try{
+    //         const response = await auth.createUserWithEmailAndPassword(auth,email,password);
+    //         console.log(response);
+    //         Alert('chck ur emails')
+    //     }catch(error){
+    //         console.log(error);
+    //         Alert('signup failed'+error.message);  
+    //     }finally{
+    //         setLoading(false);
+    //     }
+    //     }
+
 
     // const handleSubmit = () => {
     //   setIsSubmitting(true);
-  
+
     //   // Firebase login
     //   auth()
     //     .signInWithEmailAndPassword(email, password)
@@ -78,7 +78,7 @@ const Login = ({ navigation }) => {
     //       setIsSubmitting(false);
     //       Alert.alert("Error", error.message);
     //     });
-  
+
     //   setEmail("");
     //   setPassword("");
     // };
@@ -94,7 +94,7 @@ const Login = ({ navigation }) => {
     //         console.error('Login failed:', error.message);
     //       });
     //   };
-    
+
     return (
 
         <SafeAreaView
@@ -114,56 +114,44 @@ const Login = ({ navigation }) => {
                     </Text>
                 </View>
                 <View style={{ marginTop: 20 }}>
-                <KeyboardAvoidingView behaviour='padding'>
-                    <View style={STYLES.inputContainer}>
-                        
-                    <Image  style={STYLES.inputIcon} source={require('../assets/email.png')} />
-                        {/* <Icon name="home" size={30} color="black" /> */}
-                        <TextInput
-                            value={email}
-                            onChangeText={(text) => setEmail(text)}
-                            placeholder="Email"
-                            style={STYLES.input}
-                        />
-                    </View>
-                    <View style={STYLES.inputContainer}>
-                        {/* <Icon
-                            name="lock"
-                            color={COLORS.light}
-                            size={20}
-                            style={STYLES.inputIcon}
-                        /> */}
-                         <Image  style={STYLES.inputIcon} source={require('../assets/lock.png')} />
-                        <TextInput
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                            placeholder="Password"
-                            style={STYLES.input}
-                            secureTextEntry
-                        />
-                    </View>
-                    <View  style={STYLES.btnPrimary}>
+                    <KeyboardAvoidingView behaviour='padding'>
+                        <View style={STYLES.inputContainer}>
 
-                        { loading ? (<ActivityIndicator size="large" color='#0000ff'/>
-                          ):(
-                        <>
+                            <Image style={STYLES.inputIcon} source={require('../assets/email.png')} />
 
+                            <TextInput
+                                value={email}
+                                onChangeText={(text) => setEmail(text)}
+                                placeholder="Email"
+                                style={STYLES.input}
+                            />
+                        </View>
+                        <View style={STYLES.inputContainer}>
 
-                            <Button title="SignIn" onPress={()=>signIn()} >
-                                {/* // onPress={() => navigation.navigate('HomeScreen')} */}
-                                
-                                {/* // onPress={handleLogin} */}
-                                
-                                {/* // disabled={isSubmitting}
-                                // onPress={handleSubmit}> */}
+                            <Image style={STYLES.inputIcon} source={require('../assets/lock.png')} />
+                            <TextInput
+                                value={password}
+                                onChangeText={(text) => setPassword(text)}
+                                placeholder="Password"
+                                style={STYLES.input}
+                                secureTextEntry
+                            />
+                        </View>
+                        <View style={STYLES.btnPrimary}>
 
-                            </Button>
-                            {/* <Button title="SignUp"  onPress={()=>signUp()}/> */}
-                            </>
-                      )}
-                     
-                    </View>
-                </KeyboardAvoidingView>
+                            {loading ? (<ActivityIndicator size="large" color='#0000ff' />
+                            ) : (
+                                <>
+                                    <Button title="SignIn"
+                                        onPress={() => signIn()} >
+                                        {/* onPress={() => navigation.navigate('HomeScreen')}> */}
+                                    </Button>
+                                    {/* <Button title="SignUp"  onPress={()=>signUp()}/> */}
+                                </>
+                            )}
+
+                        </View>
+                    </KeyboardAvoidingView>
                 </View>
                 <View>
                     <Image style={{ width: 340, height: 340 }} source={require('../assets/login.png')}
