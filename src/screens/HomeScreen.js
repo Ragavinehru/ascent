@@ -67,7 +67,7 @@ const HomeScreen = () => {
                 }
             });
             const userDataResult = await userResponse.json();
-            console.log("user info", userDataResult);
+            // console.log("user info", userDataResult);
             setUserData(userDataResult);
 
             if (userDataResult.userInfo) {
@@ -85,11 +85,12 @@ const HomeScreen = () => {
                     body: JSON.stringify(eventRequestBody)
                 });
                 const eventResult = await eventResponse.json();
-                console.log("events", eventResult);
+                // console.log("events", eventResult);
                 setEventData(eventResult);
-
+                //
                 if (eventResult.events) {
                     const allComments = [];
+
                     for (const event of eventResult.events) {
                         const eventId = event.id;
                         const commentBody = {
@@ -105,18 +106,21 @@ const HomeScreen = () => {
                             body: JSON.stringify(commentBody)
                         });
                         const commentResult = await commentResponse.json();
-                        const commentvalue = commentResult.comments;
+                        // commentsByEvent[eventId] = commentResult.comments;
+                        // const commentvalue = commentResult.comments;
                         // const value = commentvalue.name;
-                        console.log("value", commentvalue);
-                        console.log("comments for event", eventId, ":", commentResult);
+                        console.log("value", commentResult);
+                        // console.log("test comment", ":", commentResult);
                         // Store comments for each event in the same order as events
-                        allComments.push(commentResult);
+                        // allComments.push(commentResult);
+                        allComments.push(...commentResult.comments);
+                        setCommentData(allComments);
                     }
                     // Set all comments in state
-                    setCommentData(allComments);
-
-
                 }
+                console.log("length 1", eventResult?.events?.length)
+
+                console.log("length 2")
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -126,117 +130,6 @@ const HomeScreen = () => {
     useEffect(() => {
         fetchData();
     }, []);;
-
-    // const fetchUserData = async () => {
-    //     try {
-    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
-    //         const response = await fetch(url, {
-    //             method: 'GET',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         });
-    //         const result = await response.json();
-    //         console.log("user info", result);
-    //         setUserData(result);
-    //     } catch (error) {
-    //         console.error('Error fetching user data:', error);
-    //     }
-    // };
-    // const fetchEventData = async () => {
-    //     try {
-    //         const groupIds = userData.userInfo.groups;
-    //         const requestBody = {
-    //             groupIds: groupIds
-    //         };
-    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
-    //         const response = await fetch(url, {
-    //             method: 'POST',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(requestBody)
-    //         });
-    //         const result = await response.json();
-    //         console.log("events", result);
-    //         setEventData(result);
-    //     } catch (error) {
-    //         console.error('Error fetching event data:', error);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     fetchUserData();
-    // }, []);
-
-    // useEffect(() => {
-    //     if (userData.userInfo) {
-    //         fetchEventData();
-    //     }
-    // }, [userData]);
-
-
-    // comments
-    // const fetchComments = async () => {
-    //     try {
-    //         const eventId = eventData.id;
-    //         const commentBody = {
-    //             eventId: eventId
-    //         };
-    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getComments';
-    //         const response = await fetch(url, {
-    //             method: 'POST',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(commentBody)
-    //         });
-    //         const result = await response.json();
-    //         console.log("comments", result);
-    //         setCommentData(result);
-    //     } catch (error) {
-    //         console.error('Error fetching event data:', error);
-    //     }
-    // };
-
-    // useEffect(() => {
-
-    //     fetchComments();
-
-    // }, [commentData]);
-
-    // comments
-    // const fetchComments = async () => {
-    //     try {
-    //         const eventId = eventData.id;
-    //         const commentBody = {
-    //             eventId: eventId
-    //         };
-    //         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getComments';
-    //         const response = await fetch(url, {
-    //             method: 'POST',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(commentBody)
-    //         });
-    //         const result = await response.json();
-    //         console.log("comments", result);
-    //         setCommentData(result);
-    //     } catch (error) {
-    //         console.error('Error fetching event data:', error);
-    //     }
-    // };
-
-    // useEffect(() => {
-
-    //     fetchComments();
-
-    // }, []);
 
 
 
@@ -248,7 +141,7 @@ const HomeScreen = () => {
     // console.log('eventData:::::::::::::::::', eventData)
     // console.log("members", eventData.events[0].members)
     const eventsarray = eventData.events;
-    // console.log("selected eventsss", selectedEvent)
+    // console.log("commented`````````````````````", commentData)
 
 
     return (
@@ -260,7 +153,7 @@ const HomeScreen = () => {
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('User')}>
 
-                        <Image style={{ width: 50, marginLeft: 300, marginBottom: 2, marginRight: 20, height: 50, }} source={require('../assets/person.png')} />
+                        <Image style={{ width: 50, marginLeft: 300, marginTop: -10, marginRight: 20, height: 50, }} source={require('../assets/person.png')} />
                     </TouchableOpacity>
                 </View>
                 <View >
@@ -339,14 +232,13 @@ const HomeScreen = () => {
                                     <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
                                 </TouchableOpacity>
 
-
                                 {showComments && (
                                     <View>
-                                        <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 38, color: 'black' }}>Comments</Text>
-                                        {commentvalue.map((comment, index) => (
+                                        <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 48, color: 'black' }}>Comments</Text>
+                                        {commentData.map((comment, index) => (
                                             <View key={comment.id}>
-                                                <Text style={{ marginLeft: 48 }}>{comment.name}</Text>
-                                                <Text style={{ marginLeft: 48 }}>{comment.comment}</Text>
+                                                <Text style={{ marginLeft: 58, color: 'black' }}>{comment.name}</Text>
+                                                <Text style={{ marginLeft: 68 }}>{comment.comment}</Text>
                                             </View>
                                         ))}
                                     </View>
@@ -454,12 +346,27 @@ const HomeScreen = () => {
 
                                 <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginBottom: 50 }}>Comments</Text>
                                 <View style={{ marginTop: 200 }}>
+                                    <View style={STYLES.cardcomment}>
+                                        {/* {showComments && (
+                                            <View>
+                                                <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 48, color: 'black' }}>Comments</Text>
+                                                {commentData.map((comment, index) => (
+                                                    <View key={comment.id}>
+                                                        <Text style={{ marginLeft: 58, color: 'black' }}>{comment.name}</Text>
+                                                        <Text style={{ marginLeft: 68 }}>{comment.comment}</Text>
+                                                    </View>
+                                                ))}
+                                            </View>
+                                        )} */}
+                                    </View>
                                     <TextInput
                                         // value={textValue}
                                         // onChangeText={text => setTextvalue(text)}
                                         placeholder="Post"
                                         style={STYLES.postinput} />
-                                    <Image style={{ width: 23, position: 'absolute', height: 27, marginLeft: 340, marginTop: 10 }} source={require('../assets/attachment.png')} />
+
+                                    <Image style={{ width: 23, position: 'absolute', height: 27, marginLeft: 320, marginTop: 10 }} source={require('../assets/attachment.png')} />
+                                    <Text style={{ marginLeft: 360, marginBottom: 100, marginTop: 10, fontSize: 17, color: 'blue', position: 'absolute' }}>post</Text>
                                 </View>
 
                             </View>

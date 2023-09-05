@@ -22,40 +22,64 @@ import COLORS from '../consts/color';
 import STYLES from '../styles';
 import { useState, useEffect } from 'react';
 import { Navigation } from 'react-native-navigation';
-import DatePicker from 'react-native-datepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import DatePicker from 'react-native-datepicker';
 
 const Profile = ({ navigation }) => {
-    const [textValue, setTextvalue] = useState(' Ragavi');
-    const [mobile, setMobile] = useState(' 12345678910');
-    const [bloodgroup, setBloodgroup] = useState(' B+');
-    const [Emergencycon, setemergencycon] = useState(' Nehru');
+    const [textValue, setTextvalue] = useState();
+    const [mobile, setMobile] = useState();
+    const [bloodgroup, setBloodgroup] = useState();
+    const [Emergencycon, setemergencycon] = useState();
+    // const [dob, setDob] = useState();
+    // const []
 
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
+    const showDatepicker = () => {
+        setShowDatePicker(true);
+    };
+
+    const onDateChange = (event, selectedDate) => {
+        setShowDatePicker(false);
+
+        if (selectedDate) {
+            setSelectedDate(selectedDate);
+        }
+    };
     //
     const [data, setData] = useState([]);
     const Mydata = async () => {
-        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/updateProfile';
-        const token = await AsyncStorage.getItem('authToken');
+        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
+        // const token = await AsyncStorage.getItem('authToken');
         // console.log("token", url, token, token?.accessToken);
 
         let result = await fetch(url, {
-            method: 'PUT',
+            method: 'GET',
             headers: {
                 Accept: 'application/json',
-                'Content-Type': 'multipart/form-data',
-                'Authorization': 'Bearer ' + token
+                'Content-Type': 'application/json',
+
             }
         })
 
         result = await result.json();
-        console.log("results from my car", result)
+        console.log("profileeeeeee", result)
         setData(result);
 
 
     };
 
     useEffect(() => {
+        // if (data.userInfo) {
+        //     setTextvalue(data.userInfo.name);
+        // setMobile(data.userInfo.mobileno);
+        // setBloodgroup(data.userInfo.bloodgroup);
+        // setDob(data.userInfo.dob);
+        // setemergencycon(data.userInfo.Emergencycon.name);
+
+        // }
         Mydata();
     }, []);
 
@@ -74,12 +98,14 @@ const Profile = ({ navigation }) => {
                 </View>
                 <View>
                     <Text style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10 }}>Update profile</Text>
+
                     <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Personal Info</Text>
                     <Text style={STYLES.texttitle}>Name *</Text>
                     <TextInput
-                        // value={textValue}
+                        value={textValue}
                         onChangeText={text => setTextvalue(text)}
                         style={STYLES.textinput} />
+
                     <Text style={STYLES.texttitle}>Mobile *</Text>
                     <TextInput
                         // value={mobile}
@@ -101,10 +127,20 @@ const Profile = ({ navigation }) => {
                             style={STYLES.sidebox} />
                     </View>
                     <Text style={STYLES.texttitle}>Date of Birth *</Text>
-                    <TextInput
-                        // value={textValue}
-                        onChangeText={text => setTextvalue(text)}
-                        style={STYLES.textinput} />
+                    <TouchableOpacity onPress={showDatepicker}>
+                        <Text style={{ borderWidth: 1, width: 345, height: 54, borderRadius: 6, padding: 10, marginLeft: 15 }}>
+                            {selectedDate.toDateString()}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {showDatePicker && (
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode="date"
+                            display="calendar"
+                            onChange={onDateChange}
+                        />
+                    )}
                     <Text style={STYLES.texttitle}>Emergency Contact:</Text>
                     <TextInput
                         // value={Emergencycon}
@@ -121,15 +157,15 @@ const Profile = ({ navigation }) => {
                         onChangeText={text => setTextvalue(text)}
                         style={STYLES.textinput} />
                     <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Family Info</Text>
-                    <Text style={STYLES.texttitle}>Mobile *</Text>
+                    <Text style={STYLES.texttitle}>Spouse Name</Text>
                     <TextInput
                         // value={mobile}
                         onChangeText={text => setMobile(text)}
                         style={STYLES.textinput} />
                     <View stye={{ flexDirection: 'row' }}>
 
-                        <Text style={{ marginLeft: 15, marginTop: 7 }}>Blood Group *</Text>
-                        <Text style={STYLES.gender}>Sex *</Text>
+                        <Text style={{ marginLeft: 15, marginTop: 7 }}>Spouse DOB</Text>
+                        <Text style={STYLES.gender}>Wedding Anniversary</Text>
                         <TextInput
                             // value={bloodgroup}
                             onChangeText={text => setBloodgroup(text)}
@@ -147,7 +183,7 @@ const Profile = ({ navigation }) => {
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
 
-                            <Text style={{ marginLeft: 15, marginTop: 7 }}>Child 1 Gender *</Text>
+                            <Text style={{ marginLeft: 15, marginTop: 11 }}>Child 1 Gender *</Text>
                             <Text style={STYLES.gender}>Child 1 DOB*</Text>
                             <TextInput
                                 // value={bloodgroup}
@@ -191,14 +227,32 @@ const Profile = ({ navigation }) => {
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
 
-                            {/* <Text style={{ marginLeft: 150, marginTop: 90 }}>Company Description*</Text>
+                            <Text style={{ marginLeft: 200, marginTop: -72 }}>Company Description*</Text>
                             <TextInput
-                                value={textValue}
+                                // value={textValue}
                                 onChangeText={text => setTextvalue(text)}
-                                style={STYLES.description} /> */}
+                                style={STYLES.descriptioninput}
+                            />
 
                         </View>
                     </View>
+                    {/* <View>
+                        <TouchableOpacity onPress={showDatepicker}>
+                            <Text style={{ borderWidth: 1, width: 80, padding: 10 }}>
+                                {selectedDate.toDateString()}
+                            </Text>
+                        </TouchableOpacity>
+
+                        {showDatePicker && (
+                            <DateTimePicker
+                                value={selectedDate}
+                                mode="date"
+                                display="calendar"
+                                onChange={onDateChange}
+                            />
+                        )}
+                    </View> */}
+
                     <View style={STYLES.space} />
                     <Button title="Update Profile"> </Button>
 

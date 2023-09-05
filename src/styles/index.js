@@ -20,7 +20,7 @@ const STYLES = StyleSheet.create({
         // justifyContent: 'center',
         alignItems: 'center',
         marginTop: 30,
-        marginBottom:34,
+        marginBottom: 34,
         fontSize: 70,
 
     },
@@ -58,6 +58,18 @@ const STYLES = StyleSheet.create({
         elevation: 13,
         backgroundColor: COLORS.white,
     },
+    cardcomment: {
+
+        height: 170,
+        width: 350,
+        marginLeft: 17,
+        marginTop: -230,
+        borderRadius: 25,
+        elevation: 13,
+        position: 'absolute',
+        backgroundColor: COLORS.white,
+
+    },
     header: {
         paddingVertical: 20,
         flexDirection: 'row',
@@ -78,7 +90,7 @@ const STYLES = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         height: '50',
-        width: '80%',
+        width: '76%',
         borderRadius: 6,
         marginLeft: 15,
         marginBottom: 50
@@ -94,6 +106,13 @@ const STYLES = StyleSheet.create({
         // marginTop: '1%',
         marginLeft: '4%',
         width: '37%',
+        borderRadius: 6,
+    },
+    descriptioninput: {
+        borderWidth: 1,
+        borderColor: 'black',
+        width: '37%',
+        marginLeft: '45%',
         borderRadius: 6,
     },
     sidebox: {
