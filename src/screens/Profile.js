@@ -27,15 +27,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import DatePicker from 'react-native-datepicker';
 
 const Profile = ({ navigation }) => {
-    const [textValue, setTextvalue] = useState();
-    const [mobile, setMobile] = useState();
-    const [bloodgroup, setBloodgroup] = useState();
-    const [Emergencycon, setemergencycon] = useState();
+    const [textValue, setTextvalue] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [bloodgroup, setBloodgroup] = useState('');
+    const [Emergencycon, setemergencycon] = useState('');
+    const[number,setemergencynum]= useState('');
+    // const[marital,setMarital]=useState('');
+    // const[spouse,setSpouse]=useState('');
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    // const[company,setcompany]=useState('');
+    
     // const [dob, setDob] = useState();
     // const []
 
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    // const [selectedDate, setSelectedDate] = useState(new Date());
 
     const showDatepicker = () => {
         setShowDatePicker(true);
@@ -65,21 +71,27 @@ const Profile = ({ navigation }) => {
         })
 
         result = await result.json();
-        console.log("profileeeeeee", result)
+        console.log("profileeeeeee", result);
         setData(result);
 
 
     };
 
     useEffect(() => {
-        // if (data.userInfo) {
-        //     setTextvalue(data.userInfo.name);
-        // setMobile(data.userInfo.mobileno);
-        // setBloodgroup(data.userInfo.bloodgroup);
+        if (data.userInfo) {
+            setTextvalue(data.userInfo.name);
+            setMobile(data.userInfo.mobileno);
+            setBloodgroup(data.userInfo.bloodgroup);
+            setemergencycon(data.userInfo.emergencycontact.name);
+             setemergencynum(data.userInfo.emergencycontact.mobileno);
+             setSelectedDate(new Date(data.userInfo.dob));
+            //  setMarital(data.userInfo.marital);
+            //  setSpouse(data.userInfo.spouse);
+            //  setcompany(data.userInfo);
         // setDob(data.userInfo.dob);
         // setemergencycon(data.userInfo.Emergencycon.name);
 
-        // }
+        }
         Mydata();
     }, []);
 
@@ -108,7 +120,7 @@ const Profile = ({ navigation }) => {
 
                     <Text style={STYLES.texttitle}>Mobile *</Text>
                     <TextInput
-                        // value={mobile}
+                        value={mobile}
                         onChangeText={text => setMobile(text)}
                         style={STYLES.textinput} />
                     <View stye={{ flexDirection: 'row' }}>
@@ -116,7 +128,7 @@ const Profile = ({ navigation }) => {
                         <Text style={{ marginLeft: 15, marginTop: 7 }}>Blood Group *</Text>
                         <Text style={STYLES.gender}>Sex *</Text>
                         <TextInput
-                            // value={bloodgroup}
+                             value={bloodgroup}
                             onChangeText={text => setBloodgroup(text)}
                             style={STYLES.smallinput} />
 
@@ -143,32 +155,32 @@ const Profile = ({ navigation }) => {
                     )}
                     <Text style={STYLES.texttitle}>Emergency Contact:</Text>
                     <TextInput
-                        // value={Emergencycon}
+                         value={Emergencycon}
                         onChangeText={text => setemergencycon(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Emergency Contact Number:</Text>
                     <TextInput
-                        // value={mobile}
-                        onChangeText={text => setMobile(text)}
+                         value={number}
+                        onChangeText={text => setemergencynum(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Marital Status</Text>
                     <TextInput
-                        // value={textValue}
-                        onChangeText={text => setTextvalue(text)}
+                        // value={marital}
+                        // onChangeText={text => setMarital(text)}
                         style={STYLES.textinput} />
                     <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Family Info</Text>
                     <Text style={STYLES.texttitle}>Spouse Name</Text>
                     <TextInput
-                        // value={mobile}
-                        onChangeText={text => setMobile(text)}
+                        // value={spouse.name}
+                        // onChangeText={text => setSpouse(text)}
                         style={STYLES.textinput} />
                     <View stye={{ flexDirection: 'row' }}>
 
                         <Text style={{ marginLeft: 15, marginTop: 7 }}>Spouse DOB</Text>
                         <Text style={STYLES.gender}>Wedding Anniversary</Text>
                         <TextInput
-                            // value={bloodgroup}
-                            onChangeText={text => setBloodgroup(text)}
+                            //  value={spouse.dob}
+                            onChangeText={text => setSpouse(text)}
                             style={STYLES.smallinput} />
                         <TextInput
                             // value={textValue}
@@ -223,8 +235,8 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 7 }}>Company Website*</Text>
 
                             <TextInput
-                                // value={bloodgroup}
-                                onChangeText={text => setBloodgroup(text)}
+                                //  value={company.website}
+                                onChangeText={text => setcompany(text)}
                                 style={STYLES.smallinput} />
 
                             <Text style={{ marginLeft: 200, marginTop: -72 }}>Company Description*</Text>
