@@ -254,7 +254,7 @@ const HomeScreen = () => {
                         {selectedEvent && (
                             <View style={{ flex: 1 }}>
                                 <TouchableOpacity onPress={closeEventModal} style={{ marginLeft: 330, marginTop: 10 }}>
-                                    <Text style={{ color: 'red' }}>Close</Text>
+                                    <Text style={{ color: 'red', marginTop: 10 }}>Close</Text>
                                 </TouchableOpacity>
                                 <Text style={{ fontSize: 23, color: 'black', marginTop: 17, marginLeft: 50 }}>{selectedEvent.label}</Text>
                                 <Image style={{ width: 23, height: 23, marginLeft: 10, marginTop: -25 }} source={require('../assets/video.png')} />

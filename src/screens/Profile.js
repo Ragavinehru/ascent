@@ -27,21 +27,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import DatePicker from 'react-native-datepicker';
 
 const Profile = ({ navigation }) => {
-    const [textValue, setTextvalue] = useState('');
+    const [textValue, setTextvalue] = useState();
     const [mobile, setMobile] = useState('');
     const [bloodgroup, setBloodgroup] = useState('');
-    const [Emergencycon, setemergencycon] = useState('');
-    const[number,setemergencynum]= useState('');
+    // const [Emergencycon, setemergencycon] = useState('');
+    // const [number, setemergencynum] = useState('');
     // const[marital,setMarital]=useState('');
     // const[spouse,setSpouse]=useState('');
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    // const [selectedDate, setSelectedDate] = useState(new Date());
     // const[company,setcompany]=useState('');
-    
+
     // const [dob, setDob] = useState();
     // const []
 
     const [showDatePicker, setShowDatePicker] = useState(false);
-    // const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const showDatepicker = () => {
         setShowDatePicker(true);
@@ -82,14 +82,14 @@ const Profile = ({ navigation }) => {
             setTextvalue(data.userInfo.name);
             setMobile(data.userInfo.mobileno);
             setBloodgroup(data.userInfo.bloodgroup);
-            setemergencycon(data.userInfo.emergencycontact.name);
-             setemergencynum(data.userInfo.emergencycontact.mobileno);
-             setSelectedDate(new Date(data.userInfo.dob));
+            // setemergencycon(data.userInfo.emergencycontact.name);
+            //  setemergencynum(data.userInfo.emergencycontact.mobileno);
+            //  setSelectedDate(new Date(data.userInfo.dob));
             //  setMarital(data.userInfo.marital);
             //  setSpouse(data.userInfo.spouse);
             //  setcompany(data.userInfo);
-        // setDob(data.userInfo.dob);
-        // setemergencycon(data.userInfo.Emergencycon.name);
+            // setDob(data.userInfo.dob);
+            // setemergencycon(data.userInfo.Emergencycon.name);
 
         }
         Mydata();
@@ -128,14 +128,14 @@ const Profile = ({ navigation }) => {
                         <Text style={{ marginLeft: 15, marginTop: 7 }}>Blood Group *</Text>
                         <Text style={STYLES.gender}>Sex *</Text>
                         <TextInput
-                             value={bloodgroup}
+                            value={bloodgroup}
                             onChangeText={text => setBloodgroup(text)}
                             style={STYLES.smallinput} />
 
 
                         <TextInput
                             // value={textValue}
-                            onChangeText={text => setTextvalue(text)}
+                            // onChangeText={text => setTextvalue(text)}
                             style={STYLES.sidebox} />
                     </View>
                     <Text style={STYLES.texttitle}>Date of Birth *</Text>
@@ -147,7 +147,7 @@ const Profile = ({ navigation }) => {
 
                     {showDatePicker && (
                         <DateTimePicker
-                            value={selectedDate}
+                            // value={selectedDate}
                             mode="date"
                             display="calendar"
                             onChange={onDateChange}
@@ -155,13 +155,13 @@ const Profile = ({ navigation }) => {
                     )}
                     <Text style={STYLES.texttitle}>Emergency Contact:</Text>
                     <TextInput
-                         value={Emergencycon}
-                        onChangeText={text => setemergencycon(text)}
+                        // value={Emergencycon}
+                        // onChangeText={text => setemergencycon(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Emergency Contact Number:</Text>
                     <TextInput
-                         value={number}
-                        onChangeText={text => setemergencynum(text)}
+                        // value={number}
+                        // onChangeText={text => setemergencynum(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Marital Status</Text>
                     <TextInput
@@ -180,18 +180,18 @@ const Profile = ({ navigation }) => {
                         <Text style={STYLES.gender}>Wedding Anniversary</Text>
                         <TextInput
                             //  value={spouse.dob}
-                            onChangeText={text => setSpouse(text)}
+                            // onChangeText={text => setSpouse(text)}
                             style={STYLES.smallinput} />
                         <TextInput
                             // value={textValue}
-                            onChangeText={text => setTextvalue(text)}
+                            // onChangeText={text => setTextvalue(text)}
                             style={STYLES.sidebox} />
 
                         <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Children Info</Text>
                         <Text style={STYLES.texttitle}>Child 1 Name*</Text>
                         <TextInput
                             // value={mobile}
-                            onChangeText={text => setMobile(text)}
+                            // onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
 
@@ -199,17 +199,17 @@ const Profile = ({ navigation }) => {
                             <Text style={STYLES.gender}>Child 1 DOB*</Text>
                             <TextInput
                                 // value={bloodgroup}
-                                onChangeText={text => setBloodgroup(text)}
+                                // onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
                             <TextInput
                                 // value={textValue}
-                                onChangeText={text => setTextvalue(text)}
+                                // onChangeText={text => setTextvalue(text)}
                                 style={STYLES.sidebox} />
                         </View>
                         <Text style={STYLES.texttitle}>Child 2 Name*</Text>
                         <TextInput
                             // value={mobile}
-                            onChangeText={text => setMobile(text)}
+                            // onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
 
@@ -217,18 +217,18 @@ const Profile = ({ navigation }) => {
                             <Text style={STYLES.gender}>Child 2 DOB*</Text>
                             <TextInput
                                 // value={bloodgroup}
-                                onChangeText={text => setBloodgroup(text)}
+                                // onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
                             <TextInput
                                 // value={textValue}
-                                onChangeText={text => setTextvalue(text)}
+                                // onChangeText={text => setTextvalue(text)}
                                 style={STYLES.sidebox} />
                         </View>
                         <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Personal Info</Text>
                         <Text style={STYLES.texttitle}>Company Name*</Text>
                         <TextInput
                             // value={mobile}
-                            onChangeText={text => setMobile(text)}
+                            // onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
 
@@ -236,13 +236,13 @@ const Profile = ({ navigation }) => {
 
                             <TextInput
                                 //  value={company.website}
-                                onChangeText={text => setcompany(text)}
+                                // onChangeText={text => setcompany(text)}
                                 style={STYLES.smallinput} />
 
                             <Text style={{ marginLeft: 200, marginTop: -72 }}>Company Description*</Text>
                             <TextInput
                                 // value={textValue}
-                                onChangeText={text => setTextvalue(text)}
+                                // onChangeText={text => setTextvalue(text)}
                                 style={STYLES.descriptioninput}
                             />
 

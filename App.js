@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import 'react-native-gesture-handler';
-import {useState} from "react";
+import { useState } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -17,9 +17,9 @@ import CheckIn from "./src/screens/CheckIn";
 import Topic from "./src/screens/Topic";
 import Goals from "./src/screens/Goals";
 import NewEvent from "./src/screens/NewEvent";
-import {User, onAuthStateChanged} from 'firebase/auth';
+import { User, onAuthStateChanged } from 'firebase/auth';
 // import firebaseConfig from "./src/firebase/firebaseConfig";
-// import PopupEvent from "./src/screens/PopupEvent";
+import Cleargroup from "./src/screens/Cleargroup";
 
 
 
@@ -56,20 +56,20 @@ const DrawerNavigation = () => {
   );
 };
 const App = () => {
-//  const [user,setUser]=useState<User |null>(null);
+  //  const [user,setUser]=useState<User |null>(null);
 
-//  useEffect(()=>{
-//    onAuthStateChanged(FIREBASE_AUTH,(user)=>{
-//      console.log('user',user);
-//      setUser(user);
-//    });
-//  },[]);
+  //  useEffect(()=>{
+  //    onAuthStateChanged(FIREBASE_AUTH,(user)=>{
+  //      console.log('user',user);
+  //      setUser(user);
+  //    });
+  //  },[]);
 
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ header: () => null }} >
-        
+
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="HomeScreen" component={DrawerNavigation} />
         <Stack.Screen name="Profile" component={Profile} />
@@ -77,6 +77,7 @@ const App = () => {
         <Stack.Screen name="Atten" component={Attendance} />
         <Stack.Screen name="Group" component={Group} />
         <Stack.Screen name="NewEvent" component={NewEvent} />
+        <Stack.Screen name="cleargroup" component={Cleargroup} />
 
 
       </Stack.Navigator>

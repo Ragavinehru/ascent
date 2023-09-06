@@ -30,6 +30,17 @@ const STYLES = StyleSheet.create({
 
 
     },
+
+    newuser: {
+        borderWidth: 1,
+        padding: 10,
+        color: COLORS.white,
+        backgroundColor: COLORS.primary,
+        borderRadius: 10,
+        marginTop: 20,
+        marginRight: 100,
+        marginLeft: 230,
+    },
     text: {
         borderWidth: 1,
         padding: 10,
@@ -155,14 +166,26 @@ const STYLES = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
+        width: '90%',
+        marginLeft: 20,
+        marginTop: 5
+
+
     },
     cell: {
-        width: 90,
-        height: 40,
-        borderWidth: 0.3,
-        borderColor: 'grey',
-    },
+        flex: 1,
+        textAlign: 'center',
 
+    },
+    cellHeader: {
+        flex: 1,
+        backgroundColor: 'lightgray',
+        padding: 8,
+    },
 
 
 })
