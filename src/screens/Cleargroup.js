@@ -4,41 +4,42 @@ import {
     View,
     Text,
     Image, TouchableOpacity, TouchableHighlight,
-    Button, FlatList,
+    Button, FlatList,Modal
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/color';
-import { ScrollView } from 'react-native-gesture-handler';
+// import { ScrollView } from 'react-native-gesture-handler';
 import STYLES from '../styles';
 import { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 
 
 const ClearGroup = ({ navigation, route }) => {
     // const navigation = useNavigation();
     const groupdata = route.params.groupdata;
     const membersData = groupdata.groupInfo.members;
+    const [show, setState] = useState(false);
+    const [selectedMember, setSelectedMember] = useState(null);
     console.log("members log", membersData);
 
     const MemberItem = ({ member }) => (
-
-        < View style={STYLES.row} >
-            {/* <View style={STYLES.column}>
-                <Text style={STYLES.headerText}>Name</Text>
-                <Text style={STYLES.cell}>{member.name}</Text>
-            </View> */}
-            {/* <View style={STYLES.cellHeader}>
-                <Text style={STYLES.headerText}>Email</Text>
-            </View> */}
-            {/* <Text>hi</Text> */}
-            <Text style={STYLES.cell}>{member.name}</Text>
-            <Text style={STYLES.cell}>{member.company}</Text>
-            <Text style={STYLES.cell}>{member.role}</Text>
-            <Text style={STYLES.cell}>{member.email}</Text>
-            <Text style={STYLES.cell}>{member.status}</Text>
-        </View >
-    );
-
+       
+        <View style={STYLES.row}>
+      
+          <Text style={STYLES.cellname}   onPress={() => {
+          setSelectedMember(member);
+          setState(true); 
+        }}>{member.name}</Text>
+          
+          <Text style={STYLES.cell}>{member.company}</Text>
+          <Text style={STYLES.cell}>{member.role}</Text>
+          <Text style={STYLES.cell}>{member.email}</Text>
+          <Text style={STYLES.cellstatus}>{member.status}</Text>
+        </View>
+      );
+    //   const HeaderCells = () => (
+       
+    //   );
     return (
         <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
             <View style={STYLES.header}>
@@ -56,11 +57,42 @@ const ClearGroup = ({ navigation, route }) => {
                     </Text>
                 </TouchableHighlight>
             </View>
+         <View style={STYLES.row}>
+          <Text style={STYLES.headerCell}>Name</Text>
+          <Text style={STYLES.headerCell}>Company</Text>
+          <Text style={STYLES.headerCell}>Role</Text>
+          <Text style={STYLES.headerCell}>Email</Text>
+          <Text style={STYLES.headerCell}>Status</Text>
+        </View>
             <FlatList
                 data={membersData}
                 keyExtractor={(item, index) => index.toString()} // Use index as the key for simplicity (not recommended for production)
-                renderItem={({ item }) => <MemberItem member={item} />} // Render each member using the custom MemberItem component
+                renderItem={({ item }) => <MemberItem member={item} />}
+                 // Render each member using the custom MemberItem component
             />
+             <Modal visible={show} transparent={true} animationType="slide"  onRequestClose={() => setState(false)}>
+            
+           
+             <View style={{ flex: 1 }}>
+                  <View style={{ backgroundColor: '#C0C0C0', borderRadius: 30, margin: 50, padding: 40 }}>
+                {/* <Text >{membersData.name}uuuuu</Text> */}
+                {/* <Image
+              source={{ uri: selectedMember?.profileImage }} // Replace with the member's profile image URL
+              style={STYLES.profileImage}
+            /> */}
+                <Text style={{color:'black',fontWeight:'bold',fontSize:14}}>{selectedMember?.name}|{selectedMember?.company}</Text>
+            
+            <Text>Mobile: {selectedMember?.mobileno}</Text>
+            <Text style={{width:290}}>Email:  {selectedMember?.email}</Text>
+            <Text>MaritalStatus: {selectedMember?.maritalStatus}</Text>
+            <Text>Bloodgroup: {selectedMember?.bloodgroup}</Text>
+            <Text>Birthday: {selectedMember?.dob}</Text>
+                <Button  title="close" color="red" onPress={() => setState(false)}></Button>
+                </View>
+            </View>
+          
+           </Modal>
+            
         </SafeAreaView>
     )
 };

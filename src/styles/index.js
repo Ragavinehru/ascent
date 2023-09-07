@@ -39,7 +39,7 @@ const STYLES = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
         marginRight: 100,
-        marginLeft: 230,
+        marginLeft: 210,
     },
     text: {
         borderWidth: 1,
@@ -181,12 +181,39 @@ const STYLES = StyleSheet.create({
         textAlign: 'center',
 
     },
+    cellname:{
+         fontSize:12,
+         color:'black',
+         textAlign: 'center',
+         flex: 1,
+    },
+    cellstatus:{
+        fontSize:12,
+         color:'green',
+        textAlign: 'center',
+        flex: 1,
+
+
+    },
     cellHeader: {
         flex: 1,
         backgroundColor: 'lightgray',
         padding: 8,
     },
-
+    headerCell: {
+        flex: 10, 
+        backgroundColor: '#D3D3D3', 
+        color: 'black', 
+        fontWeight: 'bold',
+        fontSize: 16,
+        padding: 12,
+        textAlign: 'center', 
+        borderWidth: 1, 
+        borderColor: '#C0C0C0',
+        // height:100,
+         
+       
+      },
 
 })
 
