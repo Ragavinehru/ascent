@@ -3,6 +3,7 @@ import COLORS from '../consts/color';
 import { Navigation } from 'react-native-navigation';
 const STYLES = StyleSheet.create({
     inputContainer: { flexDirection: 'row', marginTop: 20, },
+
     inputIcon: { marginTop: 15, width: 15, height: 15, position: 'absolute' },
     input: {
         color: COLORS.light,
@@ -37,9 +38,10 @@ const STYLES = StyleSheet.create({
         color: COLORS.white,
         backgroundColor: COLORS.primary,
         borderRadius: 10,
-        marginTop: 20,
-        marginRight: 100,
-        marginLeft: 210,
+        marginTop: -40,
+        marginRight: -40,
+        marginLeft: 220,
+        // position: ''
     },
     text: {
         borderWidth: 1,
@@ -181,15 +183,15 @@ const STYLES = StyleSheet.create({
         textAlign: 'center',
 
     },
-    cellname:{
-         fontSize:12,
-         color:'black',
-         textAlign: 'center',
-         flex: 1,
+    cellname: {
+        fontSize: 12,
+        color: 'black',
+        textAlign: 'center',
+        flex: 1,
     },
-    cellstatus:{
-        fontSize:12,
-         color:'green',
+    cellstatus: {
+        fontSize: 12,
+        color: 'green',
         textAlign: 'center',
         flex: 1,
 
@@ -199,21 +201,30 @@ const STYLES = StyleSheet.create({
         flex: 1,
         backgroundColor: 'lightgray',
         padding: 8,
+
     },
     headerCell: {
-        flex: 10, 
-        backgroundColor: '#D3D3D3', 
-        color: 'black', 
+        flex: 2,
+        backgroundColor: '#D3D3D3',
+        color: 'black',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 10,
         padding: 12,
-        textAlign: 'center', 
-        borderWidth: 1, 
-        borderColor: '#C0C0C0',
+        textAlign: 'center',
+        borderWidth: 1,
+        borderColor: 'white',
         // height:100,
-         
-       
-      },
+        // width: 300
+    },
+    search: {
+        flexDirection: 'row',
+        marginTop: 30,
+        width: '50%',
+        borderWidth: 1,
+        height: 42,
+        marginLeft: 20, borderRadius: 10,
+        backgroundColor: COLORS.primary
+    },
 
 })
 
