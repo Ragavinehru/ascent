@@ -5,6 +5,9 @@ const STYLES = StyleSheet.create({
     inputContainer: { flexDirection: 'row', marginTop: 20, },
 
     inputIcon: { marginTop: 15, width: 15, height: 15, position: 'absolute' },
+    searchimg: {
+        width: 45, height: 33,
+    },
     input: {
         color: COLORS.light,
         paddingLeft: 30,
@@ -35,8 +38,8 @@ const STYLES = StyleSheet.create({
     newuser: {
         borderWidth: 1,
         padding: 10,
-        color: COLORS.white,
-        backgroundColor: COLORS.primary,
+        color: "black",
+        backgroundColor: COLORS.light,
         borderRadius: 10,
         marginTop: -40,
         marginRight: -40,
@@ -52,7 +55,7 @@ const STYLES = StyleSheet.create({
         marginTop: 20,
         marginRight: 220,
     },
-    search: {
+    searchhome: {
         alignItems: 'center',
         paddingHorizontal: 20,
         borderRadius: 30,
@@ -96,6 +99,14 @@ const STYLES = StyleSheet.create({
         borderColor: 'black',
         height: '50',
         width: '80%',
+        borderRadius: 6,
+        marginLeft: 15
+    },
+    searchinput: {
+        borderWidth: 1,
+        borderColor: 'black',
+        // height: '10',
+        width: '140%', paddingBottom: 1,
         borderRadius: 6,
         marginLeft: 15
     },
@@ -216,6 +227,19 @@ const STYLES = StyleSheet.create({
         // height:100,
         // width: 300
     },
+    attenCell: {
+        flex: 2,
+        backgroundColor: COLORS.light,
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 10,
+        padding: 12,
+        textAlign: 'center',
+        borderWidth: 1,
+        borderColor: 'white',
+        // height:100,
+        // width: 300
+    },
     search: {
         flexDirection: 'row',
         marginTop: 30,
@@ -223,7 +247,7 @@ const STYLES = StyleSheet.create({
         borderWidth: 1,
         height: 42,
         marginLeft: 20, borderRadius: 10,
-        backgroundColor: COLORS.primary
+        backgroundColor: COLORS.light
     },
 
 })

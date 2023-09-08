@@ -165,7 +165,7 @@ const HomeScreen = () => {
                 </View>
 
 
-                <View style={STYLES.search}>
+                <View style={STYLES.searchhome}>
                     {/* <Icon name="search" size={28} /> */}
                     <TextInput
                         style={{ flex: 1, fontSize: 18 }} placeholder="Search" />

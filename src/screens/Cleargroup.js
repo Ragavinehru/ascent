@@ -20,23 +20,23 @@ const ClearGroup = ({ navigation, route }) => {
     const membersData = groupdata.groupInfo.members;
     const [show, setState] = useState(false);
     const [dots, setDots] = useState(false);
+    const [newuser, setUser] = useState(false);
     const [search, SetSearch] = useState('');
+    const [filteredMembers, setFilteredMembers] = useState(membersData);
+
     // const [olddata, setoldData] = useState([]);
     const searchRef = useRef();
     const [selectedMember, setSelectedMember] = useState(null);
     console.log("members log", membersData);
-    // setoldData(groupdata);
-    // const onSearch = text => {
-    //     if (text == '') {
-    //         setData(olddata);
-    //     }
-    //     else {
-    //         let tempList = data.filter(item => {
-    //             return item.carname.toLowerCase().indexOf(text.toLowerCase()) > -1;
-    //         });
-    //         setData(tempList);
-    //     }
-    // };
+
+    //search filter
+    const filterMembersByName = (query) => {
+        const filtered = membersData.filter((member) =>
+            member.name.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredMembers(filtered);
+    };
+
 
     const MemberItem = ({ member }) => (
 
@@ -70,36 +70,24 @@ const ClearGroup = ({ navigation, route }) => {
 
             <Text style={{ marginTop: 20, marginLeft: 10, fontSize: 27, color: 'black' }}> {groupdata.groupInfo ? groupdata.groupInfo.name : ''}</Text>
             <View style={STYLES.search}>
-                <Icon name="search" size={28} />
+                {/* <Icon name="search" size={28} /> */}
+                <Image style={STYLES.searchimg} source={require('../assets/search.png')} />
                 <TextInput
                     style={{ flex: 1, fontSize: 18, color: 'white' }}
                     value={search}
                     ref={searchRef}
                     onChangeText={txt => {
-                        // onSearch(txt);
                         SetSearch(txt);
+                        filterMembersByName(txt);
 
                     }}
                     placeholder="Search"
                 />
-                {/* {search == '' ? null : (
-                    <TouchableOpacity
-                        onPress={() => {
-                            searchRef.current.clear();
-                            // onSearch('');
-                            SetSearch('');
-                        }}
-                    >
-                        <Icon
-                            name="close"
-                        />
-                    </TouchableOpacity>
-                )} */}
 
             </View>
 
             <View style={STYLES.btnSecondary}>
-                <TouchableHighlight style={{}} onPress={() => navigation.navigate('NewEvent')}>
+                <TouchableHighlight style={{}} onPress={() => { setUser(true); }}>
                     <Text style={STYLES.newuser}>
                         + New User
                     </Text>
@@ -113,7 +101,7 @@ const ClearGroup = ({ navigation, route }) => {
                 <Text style={STYLES.headerCell}>Status</Text>
             </View>
             <FlatList
-                data={membersData}
+                data={filteredMembers}
                 keyExtractor={(item, index) => index.toString()} // Use index as the key for simplicity (not recommended for production)
                 renderItem={({ item }) => <MemberItem member={item} />}
             // Render each member using the custom MemberItem component
@@ -163,6 +151,22 @@ const ClearGroup = ({ navigation, route }) => {
                     </TouchableOpacity>
 
                 </View>
+            </Modal>
+            <Modal visible={newuser} transparent={true} animationType="slide" onRequestClose={() => setUser(false)}>
+                <View style={{
+                    justifyContent: 'center', marginTop: 80, alignItems: 'center', backgroundColor: '#fff5ee', borderRadius: 30, margin: 120, padding: 40
+                }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 12 }}>Add Users to Groups</Text>
+                    <TextInput style={STYLES.searchinput} placeholder='Search Users'></TextInput>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity onPress={() => setUser(false)} style={{ marginTop: 10 }}>
+                            <Text style={{ color: 'red', marginTop: 10 }}>Cancel</Text>
+                        </TouchableOpacity>
+                        <Text style={{ fontWeight: 'bold', fontSize: 13, color: 'blue', marginTop: 20, marginLeft: 10 }}>Add user</Text>
+                    </View>
+
+                </View>
+
             </Modal>
         </SafeAreaView>
     )
