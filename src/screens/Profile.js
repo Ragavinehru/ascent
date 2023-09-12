@@ -27,15 +27,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import DatePicker from 'react-native-datepicker';
 
 const Profile = ({ navigation }) => {
-    const [textValue, setTextvalue] = useState();
+    const [textValue, setTextvalue] = useState('');
     const [mobile, setMobile] = useState('');
     const [bloodgroup, setBloodgroup] = useState('');
-    const [Emergencycon, setemergencycon] = useState('');
-    const [number, setemergencynum] = useState('');
-    const [marital, setMarital] = useState('');
-    const [spouse, setSpouse] = useState('');
-    // const [selectedDate, setSelectedDate] = useState(new Date());
-    const [company, setcompany] = useState('');
+    // const [Emergencycon, setemergencycon] = useState('');
+    // const [number, setemergencynum] = useState('');
+    // const [marital, setMarital] = useState('');
+    // const [spouse, setSpouse] = useState('');
+    // // const [selectedDate, setSelectedDate] = useState(new Date());
+    // const [company, setcompany] = useState('');
 
     const [dob, setDob] = useState();
     // const []
@@ -58,14 +58,14 @@ const Profile = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [postdata, setPosTData] = useState([]);
     const Mydata = async () => {
-        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com';
+        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email;
         // const token = await AsyncStorage.getItem('authToken');
         // console.log("token", url, token, token?.accessToken);
 
         let result = await fetch(url, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
 
             }
@@ -77,52 +77,53 @@ const Profile = ({ navigation }) => {
 
 
     };
-
+    // console.log("data postedddd", data.userInfo.name)
+    // console.log("name", data.userInfo.name)
     useEffect(() => {
         if (data.userInfo) {
             setTextvalue(data.userInfo.name);
             setMobile(data.userInfo.mobileno);
             setBloodgroup(data.userInfo.bloodgroup);
-            setemergencycon(data.userInfo.emergencycontact.name);
-            setemergencynum(data.userInfo.emergencycontact.mobileno);
-            setSelectedDate(new Date(data.userInfo.dob));
-            setMarital(data.userInfo.marital);
-            setSpouse(data.userInfo.spouse);
-            setcompany(data.userInfo);
-            setDob(data.userInfo.dob);
-            setemergencycon(data.userInfo.Emergencycon.name);
+            // setemergencycon(data.userInfo.emergencycontact.name);
+            // setemergencynum(data.userInfo.emergencycontact.mobileno);
+            // setSelectedDate(new Date(data.userInfo.dob));
+            // setMarital(data.userInfo.marital);
+            // setSpouse(data.userInfo.spouse);
+            // setcompany(data.userInfo);
+            // setDob(data.userInfo.dob);
+            // setemergencycon(data.userInfo.Emergencycon.name);
 
         }
         Mydata();
     }, []);
-    const fetchpostdata = async () => {
-        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/updateProfile';
+    // const fetchpostdata = async () => {
+    //     const url = 'https://walrus-app-v5mk9.ondigitalocean.app/updateProfile';
 
-        const updatedProfileData = {
-            name: textValue,
-            mobile: mobile,
-            bloodgroup: bloodgroup,
+    //     const updatedProfileData = {
+    //         name: textValue,
+    //         mobile: mobile,
+    //         bloodgroup: bloodgroup,
 
-        };
+    //     };
 
-        try {
-            let result = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedProfileData),
-            });
+    //     try {
+    //         let result = await fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(updatedProfileData),
+    //         });
 
-            result = await result.json();
-            console.log('Profile Updated', result);
+    //         result = await result.json();
+    //         console.log('Profile Updated', result);
 
-        } catch (error) {
-            console.error('Error updating profile', error);
-            // Handle errors
-        }
-    };
+    //     } catch (error) {
+    //         console.error('Error updating profile', error);
+    //         // Handle errors
+    //     }
+    // };
 
 
 
@@ -166,7 +167,7 @@ const Profile = ({ navigation }) => {
 
 
                         <TextInput
-                            value={textValue}
+                            // value={textValue}
                             onChangeText={text => setTextvalue(text)}
                             style={STYLES.sidebox} />
                     </View>
@@ -187,23 +188,23 @@ const Profile = ({ navigation }) => {
                     )}
                     <Text style={STYLES.texttitle}>Emergency Contact:</Text>
                     <TextInput
-                        value={Emergencycon}
+                        // value={Emergencycon}
                         onChangeText={text => setemergencycon(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Emergency Contact Number:</Text>
                     <TextInput
-                        value={number}
+                        // value={number}
                         onChangeText={text => setemergencynum(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Marital Status</Text>
                     <TextInput
-                        value={marital}
+                        // value={marital}
                         onChangeText={text => setMarital(text)}
                         style={STYLES.textinput} />
                     <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Family Info</Text>
                     <Text style={STYLES.texttitle}>Spouse Name</Text>
                     <TextInput
-                        value={spouse.name}
+                        // value={spouse.name}
                         onChangeText={text => setSpouse(text)}
                         style={STYLES.textinput} />
                     <View stye={{ flexDirection: 'row' }}>
@@ -211,7 +212,7 @@ const Profile = ({ navigation }) => {
                         <Text style={{ marginLeft: 15, marginTop: 7 }}>Spouse DOB</Text>
                         <Text style={STYLES.gender}>Wedding Anniversary</Text>
                         <TextInput
-                            value={spouse.dob}
+                            // value={spouse.dob}
                             onChangeText={text => setSpouse(text)}
                             style={STYLES.smallinput} />
                         <TextInput
@@ -222,7 +223,7 @@ const Profile = ({ navigation }) => {
                         <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Children Info</Text>
                         <Text style={STYLES.texttitle}>Child 1 Name*</Text>
                         <TextInput
-                            value={mobile}
+                            // value={mobile}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
@@ -230,7 +231,7 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 11 }}>Child 1 Gender *</Text>
                             <Text style={STYLES.gender}>Child 1 DOB*</Text>
                             <TextInput
-                                value={bloodgroup}
+                                // value={bloodgroup}
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
                             <TextInput
@@ -240,7 +241,7 @@ const Profile = ({ navigation }) => {
                         </View>
                         <Text style={STYLES.texttitle}>Child 2 Name*</Text>
                         <TextInput
-                            value={mobile}
+                            // value={mobile}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
@@ -248,18 +249,18 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 7 }}>Child 2 Gender *</Text>
                             <Text style={STYLES.gender}>Child 2 DOB*</Text>
                             <TextInput
-                                value={bloodgroup}
+                                // value={bloodgroup}
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
                             <TextInput
-                                value={textValue}
+                                // value={textValue}
                                 onChangeText={text => setTextvalue(text)}
                                 style={STYLES.sidebox} />
                         </View>
                         <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Personal Info</Text>
                         <Text style={STYLES.texttitle}>Company Name*</Text>
                         <TextInput
-                            value={mobile}
+                            // value={mobile}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
@@ -267,13 +268,13 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 7 }}>Company Website*</Text>
 
                             <TextInput
-                                value={company.website}
+                                // value={company.website}
                                 onChangeText={text => setcompany(text)}
                                 style={STYLES.smallinput} />
 
                             <Text style={{ marginLeft: 200, marginTop: -72 }}>Company Description*</Text>
                             <TextInput
-                                value={textValue}
+                                // value={textValue}
                                 onChangeText={text => setTextvalue(text)}
                                 style={STYLES.descriptioninput}
                             />
@@ -298,7 +299,7 @@ const Profile = ({ navigation }) => {
                     </View> */}
 
                     <View style={STYLES.space} />
-                    <Button title="Update Profile" onPress={fetchpostdata} > </Button>
+                    <Button title="Update Profile"  > </Button>
 
                 </View>
             </ScrollView>

@@ -33,10 +33,13 @@ import { useNavigation } from '@react-navigation/native';
 // import PopupEvent from "./src/screens/PopupEvent";
 import DocumentPicker from 'react-native-document-picker';
 import { Platform } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
 
 const HomeScreen = () => {
-
+    const route = useRoute();
+    const userEmail = route.params?.userEmail;
+    console.log("homeeeeeeee", userEmail)
     //event images
     const images = [webs, webs2, webs1, webs2, webs3, webs4]
     // history of evnt icons
@@ -84,12 +87,12 @@ const HomeScreen = () => {
     };
 
 
-
-
     const fetchData = async () => {
         try {
+            // let api = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email;
+            // console.log("api", api)
             // Fetch user data
-            const userResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=vasanthravisankar91@gmail.com', {
+            const userResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',

@@ -36,16 +36,24 @@ const Login = ({ navigation }) => {
         setLoading(true);
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
-            console.log('succes', response);
-
+            console.log('success', response);
+            const userEmail = response._tokenResponse.email;
+            console.log("email===", userEmail);
+            global.email = email;
+            // const signedInUserEmail = response.user.email;
+            navigation.navigate('HomeScreen', { userEmail });
         } catch (error) {
             console.log(error);
-            Alert('reg failed' + error.message);
+            // Alert('reg failed' + error.message);
         } finally {
             setLoading(false);
         }
-        navigation.navigate('HomeScreen');
+
+
+
+
     }
+
     ////start 12 minutes
     // const signUp = async ()=>{
     //     setLoading(true);
