@@ -61,14 +61,14 @@ const HomeScreen = () => {
     const pickAttachment = async () => {
         try {
             const result = await DocumentPicker.pick({
-                type: [DocumentPicker.types.allFiles], // You can specify allowed file types here
+                type: [DocumentPicker.types.allFiles],
             });
 
             if (Platform.OS === 'android') {
-                // On Android, the result URI is a content URI, so you need to resolve it to a file path
+
                 const realPath = await DocumentPicker.resolvePath({
                     uri: result.uri,
-                    fileType: '*/*', // You can specify allowed file types here
+                    fileType: '*/*',
                 });
                 setSelectedAttachment(realPath);
             } else {
@@ -76,7 +76,7 @@ const HomeScreen = () => {
             }
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
-                // User canceled the picker
+
             } else {
                 throw err;
             }
@@ -165,7 +165,7 @@ const HomeScreen = () => {
 
         try {
             const formData = new FormData();
-            formData.append('eventId', selectedEvent.id); // Replace with the actual event ID
+            formData.append('eventId', selectedEvent.id);
             formData.append('comment', commentText);
 
             if (selectedAttachment) {
@@ -219,7 +219,7 @@ const HomeScreen = () => {
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('User')}>
 
-                        <Image style={{ width: 50, marginLeft: 350, marginTop: -20, marginRight: -90, height: 50, }} source={require('../assets/person.png')} />
+                        <Image style={{ width: 50, marginLeft: 290, marginTop: -20, marginRight: -90, height: 50, }} source={require('../assets/person.png')} />
                     </TouchableOpacity>
                 </View>
                 <View >
@@ -267,12 +267,12 @@ const HomeScreen = () => {
                         dotstyle={{ height: 20, width: 20, borderRadius: 50 }}
                         imageLoadingColor="black"
                         autoplay={true}
-                        autoplayInterval={1000}
+                        autoplayInterval={3000}
                         circleLoop={true}
                         onCurrentImagePressed={(index) => Alert(index + 1)}
                         firstItem={4}
                         paginationBoxVerticalPadding={20}
-                        style={{ width: 360, height: 200, borderRadius: 25, marginLeft: 29, marginTop: 20 }}
+                        style={{ width: 360, height: 200, borderRadius: 25, marginLeft: 19, marginTop: 20 }}
                     />
                 </View>
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
@@ -325,7 +325,7 @@ const HomeScreen = () => {
             </ScrollView >
 
             <Modal visible={showModal} animationType="slide" >
-                {/* Display Event Details in the Modal */}
+
                 {selectedEvent && (
                     <View style={{ flex: 1 }}>
                         <TouchableOpacity onPress={closeEventModal} style={{ marginLeft: 330, marginTop: 10 }}>

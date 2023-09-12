@@ -3,12 +3,13 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB8l7W3wOccGC-A_p8qTfMtbnO9Fl6kOK4",
-  authDomain: "ascent-app-9e1ae.firebaseapp.com",
-  projectId: "ascent-app-9e1ae",
-  storageBucket: "ascent-app-9e1ae.appspot.com",
-  messagingSenderId: "70834123",
-  appId: "1:70834123:web:2e47c8a86ef746225b884e"
+  apiKey: "AIzaSyAufFxopGtzeUjzgHwJ-ltj7apqPLkwRCY",
+  authDomain: "ascent-server.firebaseapp.com",
+  projectId: "ascent-server",
+  storageBucket: "ascent-server.appspot.com",
+  messagingSenderId: "15880228153",
+  appId: "1:15880228153:web:1229c71553948f2fb3ece8",
+  measurementId: "G-ZK59G7WHBV",
 };
 
 // Initialize Firebase
