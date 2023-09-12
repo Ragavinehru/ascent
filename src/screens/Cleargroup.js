@@ -102,7 +102,7 @@ const ClearGroup = ({ navigation, route }) => {
             </View>
             <FlatList
                 data={filteredMembers}
-                keyExtractor={(item, index) => index.toString()} // Use index as the key for simplicity (not recommended for production)
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => <MemberItem member={item} />}
             // Render each member using the custom MemberItem component
             />

@@ -4,7 +4,7 @@ import {
   View,
   Text,
   Image, TouchableOpacity,
-  Button, FlatList
+  Button, FlatList, length
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/color';
@@ -64,7 +64,7 @@ const Attendance = () => {
         setAttenData(data);
       })
       .catch((error) => {
-        // Handle any errors that occurred during the fetch
+        // Handle any errors
         console.error('Error:', error);
       });
   }
@@ -74,14 +74,28 @@ const Attendance = () => {
 
   const EventItem = ({ event }) => {
     return (
-      <View style={STYLES.row}>
-        <Text style={STYLES.cell}>{event.type}</Text>
-        <Text style={STYLES.cell}>{event.usergi}</Text>
-        <Text style={STYLES.cell}>{event.format}</Text>
-        <Text style={STYLES.cell}>{event.date}</Text>
-      </View>
+      <>
+        {event.members.map((member, index) => (
+          <View style={STYLES.row} key={index}>
+            <Text style={STYLES.cell}>{member.name}</Text>
+            <Text style={STYLES.cell}>{calculateMemberAttendance(member.email)}</Text>
+            <Text style={STYLES.cell}>{event.format || '---'}</Text>
+            <Text style={STYLES.cell}>{event.type}</Text>
+          </View>
+        ))}
+      </>
     );
   };
+  const calculateMemberAttendance = (memberId) => {
+    if (attenData.events && attenData.events.length > 0) {
+      const memberEvents = attenData.events.filter(event => event.user === memberId);
+      const totalEvents = memberEvents.length;
+      const presentEvents = memberEvents.filter(event => event.type === "present").length;
+      return `${presentEvents}/${totalEvents}`;
+    }
+    return "0/0";
+  };
+
 
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.white, height: '100%' }}>
@@ -93,21 +107,26 @@ const Attendance = () => {
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
         </TouchableOpacity>
       </View>
-      <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 20, color: 'black' }}>Overall Attendance</Text>
-      <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 13, color: 'black' }}>Total Events:  | Online Events:  | Offline Events:  </Text>
+      <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 20, color: 'black' }}>Overall Attendance </Text>
+
+      <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 13, color: 'black' }}>   Total Events: {attenData.events ? attenData.events.length : 0}
+        | Online Events: {attenData.events ? attenData.events.filter(event => event.type === "online").length : 0}
+        | Offline Events: {attenData.events ? attenData.events.filter(event => event.type === "offline").length : 0}
+      </Text>
+
       <View>
         <View style={STYLES.row}>
           <Text style={STYLES.attenCell}>Name</Text>
           <Text style={STYLES.attenCell}>Attendance</Text>
           <Text style={STYLES.attenCell}>Offline</Text>
-          <Text style={STYLES.attenCell}>Late</Text>
-          {/* <Text style={STYLES.headerCell}>Status</Text> */}
+          <Text style={STYLES.attenCell}>Event Type</Text>
+
         </View>
         <FlatList
           data={attenData.events}
-          keyExtractor={(item, index) => index.toString()} // Use index as the key for simplicity (not recommended for production)
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => <EventItem event={item} />}
-        // Render each member using the custom MemberItem component
+
         />
 
       </View>

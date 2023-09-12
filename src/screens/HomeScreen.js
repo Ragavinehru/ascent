@@ -31,6 +31,8 @@ import webs4 from '../assets/images/image4.jpg';
 import { DrawerActions } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 // import PopupEvent from "./src/screens/PopupEvent";
+import DocumentPicker from 'react-native-document-picker';
+import { Platform } from 'react-native';
 
 
 const HomeScreen = () => {
@@ -53,6 +55,34 @@ const HomeScreen = () => {
     const [userData, setUserData] = useState({});
     const [eventData, setEventData] = useState([]);
     const [commentData, setCommentData] = useState([]);
+    const [commentText, setCommentText] = useState('');
+    const [selectedAttachment, setSelectedAttachment] = useState(null);
+
+    const pickAttachment = async () => {
+        try {
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles], // You can specify allowed file types here
+            });
+
+            if (Platform.OS === 'android') {
+                // On Android, the result URI is a content URI, so you need to resolve it to a file path
+                const realPath = await DocumentPicker.resolvePath({
+                    uri: result.uri,
+                    fileType: '*/*', // You can specify allowed file types here
+                });
+                setSelectedAttachment(realPath);
+            } else {
+                setSelectedAttachment(result.uri);
+            }
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                // User canceled the picker
+            } else {
+                throw err;
+            }
+        }
+    };
+
 
 
 
@@ -106,13 +136,9 @@ const HomeScreen = () => {
                             body: JSON.stringify(commentBody)
                         });
                         const commentResult = await commentResponse.json();
-                        // commentsByEvent[eventId] = commentResult.comments;
-                        // const commentvalue = commentResult.comments;
-                        // const value = commentvalue.name;
+
                         console.log("value", commentResult);
-                        // console.log("test comment", ":", commentResult);
-                        // Store comments for each event in the same order as events
-                        // allComments.push(commentResult);
+
                         allComments.push(...commentResult.comments);
                         setCommentData(allComments);
                     }
@@ -120,18 +146,58 @@ const HomeScreen = () => {
                 }
                 console.log("length 1", eventResult?.events?.length)
 
-                console.log("length 2")
+
             }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+
     };
 
     useEffect(() => {
         fetchData();
-    }, []);;
+    }, []);
+    const postComment = async () => {
+        if (!commentText) {
+            // Handle empty comment text
+            return;
+        }
 
+        try {
+            const formData = new FormData();
+            formData.append('eventId', selectedEvent.id); // Replace with the actual event ID
+            formData.append('comment', commentText);
 
+            if (selectedAttachment) {
+
+                formData.append('attachment', {
+                    uri: selectedAttachment,
+                    name: 'attachment.ext',
+                    type: 'application/octet-stream',
+                });
+            }
+
+            const response = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/postComment', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+
+                setCommentText('');
+                // Fetch the updated comments for the event if needed
+                fetchComments(selectedEvent.id);
+            } else {
+                // Handle error, e.g., show an error message to the user
+                console.error('Failed to post comment. Server returned:', response.status, response.statusText);
+
+            }
+        } catch (error) {
+            console.error('Error posting comment:', error);
+        }
+    };
+    // console.log('commentBody:', commentBody);
+    console.log('comment:', commentText);
 
     const navigation = useNavigation();
     const openDrawer = () => {
@@ -153,7 +219,7 @@ const HomeScreen = () => {
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('User')}>
 
-                        <Image style={{ width: 50, marginLeft: 300, marginTop: -10, marginRight: 20, height: 50, }} source={require('../assets/person.png')} />
+                        <Image style={{ width: 50, marginLeft: 350, marginTop: -20, marginRight: -90, height: 50, }} source={require('../assets/person.png')} />
                     </TouchableOpacity>
                 </View>
                 <View >
@@ -200,13 +266,13 @@ const HomeScreen = () => {
                         inactiveDotColor="white"
                         dotstyle={{ height: 20, width: 20, borderRadius: 50 }}
                         imageLoadingColor="black"
-                        // autoplay={true}
-                        // autoplayInterval={1000}
-                        // circleLoop={true}
-                        // onCurrentImagePressed={(index) => Alert(index + 1)}
+                        autoplay={true}
+                        autoplayInterval={1000}
+                        circleLoop={true}
+                        onCurrentImagePressed={(index) => Alert(index + 1)}
                         firstItem={4}
                         paginationBoxVerticalPadding={20}
-                        style={{ width: 360, height: 200, borderRadius: 25, marginLeft: 17, marginTop: 20 }}
+                        style={{ width: 360, height: 200, borderRadius: 25, marginLeft: 29, marginTop: 20 }}
                     />
                 </View>
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
@@ -217,7 +283,7 @@ const HomeScreen = () => {
                         data={eventData.events}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <View>
+                            <View >
                                 <TouchableOpacity onPress={() => openEventModal(item)}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, marginTop: 10 }}>
                                         <Image style={{ width: 23, height: 23, marginRight: 10 }} source={require('../assets/video.png')} />
@@ -249,130 +315,6 @@ const HomeScreen = () => {
                         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
                     />
 
-                    <Modal visible={showModal} animationType="slide" >
-                        {/* Display Event Details in the Modal */}
-                        {selectedEvent && (
-                            <View style={{ flex: 1 }}>
-                                <TouchableOpacity onPress={closeEventModal} style={{ marginLeft: 330, marginTop: 10 }}>
-                                    <Text style={{ color: 'red', marginTop: 10 }}>Close</Text>
-                                </TouchableOpacity>
-                                <Text style={{ fontSize: 23, color: 'black', marginTop: 17, marginLeft: 50 }}>{selectedEvent.label}</Text>
-                                <Image style={{ width: 23, height: 23, marginLeft: 10, marginTop: -25 }} source={require('../assets/video.png')} />
-                                <Text style={{ marginLeft: 12, marginTop: 17 }}>{selectedEvent.type}|{selectedEvent.date}|{selectedEvent.startHour}-{selectedEvent.endHour}</Text>
-                                <Text style={{ marginLeft: 12, marginTop: 10 }}>{selectedEvent.format}|{selectedEvent.groupName}</Text>
-                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Agenda/Description</Text>
-                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Attendees</Text>
-
-                                {/* <Text>{[selectedEvent].length}</Text> */}
-                                <FlatList
-                                    data={[selectedEvent]}
-                                    renderItem={({ item }) => {
-                                        let Set1 = [];
-
-                                        if (item?.members) {
-                                            Set1 = item.members.map((set1, index1) => {
-                                                return (
-                                                    <View >
-                                                        <Text style={{ fontSize: 15, marginLeft: 26, marginTop: 10 }}>{set1?.name}</Text>
-                                                    </View>
-                                                )
-                                            })
-                                        }
-
-                                        let Set2 = [];
-
-                                        if (item?.attendance) {
-                                            Set2 = item.attendance.map((set1, index1) => {
-                                                return (
-                                                    <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10 }}>
-                                                        <Text style={{ color: 'green' }}>{set1.mode}</Text>
-                                                        <Text> | </Text>
-                                                        <Text style={{ color: 'blue' }}>{set1.punctualityMark}</Text>
-                                                    </View>
-                                                )
-                                            })
-                                        }
-
-
-                                        return (
-                                            <View style={{ flexDirection: "row", width: '100%' }}>
-                                                <View style={{ width: '50%', }}>
-                                                    {Set1}
-                                                </View>
-
-                                                <View style={{ width: '50%' }}>
-                                                    {Set2}
-                                                </View>
-                                            </View>
-                                        )
-                                    }
-                                    }
-                                />
-                                {/* <FlatList
-                                    data={[...selectedEvent.members, ...selectedEvent.attendance]}
-                                    // keyExtractor={(item) => item.id.toString()}
-                                    // numColumns={1}
-                                    // horizontal={false}
-                                    renderItem={({ item }) => (
-                                        <View style={{ flexDirection: 'row' }}>
-
-                                            <Text style={{ fontSize: 15, marginLeft: 26, marginTop: 10 }}>{item.name}</Text>
-
-
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <Text style={{ color: 'green' }}>{item.mode} </Text>
-                                                <Text style={{ color: 'blue' }}>{item.punctualityMark}</Text>
-                                            </View>
-
-                                        </View>
-
-                                    )}
-                                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-                                /> */}
-                                {/* <FlatList
-                                    data={selectedEvent.attendance.map((atten) => atten)}
-                                    // keyExtractor={(item) => item.id.toString()}
-                                    renderItem={({ item }) => (
-                                        <View style={{ flexDirection: 'row', marginLeft: 220 }}>
-                                            <Text style={{ color: 'green' }}>{item.mode} |</Text><Text style={{ color: 'blue' }} > {item.punctualityMark}</Text>
-
-                                        </View>
-
-                                    )}
-                                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-                                /> */}
-
-
-
-                                <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginBottom: 50 }}>Comments</Text>
-                                <View style={{ marginTop: 200 }}>
-                                    <View style={STYLES.cardcomment}>
-                                        {/* {showComments && (
-                                            <View>
-                                                <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 48, color: 'black' }}>Comments</Text>
-                                                {commentData.map((comment, index) => (
-                                                    <View key={comment.id}>
-                                                        <Text style={{ marginLeft: 58, color: 'black' }}>{comment.name}</Text>
-                                                        <Text style={{ marginLeft: 68 }}>{comment.comment}</Text>
-                                                    </View>
-                                                ))}
-                                            </View>
-                                        )} */}
-                                    </View>
-                                    <TextInput
-                                        // value={textValue}
-                                        // onChangeText={text => setTextvalue(text)}
-                                        placeholder="Post"
-                                        style={STYLES.postinput} />
-
-                                    <Image style={{ width: 23, position: 'absolute', height: 27, marginLeft: 320, marginTop: 10 }} source={require('../assets/attachment.png')} />
-                                    <Text style={{ marginLeft: 360, marginBottom: 100, marginTop: 10, fontSize: 17, color: 'blue', position: 'absolute' }}>post</Text>
-                                </View>
-
-                            </View>
-                        )}
-                    </Modal>
-
 
 
 
@@ -381,6 +323,142 @@ const HomeScreen = () => {
 
 
             </ScrollView >
+
+            <Modal visible={showModal} animationType="slide" >
+                {/* Display Event Details in the Modal */}
+                {selectedEvent && (
+                    <View style={{ flex: 1 }}>
+                        <TouchableOpacity onPress={closeEventModal} style={{ marginLeft: 330, marginTop: 10 }}>
+                            <Text style={{ color: 'red', marginTop: 10 }}>Close</Text>
+                        </TouchableOpacity>
+                        <Text style={{ fontSize: 23, color: 'black', marginTop: 17, marginLeft: 50 }}>{selectedEvent.label}</Text>
+                        <Image style={{ width: 23, height: 23, marginLeft: 10, marginTop: -25 }} source={require('../assets/video.png')} />
+                        <Text style={{ marginLeft: 12, marginTop: 17 }}>{selectedEvent.type}|{selectedEvent.date}|{selectedEvent.startHour}-{selectedEvent.endHour}</Text>
+                        <Text style={{ marginLeft: 12, marginTop: 10 }}>{selectedEvent.format}|{selectedEvent.groupName}</Text>
+                        <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Agenda/Description</Text>
+                        <Text style={{ marginLeft: 12, marginTop: 10 }}>{selectedEvent.description}</Text>
+                        <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 19 }}>Attendees</Text>
+
+                        {/* <Text>{[selectedEvent].length}</Text> */}
+                        <FlatList
+                            data={[selectedEvent]}
+                            renderItem={({ item }) => {
+                                let Set1 = [];
+
+                                if (item?.members) {
+                                    Set1 = item.members.map((set1, index1) => {
+                                        return (
+                                            <View >
+                                                <Text style={{ fontSize: 15, marginLeft: 26, marginTop: 10 }}>{set1?.name}</Text>
+                                            </View>
+                                        )
+                                    })
+                                }
+
+                                let Set2 = [];
+
+                                if (item?.attendance) {
+                                    Set2 = item.attendance.map((set1, index1) => {
+                                        return (
+                                            <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10 }}>
+                                                <Text style={{ color: 'green' }}>{set1.mode || set1.status}</Text>
+                                                {/* <Text> | </Text> */}
+                                                <Text style={{ color: 'blue' }}>  {set1.punctualityMark}</Text>
+                                            </View>
+                                        )
+                                    })
+                                }
+
+
+                                return (
+                                    <View style={{ flexDirection: "row", width: '100%' }}>
+                                        <View style={{ width: '50%', }}>
+                                            {Set1}
+                                        </View>
+
+                                        <View style={{ width: '50%' }}>
+                                            {Set2}
+                                        </View>
+                                    </View>
+                                )
+                            }
+                            }
+                        />
+                        {/* <FlatList
+                data={[...selectedEvent.members, ...selectedEvent.attendance]}
+                // keyExtractor={(item) => item.id.toString()}
+                // numColumns={1}
+                // horizontal={false}
+                renderItem={({ item }) => (
+                    <View style={{ flexDirection: 'row' }}>
+
+                        <Text style={{ fontSize: 15, marginLeft: 26, marginTop: 10 }}>{item.name}</Text>
+
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ color: 'green' }}>{item.mode} </Text>
+                            <Text style={{ color: 'blue' }}>{item.punctualityMark}</Text>
+                        </View>
+
+                    </View>
+
+                )}
+                ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+            /> */}
+                        {/* <FlatList
+                data={selectedEvent.attendance.map((atten) => atten)}
+                // keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <View style={{ flexDirection: 'row', marginLeft: 220 }}>
+                        <Text style={{ color: 'green' }}>{item.mode} |</Text><Text style={{ color: 'blue' }} > {item.punctualityMark}</Text>
+
+                    </View>
+
+                )}
+                ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+            /> */}
+
+
+
+                        <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginBottom: 50 }}>Comments</Text>
+                        <View style={{ marginTop: 200 }}>
+                            <View style={STYLES.cardcomment}>
+                                <ScrollView>
+                                    {commentData.map((comment, index) => (
+                                        <View key={comment.id}>
+                                            <Text style={{ marginLeft: 28, color: 'black' }}>{comment.name}</Text>
+                                            <Text style={{ marginLeft: 48 }}>{comment.comment}</Text>
+                                        </View>
+                                    ))}
+                                    {/* {showComments && (
+                    <View>
+                        <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 48, color: 'black' }}>Comments</Text>
+                        {commentData.map((comment, index) => (
+                            <View key={comment.id}>
+                                <Text style={{ marginLeft: 58, color: 'black' }}>{comment.name}</Text>
+                                <Text style={{ marginLeft: 68 }}>{comment.comment}</Text>
+                            </View>
+                        ))}
+                    </View>
+                )} */}
+                                </ScrollView>
+                            </View>
+                            <TextInput
+                                placeholder="Enter your comment"
+                                style={STYLES.postinput}
+                                value={commentText}
+                                onChangeText={(text) => setCommentText(text)} />
+                            {/* <TouchableOpacity onPress={pickAttachment}> */}
+                            <Image style={{ width: 23, position: 'absolute', height: 27, marginLeft: 320, marginTop: 10 }} source={require('../assets/attachment.png')} />
+                            {/* </TouchableOpacity> */}
+                            <TouchableOpacity>
+                                <Text onPress={postComment} style={{ marginTop: -90, fontSize: 17, color: 'blue', marginLeft: 360 }}>post</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                )}
+            </Modal>
         </SafeAreaView >
 
     )

@@ -66,12 +66,13 @@ const STYLES = StyleSheet.create({
         flexDirection: 'row',
     },
     card: {
-        height: 200,
+        height: 220,
         width: 360,
-        marginLeft: 17,
-        marginTop: 20,
+        marginLeft: 27,
+        marginTop: 40,
+        marginBottom: 20,
         borderRadius: 25,
-        elevation: 13,
+        elevation: 9,
         backgroundColor: COLORS.white,
     },
     cardcomment: {
@@ -114,7 +115,7 @@ const STYLES = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         height: '50',
-        width: '76%',
+        width: '70%',
         borderRadius: 6,
         marginLeft: 15,
         marginBottom: 50
@@ -185,7 +186,8 @@ const STYLES = StyleSheet.create({
         borderBottomColor: 'gray',
         width: '90%',
         marginLeft: 20,
-        marginTop: 5
+        marginTop: 5,
+        backgroundColor: 'white'
 
 
     },
@@ -246,7 +248,7 @@ const STYLES = StyleSheet.create({
         width: '50%',
         borderWidth: 1,
         height: 42,
-        marginLeft: 20, borderRadius: 10,
+        marginLeft: 40, borderRadius: 10,
         backgroundColor: COLORS.light
     },
 

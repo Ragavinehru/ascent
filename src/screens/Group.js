@@ -65,6 +65,7 @@ const Group = () => {
         </TouchableOpacity>
         <Text style={{ marginTop: -35, marginLeft: 94, fontSize: 15, }}> {groupdata.groupInfo ? `Owner: ${groupdata.groupInfo.owner.name}` : ''}
         </Text>
+        {/* <Text>members</Text> */}
 
       </View>
 
