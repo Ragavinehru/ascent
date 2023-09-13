@@ -25,15 +25,21 @@ import { Navigation } from 'react-native-navigation';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import DatePicker from 'react-native-datepicker';
+import { Picker } from '@react-native-picker/picker';
 
 const Profile = ({ navigation }) => {
     const [textValue, setTextvalue] = useState('');
     const [mobile, setMobile] = useState('');
     const [bloodgroup, setBloodgroup] = useState('');
-    // const [Emergencycon, setemergencycon] = useState('');
-    // const [number, setemergencynum] = useState('');
-    // const [marital, setMarital] = useState('');
-    // const [spouse, setSpouse] = useState('');
+    const [sex, setSex] = useState('');
+    const [Emergencycon, setemergencycon] = useState('');
+    const [number, setemergencynum] = useState('');
+    const [child, setChild] = useState('');
+    const [spouse, setSpouse] = useState('');
+    const [wedding, setWedd] = useState('');
+    const [marital, setMarital] = useState('');
+    const [childrenData, setChildrenData] = useState([]);
+
     // // const [selectedDate, setSelectedDate] = useState(new Date());
     // const [company, setcompany] = useState('');
 
@@ -42,7 +48,7 @@ const Profile = ({ navigation }) => {
 
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
-
+    const [selectedValue, setSelectedValue] = useState('');
     const showDatepicker = () => {
         setShowDatePicker(true);
     };
@@ -74,26 +80,40 @@ const Profile = ({ navigation }) => {
         result = await result.json();
         console.log("profileeeeeee", result);
         setData(result);
+        const userInfo = data.userInfo;
+        setTextvalue(userInfo.name);
+        setMobile(userInfo.mobileno);
+        setBloodgroup(userInfo.bloodgroup);
+        setDob(userInfo.dob);
+        setemergencycon(userInfo.emergencycontact.name);
+        setemergencynum(userInfo.emergencycontact.mobileno);
+        setSpouse(userInfo.spouse);
+        setChild(userInfo.children.name);
+        setWedd(userInfo.weddingann);
+        setMarital(userInfo.maritalStatus);
+        setChildrenData(userInfo.children);
+        // setSex(userInfo.sex);
+
 
 
     };
     // console.log("data postedddd", data.userInfo.name)
     // console.log("name", data.userInfo.name)
     useEffect(() => {
-        if (data.userInfo) {
-            setTextvalue(data.userInfo.name);
-            setMobile(data.userInfo.mobileno);
-            setBloodgroup(data.userInfo.bloodgroup);
-            // setemergencycon(data.userInfo.emergencycontact.name);
-            // setemergencynum(data.userInfo.emergencycontact.mobileno);
-            // setSelectedDate(new Date(data.userInfo.dob));
-            // setMarital(data.userInfo.marital);
-            // setSpouse(data.userInfo.spouse);
-            // setcompany(data.userInfo);
-            // setDob(data.userInfo.dob);
-            // setemergencycon(data.userInfo.Emergencycon.name);
+        // if (data.userInfo) {
+        //     setTextvalue(data.userInfo.name);
+        //     setMobile(data.userInfo.mobileno);
+        //     setBloodgroup(data.userInfo.bloodgroup);
+        // setemergencycon(data.userInfo.emergencycontact.name);
+        // setemergencynum(data.userInfo.emergencycontact.mobileno);
+        // setSelectedDate(new Date(data.userInfo.dob));
+        // setMarital(data.userInfo.marital);
+        // setSpouse(data.userInfo.spouse);
+        // setcompany(data.userInfo);
+        // setDob(data.userInfo.dob);
+        // setemergencycon(data.userInfo.Emergencycon.name);
+        // }
 
-        }
         Mydata();
     }, []);
     // const fetchpostdata = async () => {
@@ -167,7 +187,7 @@ const Profile = ({ navigation }) => {
 
 
                         <TextInput
-                            // value={textValue}
+                            value={sex}
                             onChangeText={text => setTextvalue(text)}
                             style={STYLES.sidebox} />
                     </View>
@@ -188,23 +208,33 @@ const Profile = ({ navigation }) => {
                     )}
                     <Text style={STYLES.texttitle}>Emergency Contact:</Text>
                     <TextInput
-                        // value={Emergencycon}
+                        value={Emergencycon}
                         onChangeText={text => setemergencycon(text)}
                         style={STYLES.textinput} />
                     <Text style={STYLES.texttitle}>Emergency Contact Number:</Text>
                     <TextInput
-                        // value={number}
+                        value={number}
                         onChangeText={text => setemergencynum(text)}
                         style={STYLES.textinput} />
+                    {/* <Picker
+                        selectedValue={selectedValue}
+                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                    >
+                        <Picker.Item label="Option 1" value="Option 1" />
+                        <Picker.Item label="Option 2" value="Option 2" />
+
+                      
+                    </Picker> */}
                     <Text style={STYLES.texttitle}>Marital Status</Text>
                     <TextInput
-                        // value={marital}
+                        value={marital}
+                        // value={selectedValue}
                         onChangeText={text => setMarital(text)}
                         style={STYLES.textinput} />
                     <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Family Info</Text>
                     <Text style={STYLES.texttitle}>Spouse Name</Text>
                     <TextInput
-                        // value={spouse.name}
+                        value={spouse.name}
                         onChangeText={text => setSpouse(text)}
                         style={STYLES.textinput} />
                     <View stye={{ flexDirection: 'row' }}>
@@ -212,18 +242,19 @@ const Profile = ({ navigation }) => {
                         <Text style={{ marginLeft: 15, marginTop: 7 }}>Spouse DOB</Text>
                         <Text style={STYLES.gender}>Wedding Anniversary</Text>
                         <TextInput
-                            // value={spouse.dob}
+                            value={spouse.dob}
                             onChangeText={text => setSpouse(text)}
                             style={STYLES.smallinput} />
                         <TextInput
-                            value={textValue}
+                            value={wedding}
                             onChangeText={text => setTextvalue(text)}
                             style={STYLES.sidebox} />
 
                         <Text style={{ fontSize: 15, marginTop: 10, marginLeft: 10 }}>Children Info</Text>
+
                         <Text style={STYLES.texttitle}>Child 1 Name*</Text>
                         <TextInput
-                            // value={mobile}
+                            // value={child}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>

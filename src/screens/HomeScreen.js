@@ -271,7 +271,7 @@ const HomeScreen = () => {
                         imageLoadingColor="black"
                         autoplay={true}
                         autoplayInterval={3000}
-                        circleLoop={true}
+                        // circleLoop={true}
                         onCurrentImagePressed={(index) => Alert(index + 1)}
                         firstItem={4}
                         paginationBoxVerticalPadding={20}
