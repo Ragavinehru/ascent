@@ -46,6 +46,18 @@ const STYLES = StyleSheet.create({
         marginLeft: 220,
         // position: ''
     },
+    newgroup: {
+        borderWidth: 1,
+        padding: 10,
+        color: "black",
+        backgroundColor: COLORS.light,
+        borderRadius: 10,
+        marginTop: -110,
+        marginRight: -40,
+        marginLeft: 90,
+        position: 'absolute',
+        // marginBottom: -100
+    },
     text: {
         borderWidth: 1,
         padding: 10,

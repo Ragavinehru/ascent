@@ -102,6 +102,8 @@ const HomeScreen = () => {
             const userDataResult = await userResponse.json();
             // console.log("user info", userDataResult);
             setUserData(userDataResult);
+            // const groupData = userData.userInfo.groups;
+            // console.log("group", groupData);
 
             if (userDataResult.userInfo) {
                 const groupIds = userDataResult.userInfo.groups;
@@ -118,7 +120,7 @@ const HomeScreen = () => {
                     body: JSON.stringify(eventRequestBody)
                 });
                 const eventResult = await eventResponse.json();
-                // console.log("events", eventResult);
+                console.log("events", eventResult);
                 setEventData(eventResult);
                 //
                 if (eventResult.events) {

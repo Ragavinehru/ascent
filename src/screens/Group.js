@@ -4,7 +4,7 @@ import {
   View,
   Text,
   Image, TouchableOpacity,
-  Button,
+  Button, TouchableHighlight, Modal, TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/color';
@@ -12,24 +12,44 @@ import { ScrollView } from 'react-native-gesture-handler';
 import STYLES from '../styles';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+
 
 
 const Group = () => {
+  // const route = useRoute();
+  // const groupData = route.params?.groupData || [];
+  // console.log("id id id 7777", groupData);
+
   const navigation = useNavigation();
   const [groupdata, setGroupData] = useState({});
+  const [newgroup, setgroup] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchUserData = async () => {
     try {
-      const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getGroupInfo?groupId=PjIK87LDBDc5quWz76Ct';
-      const response = await fetch(url, {
+      const userResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         }
       });
+      const userDataResult = await userResponse.json();
+      // console.log("userdata result++++++++++++++++++", userDataResult);
+      const groupIds = userDataResult.userInfo.groups;
+      console.log("groups", groupIds);
+
+      const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getGroups';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(groupIds)
+      });
       const result = await response.json();
-      console.log(" Groupinfo", result);
+      console.log(" Groupinfo______", result);
       setGroupData(result);
       setLoading(false);
     } catch (error) {
@@ -60,6 +80,13 @@ const Group = () => {
       <View>
         <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 20, color: 'black' }}>Your Groups</Text>
         <Image style={{ width: 45, height: 45, marginTop: 30, marginBottom: 10, marginLeft: 30 }} source={require('../assets/group.png')} />
+        <View style={STYLES.btnSecondary}>
+          <TouchableHighlight style={{}} onPress={() => { setgroup(true); }}>
+            <Text style={STYLES.newgroup}>
+              + New Group
+            </Text>
+          </TouchableHighlight>
+        </View>
         <TouchableOpacity onPress={navigateToClearGroup}>
           <Text style={{ marginTop: -60, marginLeft: 89, fontSize: 17, color: 'blue' }} >  {groupdata.groupInfo ? groupdata.groupInfo.name : ''}</Text>
         </TouchableOpacity>
@@ -68,7 +95,32 @@ const Group = () => {
         {/* <Text>members</Text> */}
 
       </View>
+      <Modal visible={newgroup} transparent={true} animationType="slide" onRequestClose={() => setgroup(false)}  >
+        <View style={{
+          justifyContent: 'center', marginTop: 80,
+          alignItems: 'center',
+          backgroundColor: '#fff5ee',
+          borderRadius: 30,
+          // margin: 120,
+          marginLeft: 70,
+          padding: 80, width: '70%'
+        }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 22, width: 200 }}>Create new Group</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 15, width: 260, marginBottom: 30 }}>Be more Organized.Be more Focused.</Text>
 
+          <TextInput style={STYLES.searchinput} placeholder='Group Name *'></TextInput>
+          <View style={STYLES.space}></View>
+          <TextInput style={STYLES.searchinput} placeholder='Description*'></TextInput>
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => setgroup(false)} style={{ marginTop: 10 }}>
+              <Text style={{ color: 'red', marginTop: 10 }}>Cancel</Text>
+            </TouchableOpacity>
+            <Text style={{ fontWeight: 'bold', fontSize: 13, color: 'blue', marginTop: 20, marginLeft: 10 }}>Create Group</Text>
+          </View>
+
+        </View>
+
+      </Modal>
     </SafeAreaView>
   )
 };
