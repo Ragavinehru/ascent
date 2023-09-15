@@ -52,7 +52,7 @@ const STYLES = StyleSheet.create({
         color: "black",
         backgroundColor: COLORS.light,
         borderRadius: 10,
-        marginTop: -110,
+        marginTop: -100,
         marginRight: -40,
         marginLeft: 90,
         position: 'absolute',

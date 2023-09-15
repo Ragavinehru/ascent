@@ -19,7 +19,7 @@ import Goals from "./src/screens/Goals";
 import NewEvent from "./src/screens/NewEvent";
 import { User, onAuthStateChanged } from 'firebase/auth';
 // import firebaseConfig from "./src/firebase/firebaseConfig";
-import Cleargroup from "./src/screens/Cleargroup";
+import GroupInfo from "./src/screens/GroupInfo";
 
 
 
@@ -77,7 +77,7 @@ const App = () => {
         <Stack.Screen name="Atten" component={Attendance} />
         <Stack.Screen name="Group" component={Group} />
         <Stack.Screen name="NewEvent" component={NewEvent} />
-        <Stack.Screen name="cleargroup" component={Cleargroup} />
+        <Stack.Screen name="groupinfo" component={GroupInfo} />
 
 
       </Stack.Navigator>

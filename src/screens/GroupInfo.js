@@ -14,24 +14,64 @@ import { useState, useEffect, useRef } from 'react';
 // import { useNavigation } from '@react-navigation/native';
 
 
-const ClearGroup = ({ navigation, route }) => {
+const GroupInfo = ({ navigation, route }) => {
     // const navigation = useNavigation();
-    const groupdata = route.params.groupdata;
-    const membersData = groupdata.groupInfo.members;
+    const [groupInfo, setGroupInfo] = useState({});
+    const groupId = route.params.groupId;
+    console.log("groups hangd data", groupId);
+    // const membersData = groupdata.groups.members;
+    // console.log("{}{}{}{}{}", membersData);
+    const fetchGroupData = async () => {
+
+        try {
+            const url = `https://walrus-app-v5mk9.ondigitalocean.app/getGroupInfo?groupId=${groupId}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+
+            });
+            const result = await response.json();
+            console.log(" Groupinfo______", result);
+            setGroupInfo(result);
+
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+    useEffect(() => {
+        fetchGroupData();
+    }, []);
+    // console.log("groupId:", groupId);
+    // console.log("GroupInfo result:", groupInfo);
+
+
+    // const membersArray = [];
+    // groupdata.groups.forEach(group => {
+    //     if (group.members && Array.isArray(group.members)) {
+    //         group.members.forEach(member => {
+    //             membersArray.push(member);
+    //             // console.log("Member:", member);
+    //         });
+    //     }
+    // });
+    // console.log("_________________________", groupdata.groups.id);
+    // console.log("{", membersData);_
     const [show, setState] = useState(false);
     const [dots, setDots] = useState(false);
     const [newuser, setUser] = useState(false);
     const [search, SetSearch] = useState('');
-    const [filteredMembers, setFilteredMembers] = useState(membersData);
+    const [filteredMembers, setFilteredMembers] = useState(groupInfo);
 
     // const [olddata, setoldData] = useState([]);
     const searchRef = useRef();
     const [selectedMember, setSelectedMember] = useState(null);
-    console.log("members log", membersData);
-
-    //search filter
+    // console.log("members log", membersData);
+    // search filter
     const filterMembersByName = (query) => {
-        const filtered = membersData.filter((member) =>
+        const filtered = membersArray.filter((member) =>
             member.name.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredMembers(filtered);
@@ -68,7 +108,7 @@ const ClearGroup = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
 
-            <Text style={{ marginTop: 20, marginLeft: 10, fontSize: 27, color: 'black' }}> {groupdata.groupInfo ? groupdata.groupInfo.name : ''}</Text>
+            {/* <Text style={{ marginTop: 20, marginLeft: 10, fontSize: 27, color: 'black' }}> {groupdata.groups.name}</Text> */}
             <View style={STYLES.search}>
                 {/* <Icon name="search" size={28} /> */}
                 <Image style={STYLES.searchimg} source={require('../assets/search.png')} />
@@ -107,7 +147,7 @@ const ClearGroup = ({ navigation, route }) => {
             // Render each member using the custom MemberItem component
             />
             <View>
-                <Text style={{ color: 'black', fontSize: 17, marginLeft: 20, marginBottom: 50 }}>Invited Members:   {groupdata.groupInfo ? groupdata.groupInfo.invitedMembers : ''}</Text>
+                <Text style={{ color: 'black', fontSize: 17, marginLeft: 20, marginBottom: 50 }}>Invited Members: </Text>
             </View>
             <Modal visible={show} transparent={true} animationType="slide" onRequestClose={() => setState(false)}>
 
@@ -117,11 +157,7 @@ const ClearGroup = ({ navigation, route }) => {
                     alignItems: 'center',
                 }}>
                     <View style={{ backgroundColor: '#fff5ee', borderRadius: 30, margin: 90, padding: 40 }}>
-                        {/* <Text >{membersData.name}uuuuu</Text> */}
-                        {/* <Image
-              source={{ uri: selectedMember?.profileImage }} // Replace with the member's profile image URL
-              style={STYLES.profileImage}
-            /> */}
+
                         <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>{selectedMember?.name}|{selectedMember?.company}</Text>
 
                         <Text> Mobile: {selectedMember?.mobileno}</Text>
@@ -171,4 +207,4 @@ const ClearGroup = ({ navigation, route }) => {
         </SafeAreaView>
     )
 };
-export default ClearGroup;
+export default GroupInfo;

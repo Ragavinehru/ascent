@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/color';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import STYLES from '../styles';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -25,6 +25,8 @@ const Group = () => {
   const [groupdata, setGroupData] = useState({});
   const [newgroup, setgroup] = useState(false);
   const [loading, setLoading] = useState(true);
+
+
   const fetchUserData = async () => {
     try {
       const userResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email, {
@@ -46,11 +48,12 @@ const Group = () => {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(groupIds)
+        body: JSON.stringify({ groupIds })
       });
       const result = await response.json();
       console.log(" Groupinfo______", result);
       setGroupData(result);
+      console.log("name:", groupdata);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -60,8 +63,8 @@ const Group = () => {
     fetchUserData();
   }, []);
 
-  const navigateToClearGroup = () => {
-    navigation.navigate('cleargroup', { groupdata });
+  const navigateToClearGroup = (groupId) => {
+    navigation.navigate('groupinfo', { groupId });
   };
   // const memberCount = groupdata.groupInfo.members.length;
   // console.log("test", memberCount)
@@ -79,7 +82,7 @@ const Group = () => {
       {/* groups */}
       <View>
         <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 20, color: 'black' }}>Your Groups</Text>
-        <Image style={{ width: 45, height: 45, marginTop: 30, marginBottom: 10, marginLeft: 30 }} source={require('../assets/group.png')} />
+
         <View style={STYLES.btnSecondary}>
           <TouchableHighlight style={{}} onPress={() => { setgroup(true); }}>
             <Text style={STYLES.newgroup}>
@@ -87,13 +90,26 @@ const Group = () => {
             </Text>
           </TouchableHighlight>
         </View>
-        <TouchableOpacity onPress={navigateToClearGroup}>
-          <Text style={{ marginTop: -60, marginLeft: 89, fontSize: 17, color: 'blue' }} >  {groupdata.groupInfo ? groupdata.groupInfo.name : ''}</Text>
-        </TouchableOpacity>
-        <Text style={{ marginTop: -35, marginLeft: 94, fontSize: 15, }}> {groupdata.groupInfo ? `Owner: ${groupdata.groupInfo.owner.name}` : ''}
-        </Text>
-        {/* <Text>members</Text> */}
-
+        <View>
+          {/* <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 20, color: 'black' }}>Your Groups</Text> */}
+          {/* ... */}
+          <FlatList
+            data={groupdata.groups} // Use the groups array for the data source
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View>
+                <Image style={{ width: 45, height: 45, marginTop: 30, marginBottom: 10, marginLeft: 30 }} source={require('../assets/group.png')} />
+                <TouchableOpacity onPress={navigateToClearGroup}>
+                  <Text style={{ marginTop: -60, marginLeft: 89, fontSize: 17, color: 'blue' }} >{item.name}</Text>
+                </TouchableOpacity>
+                <Text style={{ marginTop: -35, marginLeft: 94, fontSize: 15, }}> {item.createdon}</Text>
+                {/* Display owner information here */}
+                {/* Assuming you have access to owner data in the group object */}
+                {/* <Text style={{ marginTop: 10, marginLeft: 94, fontSize: 15, }}> Owner: {item.owner[0]}</Text> */}
+              </View>
+            )}
+          />
+        </View>
       </View>
       <Modal visible={newgroup} transparent={true} animationType="slide" onRequestClose={() => setgroup(false)}  >
         <View style={{

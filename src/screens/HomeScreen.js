@@ -214,7 +214,6 @@ const HomeScreen = () => {
     const eventsarray = eventData.events;
     // console.log("commented`````````````````````", commentData)
 
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <ScrollView>
