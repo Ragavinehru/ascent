@@ -6,7 +6,7 @@ import {
     Image, TouchableOpacity, TouchableHighlight,
     Button, FlatList, Modal
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/color';
 // import { ScrollView } from 'react-native-gesture-handler';
 import STYLES from '../styles';
@@ -16,8 +16,9 @@ import { useState, useEffect, useRef } from 'react';
 
 const GroupInfo = ({ navigation, route }) => {
     // const navigation = useNavigation();
-    const [groupInfo, setGroupInfo] = useState({});
-   
+    const [groupInfo, setGroupInfo] = useState([]);
+    const [role, setRole] = useState([]);
+
     const groupId = route.params.groupId;
     console.log("groups hangd data", groupId);
     // const membersData = groupdata.groups.members;
@@ -25,7 +26,7 @@ const GroupInfo = ({ navigation, route }) => {
     const fetchGroupData = async () => {
 
         try {
-            const url = `https://walrus-app-v5mk9.ondigitalocean.app/getGroupInfo?groupId=PjIK87LDBDc5quWz76Ct`;
+            const url = `https://walrus-app-v5mk9.ondigitalocean.app/getGroupInfo?groupId=${groupId}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -35,9 +36,10 @@ const GroupInfo = ({ navigation, route }) => {
 
             });
             const result = await response.json();
-            console.log(" Groupinfo______", result.members);
-            setGroupInfo(result);
-           
+            console.log(" Groupinfo______", result);
+            setGroupInfo(result.groupInfo);
+
+
         } catch (error) {
             console.error('Error fetching user data:', error);
         }
@@ -45,22 +47,45 @@ const GroupInfo = ({ navigation, route }) => {
     useEffect(() => {
         fetchGroupData();
     }, []);
-    // console.log("groupId:", groupId);
-    // console.log("GroupInfo result:", groupInfo);
+    const updateRole = async (newRole, email, groupId) => {
+        try {
+            const url = `https://walrus-app-v5mk9.ondigitalocean.app/updateRole`;
+            const body = JSON.stringify({ role: newRole, email, groupId });
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: body
+            });
+            const result = await response.json();
+            console.log("Role updated:", result);
+            console.log("Role updated:", newRole);
 
+            // Update the user's role in the local state (groupInfo.members) here.
+            // Find the member by their email and update their role.
+            const updatedMembers = groupInfo.members.map((member) => {
+                if (member.email === email) {
+                    // Update the role of the member
+                    return { ...member, role: newRole };
+                }
+                return member;
+            });
 
-    // const membersArray = [];
-    // groupdata.groups.forEach(group => {
-    //     if (group.members && Array.isArray(group.members)) {
-    //         group.members.forEach(member => {
-    //             membersArray.push(member);
-    //             // console.log("Member:", member);
-    //         });
-    //     }
-    // });
-    // console.log("_________________________", groupdata.groups.id);
-    // console.log("{", membersData);_
-    const [show, setState] = useState(false);
+            // Set the updated members array in your local state
+            setGroupInfo({ ...groupInfo, members: updatedMembers });
+            console.log("kkkkkkkk", updatedMembers);
+            // Close the role selection modal
+            setDots(false);
+        } catch (error) {
+            console.error('Error updating role:', error);
+            // Handle errors here.
+        }
+    };
+
+    console.log("message", groupInfo);
+    const [show, setShow] = useState(false);
     const [dots, setDots] = useState(false);
     const [newuser, setUser] = useState(false);
     const [search, SetSearch] = useState('');
@@ -68,11 +93,11 @@ const GroupInfo = ({ navigation, route }) => {
 
     // const [olddata, setoldData] = useState([]);
     const searchRef = useRef();
-    const [selectedMember, setSelectedMember] = useState(null);
+    const [selectedMember, setSelectedMember] = useState([]);
     // console.log("members log", membersData);
     // search filter
     const filterMembersByName = (query) => {
-        const filtered = membersArray.filter((member) =>
+        const filtered = groupInfo.members.filter((member) =>
             member.name.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredMembers(filtered);
@@ -85,21 +110,24 @@ const GroupInfo = ({ navigation, route }) => {
 
             <Text style={STYLES.cellname} onPress={() => {
                 setSelectedMember(member);
-                setState(true);
+                setShow(true);
+                // setState(true);
             }}>{member.name}</Text>
 
             <Text style={STYLES.cell}>{member.company}</Text>
             <Text style={STYLES.cell}>{member.role}</Text>
             <Text style={STYLES.cell}>{member.email}</Text>
             <Text style={STYLES.cellstatus}>{member.status}</Text>
-            <TouchableOpacity onPress={() => { setDots(true); }}>
+            <TouchableOpacity onPress={() => setDots(true)}>
                 <Image style={{ marginRight: -17, width: 20, height: 20 }} source={require('../assets/threedots.png')} />
             </TouchableOpacity>
+
         </View>
     );
     //   const HeaderCells = () => (
 
     //   );
+    // console.log("memberssssss", groupInfo.groupInfo)
     return (
         <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
             <View style={STYLES.header}>
@@ -141,6 +169,7 @@ const GroupInfo = ({ navigation, route }) => {
                 <Text style={STYLES.headerCell}>Email</Text>
                 <Text style={STYLES.headerCell}>Status</Text>
             </View>
+
             <FlatList
                 data={groupInfo.members}
                 keyExtractor={(item, index) => index.toString()}
@@ -148,7 +177,9 @@ const GroupInfo = ({ navigation, route }) => {
             // Render each member using the custom MemberItem component
             />
             <View>
-                <Text style={{ color: 'black', fontSize: 17, marginLeft: 20, marginBottom: 50 }}>Invited Members: </Text>
+                <Text style={{ color: 'blue', fontSize: 17, marginLeft: 10, marginTop: -60, position: 'absolute' }}>  Invited Members:
+                </Text>
+                <Text style={{ color: 'black', fontSize: 15, marginLeft: 20, marginTop: -40 }}>{groupInfo.invitedMembers}</Text>
             </View>
             <Modal visible={show} transparent={true} animationType="slide" onRequestClose={() => setState(false)}>
 
@@ -167,28 +198,57 @@ const GroupInfo = ({ navigation, route }) => {
                         <Text> Bloodgroup: {selectedMember?.bloodgroup}</Text>
                         <Text> Birthday: {selectedMember?.dob}</Text>
                         <TouchableOpacity style={{ marginTop: 20 }}>
-                            <Button title="close" color="red" onPress={() => setState(false)} ></Button>
+                            <Button title="close" color="red" onPress={() => setShow(false)} ></Button>
                         </TouchableOpacity>
+
                     </View>
                 </View>
 
             </Modal>
-            <Modal visible={dots} transparent={true} animationType="slide" onRequestClose={() => setDots(false)}>
+            <Modal visible={dots} transparent={true} animationType="slide">
                 <View style={{ backgroundColor: '#fff5ee', borderRadius: 30, margin: 20, padding: 30, position: 'absolute', top: 230, left: 170, justifyContent: 'flex-start', alignItems: 'center' }}>
                     <Image style={{ width: 15, height: 15, marginTop: 20, marginLeft: -130 }} source={require('../assets/pencil.png')} />
-                    <Text style={{ marginTop: -17 }}>  Make Facilitator</Text>
+                    <TouchableOpacity>
+                        <Text style={{ marginTop: -17 }} onPress={() => updateRole('Facilitator', selectedMember.email, groupId)}>  Make Facilitator</Text>
+                    </TouchableOpacity>
                     <Image style={{ width: 15, height: 15, marginLeft: -130, marginTop: 10 }} source={require('../assets/pencil.png')} />
-                    <Text style={{ marginTop: -17 }}> Make Member</Text>
+                    <TouchableOpacity>
+                        <Text style={{ marginTop: -17 }} onPress={() => updateRole('Member', selectedMember.email, groupId)}> Make Member</Text>
+                    </TouchableOpacity>
                     <Image style={{ width: 15, height: 15, marginLeft: -130, marginTop: 10, }} source={require('../assets/pencil.png')} />
-                    <Text style={{ marginTop: -17, marginLeft: 10 }}>   Make CoFacilitator</Text>
+                    <TouchableOpacity>
+                        <Text style={{ marginTop: -17, marginLeft: 10 }} onPress={() => updateRole('CoFacilitator', selectedMember.email, groupId)}>   Make CoFacilitator</Text>
+                    </TouchableOpacity>
                     <Image style={{ width: 15, height: 15, marginLeft: -130, marginTop: 10, }} source={require('../assets/delete.png')} />
                     <Text style={{ marginTop: -17, marginLeft: -55 }}>Delete</Text>
                     <TouchableOpacity onPress={() => setDots(false)} style={{ marginTop: 10 }}>
                         <Text style={{ color: 'red', marginTop: 10 }}>Close</Text>
                     </TouchableOpacity>
-
                 </View>
             </Modal>
+
+            {/* <Modal visible={dots} transparent={true} animationType="slide">
+
+                <View style={{ backgroundColor: '#fff5ee', borderRadius: 30, margin: 20, padding: 30, position: 'absolute', top: 230, left: 170, justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <Text>Select Role:</Text>
+                    <TouchableOpacity onPress={() => updateRole('Facilitator', selectedMember.email, groupId)}>
+                        <Text>Facilitator</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => updateRole('Member', selectedMember.email, groupId)}>
+                        <Text>Member</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => updateRole('Member', selectedMember.email, groupId)}>
+                        <Text>CoFacilitator</Text>
+                    </TouchableOpacity>
+                    {/* Add other role options as needed */}
+            {/* <TouchableOpacity onPress={() => setDots(false)} style={{ marginTop: 10 }}>
+                        <Text style={{ color: 'red', marginTop: 10 }}>Close</Text>
+                    </TouchableOpacity>
+
+                </View>
+            </Modal> */}
+
+
             <Modal visible={newuser} transparent={true} animationType="slide" onRequestClose={() => setUser(false)}>
                 <View style={{
                     justifyContent: 'center', marginTop: 80, alignItems: 'center', backgroundColor: '#fff5ee', borderRadius: 30, margin: 120, padding: 40
@@ -205,7 +265,7 @@ const GroupInfo = ({ navigation, route }) => {
                 </View>
 
             </Modal>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 };
 export default GroupInfo;

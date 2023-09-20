@@ -142,7 +142,7 @@ const HomeScreen = () => {
                         });
                         const commentResult = await commentResponse.json();
 
-                        console.log("value", commentResult);
+                        console.log("value1234", commentResult);
 
                         allComments.push(...commentResult.comments);
                         setCommentData(allComments);
@@ -309,6 +309,15 @@ const HomeScreen = () => {
                                             <View key={comment.id}>
                                                 <Text style={{ marginLeft: 58, color: 'black' }}>{comment.name}</Text>
                                                 <Text style={{ marginLeft: 68 }}>{comment.comment}</Text>
+                                                {comment.attachmentName && (
+                                                    <View>
+                                                        <Image
+                                                            style={{ width: 30, height: 30, marginLeft: 170, marginTop: -30 }} // You can adjust the image dimensions
+                                                            source={{ uri: comment.attachmentUrl }}
+                                                        />
+
+                                                    </View>
+                                                )}
                                             </View>
                                         ))}
                                     </View>
@@ -432,19 +441,18 @@ const HomeScreen = () => {
                                         <View key={comment.id}>
                                             <Text style={{ marginLeft: 28, color: 'black' }}>{comment.name}</Text>
                                             <Text style={{ marginLeft: 48 }}>{comment.comment}</Text>
+
+                                            {comment.attachmentName && (
+                                                <View>
+                                                    <Image
+                                                        style={{ width: 30, height: 30, marginLeft: 170, marginTop: -30 }} // You can adjust the image dimensions
+                                                        source={{ uri: comment.attachmentUrl }}
+                                                    />
+
+                                                </View>
+                                            )}
                                         </View>
                                     ))}
-                                    {/* {showComments && (
-                    <View>
-                        <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 48, color: 'black' }}>Comments</Text>
-                        {commentData.map((comment, index) => (
-                            <View key={comment.id}>
-                                <Text style={{ marginLeft: 58, color: 'black' }}>{comment.name}</Text>
-                                <Text style={{ marginLeft: 68 }}>{comment.comment}</Text>
-                            </View>
-                        ))}
-                    </View>
-                )} */}
                                 </ScrollView>
                             </View>
                             <TextInput
