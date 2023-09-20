@@ -46,6 +46,17 @@ const STYLES = StyleSheet.create({
         marginLeft: 220,
         // position: ''
     },
+    newgoal: {
+        borderWidth: 1,
+        padding: 10,
+        color: "black",
+        backgroundColor: COLORS.light,
+        borderRadius: 10,
+        marginTop: -30,
+        marginRight: -40,
+        marginLeft: 200,
+        // position: ''
+    },
     newgroup: {
         borderWidth: 1,
         padding: 10,
@@ -81,6 +92,16 @@ const STYLES = StyleSheet.create({
         height: 220,
         width: 360,
         marginLeft: 17,
+        marginTop: 40,
+        marginBottom: 20,
+        borderRadius: 25,
+        elevation: 9,
+        backgroundColor: COLORS.white,
+    },
+    cardgoal: {
+        height: 150,
+        width: 330,
+        marginLeft:9,
         marginTop: 40,
         marginBottom: 20,
         borderRadius: 25,
@@ -123,6 +144,27 @@ const STYLES = StyleSheet.create({
         borderRadius: 6,
         marginLeft: 15
     },
+    goalinput:{
+        borderWidth: 1,
+        borderColor: 'black',
+        height: '100',
+        width: '90%', paddingBottom: 1,
+        borderRadius: 6,
+        marginLeft: 15
+    },
+    // modalContainer: {
+    //     flex: 1,
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //   },
+    //   closeButton: {
+    //     // position: 'absolute',
+    //     top: 10,
+    //     // right: 10,
+    //     color: 'red',
+    //     // padding: 10,
+    //     borderRadius: 5,
+    //   },
     postinput: {
         borderWidth: 1,
         borderColor: 'black',

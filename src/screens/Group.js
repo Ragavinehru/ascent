@@ -51,7 +51,7 @@ const Group = () => {
         body: JSON.stringify({ groupIds })
       });
       const result = await response.json();
-      console.log(" Groupinfo______", result);
+      console.log(" result groups", result);
       setGroupData(result);
       console.log("name:", groupdata);
       setLoading(false);
@@ -99,10 +99,10 @@ const Group = () => {
             renderItem={({ item }) => (
               <View>
                 <Image style={{ width: 45, height: 45, marginTop: 30, marginBottom: 10, marginLeft: 30 }} source={require('../assets/group.png')} />
-                <TouchableOpacity onPress={navigateToClearGroup}>
+                <TouchableOpacity onPress={() => navigateToClearGroup(item.id)}>
                   <Text style={{ marginTop: -60, marginLeft: 89, fontSize: 17, color: 'blue' }} >{item.name}</Text>
                 </TouchableOpacity>
-                <Text style={{ marginTop: -35, marginLeft: 94, fontSize: 15, }}> {item.createdon}</Text>
+                <Text style={{ marginTop: -35, marginLeft: 92, fontSize: 15, }}>{item.createdon}</Text>
                 {/* Display owner information here */}
                 {/* Assuming you have access to owner data in the group object */}
                 {/* <Text style={{ marginTop: 10, marginLeft: 94, fontSize: 15, }}> Owner: {item.owner[0]}</Text> */}

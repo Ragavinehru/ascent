@@ -17,6 +17,7 @@ import { useState, useEffect, useRef } from 'react';
 const GroupInfo = ({ navigation, route }) => {
     // const navigation = useNavigation();
     const [groupInfo, setGroupInfo] = useState({});
+   
     const groupId = route.params.groupId;
     console.log("groups hangd data", groupId);
     // const membersData = groupdata.groups.members;
@@ -24,7 +25,7 @@ const GroupInfo = ({ navigation, route }) => {
     const fetchGroupData = async () => {
 
         try {
-            const url = `https://walrus-app-v5mk9.ondigitalocean.app/getGroupInfo?groupId=${groupId}`;
+            const url = `https://walrus-app-v5mk9.ondigitalocean.app/getGroupInfo?groupId=PjIK87LDBDc5quWz76Ct`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -34,9 +35,9 @@ const GroupInfo = ({ navigation, route }) => {
 
             });
             const result = await response.json();
-            console.log(" Groupinfo______", result);
+            console.log(" Groupinfo______", result.members);
             setGroupInfo(result);
-
+           
         } catch (error) {
             console.error('Error fetching user data:', error);
         }
@@ -141,7 +142,7 @@ const GroupInfo = ({ navigation, route }) => {
                 <Text style={STYLES.headerCell}>Status</Text>
             </View>
             <FlatList
-                data={filteredMembers}
+                data={groupInfo.members}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => <MemberItem member={item} />}
             // Render each member using the custom MemberItem component
