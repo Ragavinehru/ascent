@@ -60,38 +60,66 @@ const HomeScreen = () => {
     const [commentData, setCommentData] = useState([]);
     const [commentText, setCommentText] = useState('');
     const [selectedAttachment, setSelectedAttachment] = useState(null);
+    const [showComments, setShowComments] = useState(true);
 
     const pickAttachment = async () => {
         try {
             const result = await DocumentPicker.pick({
                 type: [DocumentPicker.types.allFiles],
             });
+            console.log("result", result);
+            console.log("Result URI:", result[0].uri);
+
+
+            if (!result) {
+                console.error("DocumentPicker result is undefined.");
+                return;
+            }
 
             if (Platform.OS === 'android') {
+                if (result[0].uri) {
+                    console.log("Android URI:", result[0].uri);
+                    const realPath = await DocumentPicker.resolvePath({
+                        uri: result.uri,
+                        fileType: '*/*',
+                    });
 
-                const realPath = await DocumentPicker.resolvePath({
-                    uri: result.uri,
-                    fileType: '*/*',
-                });
-                setSelectedAttachment(realPath);
+                    console.log("Resolved Real Path:", realPath);
+
+                    if (realPath) {
+                        setSelectedAttachment(realPath);
+                        console.log("attach", realPath);
+                    } else {
+                        console.error("Real path is undefined.");
+                    }
+                } else {
+
+                    console.error("Result URI is undefined.");
+                }
             } else {
-                setSelectedAttachment(result.uri);
+                if (result.uri) {
+                    setSelectedAttachment(result[0].uri);
+                    console.log("attach", result.uri);
+                } else {
+                    console.error("Result URI is undefined.");
+                }
             }
+
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
-
+                // Handle cancelation
             } else {
+                console.error("Error picking attachment:", err);
                 throw err;
             }
         }
     };
 
 
+
     const fetchData = async () => {
         try {
-            // let api = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email;
-            // console.log("api", api)
-            // Fetch user data
+
             const userResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email, {
                 method: 'GET',
                 headers: {
@@ -135,7 +163,7 @@ const HomeScreen = () => {
                         const commentResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getComments', {
                             method: 'POST',
                             headers: {
-                                Accept: 'application/json',
+                                'Accept': 'application/json',
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(commentBody)
@@ -162,9 +190,9 @@ const HomeScreen = () => {
     useEffect(() => {
         fetchData();
     }, []);
+
     const postComment = async () => {
         if (!commentText) {
-            // Handle empty comment text
             return;
         }
 
@@ -188,31 +216,30 @@ const HomeScreen = () => {
             });
 
             if (response.ok) {
-
                 setCommentText('');
-                // Fetch the updated comments for the event if needed
+                setSelectedAttachment(null);
                 fetchComments(selectedEvent.id);
             } else {
-                // Handle error, e.g., show an error message to the user
                 console.error('Failed to post comment. Server returned:', response.status, response.statusText);
-
             }
         } catch (error) {
             console.error('Error posting comment:', error);
         }
     };
-    // console.log('commentBody:', commentBody);
+
     console.log('comment:', commentText);
 
     const navigation = useNavigation();
+
+
     const openDrawer = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
-    const [showComments, setShowComments] = useState(true);
-    // console.log('eventData:::::::::::::::::', eventData)
-    // console.log("members", eventData.events[0].members)
+
+
+
     const eventsarray = eventData.events;
-    // console.log("commented`````````````````````", commentData)
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -397,39 +424,7 @@ const HomeScreen = () => {
                             }
                             }
                         />
-                        {/* <FlatList
-                data={[...selectedEvent.members, ...selectedEvent.attendance]}
-                // keyExtractor={(item) => item.id.toString()}
-                // numColumns={1}
-                // horizontal={false}
-                renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row' }}>
 
-                        <Text style={{ fontSize: 15, marginLeft: 26, marginTop: 10 }}>{item.name}</Text>
-
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: 'green' }}>{item.mode} </Text>
-                            <Text style={{ color: 'blue' }}>{item.punctualityMark}</Text>
-                        </View>
-
-                    </View>
-
-                )}
-                ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            /> */}
-                        {/* <FlatList
-                data={selectedEvent.attendance.map((atten) => atten)}
-                // keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', marginLeft: 220 }}>
-                        <Text style={{ color: 'green' }}>{item.mode} |</Text><Text style={{ color: 'blue' }} > {item.punctualityMark}</Text>
-
-                    </View>
-
-                )}
-                ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            /> */}
 
 
 
@@ -461,10 +456,10 @@ const HomeScreen = () => {
                                 value={commentText}
                                 onChangeText={(text) => setCommentText(text)} />
                             {/* <TouchableOpacity onPress={pickAttachment}> */}
-                            <Image style={{ width: 23, position: 'absolute', height: 27, marginLeft: 320, marginTop: 10 }} source={require('../assets/attachment.png')} />
+                            <Image style={{ width: 23, height: 27, marginLeft: 20, marginTop: -90 }} source={require('../assets/attachment.png')} />
                             {/* </TouchableOpacity> */}
                             <TouchableOpacity>
-                                <Text onPress={postComment} style={{ marginTop: -90, fontSize: 17, color: 'blue', marginLeft: 360 }}>post</Text>
+                                <Text onPress={postComment} style={{ marginTop: -90, fontSize: 17, color: 'blue', marginLeft: 330 }}>post</Text>
                             </TouchableOpacity>
                         </View>
 

@@ -101,7 +101,7 @@ const STYLES = StyleSheet.create({
     cardgoal: {
         height: 150,
         width: 330,
-        marginLeft:9,
+        marginLeft: 9,
         marginTop: 40,
         marginBottom: 20,
         borderRadius: 25,
@@ -136,6 +136,14 @@ const STYLES = StyleSheet.create({
         borderRadius: 6,
         marginLeft: 15
     },
+    texttype: {
+        borderWidth: 1,
+        borderColor: 'grey',
+        // height: '17%',
+        width: '98%',
+        borderRadius: 6,
+        marginLeft: 3
+    },
     searchinput: {
         borderWidth: 1,
         borderColor: 'black',
@@ -144,7 +152,7 @@ const STYLES = StyleSheet.create({
         borderRadius: 6,
         marginLeft: 15
     },
-    goalinput:{
+    goalinput: {
         borderWidth: 1,
         borderColor: 'black',
         height: '100',
@@ -304,6 +312,17 @@ const STYLES = StyleSheet.create({
         height: 42,
         marginLeft: 40, borderRadius: 10,
         backgroundColor: COLORS.light
+    },
+    label: {
+        fontSize: 18,
+        marginBottom: 10,
+    },
+    datePicker: {
+        width: 200,
+        marginBottom: 20,
+    },
+    selectedDate: {
+        fontSize: 16,
     },
 
 })
