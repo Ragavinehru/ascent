@@ -1,83 +1,229 @@
-import React from 'react';
-import { useState } from 'react';
-import {
-    SafeAreaView,
-    View,
-    Text,
-    TextInput,
-    Image,
-    Button,
-    ToastAndroid, Alert,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-// import Icon from 'react-native-vector-icons/FontAwesome';
-import COLORS from '../consts/color';
-import STYLES from '../styles';
-import { ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
-import { Navigation } from 'react-native-navigation';
-import { Calendar } from 'react-native-calendars';
+// import React from 'react';
+// import { useState } from 'react';
+// import {
+//     SafeAreaView,
+//     View,
+//     Text,
+//     TextInput,
+//     Image,
+//     Button,
+//     ToastAndroid, Alert,
+// } from 'react-native';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
+// // import Icon from 'react-native-vector-icons/FontAwesome';
+// import COLORS from '../consts/color';
+// import STYLES from '../styles';
+// import { ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
+// import { Navigation } from 'react-native-navigation';
+// import { Calendar } from 'react-native-calendars';
 
+
+// const Calendarr = ({ navigation }) => {
+
+//     const [selectedDate, setSelectedDate] = useState(null);
+
+//     const handleDateSelect = (date) => {
+//         setSelectedDate(date);
+//     };
+
+//     return (
+//         <SafeAreaView
+//             style={{ paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white }}>
+
+//             <ScrollView showsVerticalScrollIndicator={true}>
+
+//                 <TouchableOpacity onPress={navigation.goBack}>
+//                     <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
+
+//                     {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
+//                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
+//                 </TouchableOpacity>
+
+//                 <View style={STYLES.header}>
+//                     <View>
+//                         <TouchableOpacity onPress={() => navigation.navigate('User')}>
+
+//                             <Image style={{ width: 50, marginLeft: 260, marginTop: 30, marginRight: 40, height: 50, }} source={require('../assets/person.png')} />
+//                         </TouchableOpacity>
+//                     </View>
+
+//                 </View>
+
+
+
+
+//                 <View style={{ marginTop: -65 }}>
+//                     <Text style={{ fontSize: 19, marginLeft: 17, marginBottom: 10, fontWeight: 'bold', color: COLORS.dark }}>
+//                         Hi,Welcome Back
+//                     </Text>
+
+//                 </View>
+//                 <View style={STYLES.btnSecondary}>
+//                     <TouchableHighlight onPress={() => navigation.navigate('NewEvent')}>
+//                         <Text style={STYLES.text}>
+//                             + New Event
+//                         </Text>
+//                     </TouchableHighlight>
+//                 </View>
+//                 <View style={STYLES.container}>
+//                     <Calendar
+//                         onDayPress={(day) => handleDateSelect(day.dateString)}
+//                         markedDates={{
+//                             [selectedDate]: { selected: true, selectedColor: 'blue' },
+//                         }}
+//                     />
+//                 </View>
+
+
+//             </ScrollView>
+//         </SafeAreaView>
+//     )
+
+// }
+// export default Calendarr;
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import Modal from 'react-native-modal';
+import axios from 'axios';
+import STYLES from '../styles';
 
 const Calendarr = ({ navigation }) => {
-
+    const [isModalVisible, setModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [eventTitle, setEventTitle] = useState('');
+    const [type, setType] = useState('');
+    const [format, setFormat] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const [location, setLocation] = useState('');
+    const [description, setDescription] = useState('');
+    const [notes, setNotes] = useState('');
+    const apiUrl = 'https://walrus-app-v5mk9.ondigitalocean.app/createEvent';
 
-    const handleDateSelect = (date) => {
+    const toggleModal = (date) => {
         setSelectedDate(date);
+        setModalVisible(!isModalVisible);
+    };
+
+    const handleDateSelect = (day) => {
+        toggleModal(day.dateString);
+    };
+
+    const createEvent = async () => {
+        try {
+            const response = await axios.post(apiUrl, {
+                date: selectedDate,
+                title: eventTitle,
+                type,
+                format,
+                startTime,
+                endTime,
+                location,
+                description,
+                notes,
+            });
+
+            if (response.status === 200) {
+                // Event created successfully, you can display a confirmation to the user
+                console.log('Event created:', response.data);
+                toggleModal(null); // Close the modal
+            }
+        } catch (error) {
+            // Handle any API request errors here
+            console.error('Error creating event:', error);
+        }
     };
 
     return (
-        <SafeAreaView
-            style={{ paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white }}>
-
-            <ScrollView showsVerticalScrollIndicator={true}>
-
+        <ScrollView>
+            <View style={STYLES.header}>
                 <TouchableOpacity onPress={navigation.goBack}>
                     <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
-
-                    {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
                 </TouchableOpacity>
+            </View>
+            <Calendar
+                onDayPress={handleDateSelect}
+                markedDates={{
+                    [selectedDate]: { selected: true, marked: true },
+                }}
+                style={{ marginTop: 20, height: 400 }}
+            />
 
-                <View style={STYLES.header}>
+            <Modal isVisible={isModalVisible} style={{ backgroundColor: 'white' }}>
+                <ScrollView>
                     <View>
-                        <TouchableOpacity onPress={() => navigation.navigate('User')}>
-
-                            <Image style={{ width: 50, marginLeft: 260, marginTop: 30, marginRight: 40, height: 50, }} source={require('../assets/person.png')} />
+                        <Text style={{ fontSize: 19, color: 'black' }}>Create new event</Text>
+                        <Text>Plan your day. Plan your success.</Text>
+                        <Text style={{ marginTop: 20 }}>Event name*</Text>
+                        <TextInput
+                            value={eventTitle}
+                            onChangeText={(text) => setEventTitle(text)}
+                            style={STYLES.texttype}
+                        />
+                        <Text>Select Type:</Text>
+                        <TextInput
+                            style={STYLES.texttype}
+                            placeholder="Select Type"
+                            value={type}
+                            onChangeText={(text) => setType(text)}
+                        />
+                        <Text>Select Format:</Text>
+                        <TextInput
+                            style={STYLES.texttype}
+                            placeholder="Select Format"
+                            value={format}
+                            onChangeText={(text) => setFormat(text)}
+                        />
+                        <Text>Date:</Text>
+                        <TextInput
+                            style={STYLES.texttype}
+                            value={selectedDate}
+                            onChangeText={(text) => setSelectedDate(text)}
+                        />
+                        <Text>Time:</Text>
+                        <TextInput
+                            style={STYLES.texttype}
+                            placeholder="Start Time"
+                            value={startTime}
+                            onChangeText={(text) => setStartTime(text)}
+                        />
+                        <TextInput
+                            style={STYLES.texttype}
+                            placeholder="End Time"
+                            value={endTime}
+                            onChangeText={(text) => setEndTime(text)}
+                        />
+                        <Text>Location/Meeting Link:</Text>
+                        <TextInput
+                            style={STYLES.texttype}
+                            value={location}
+                            onChangeText={(text) => setLocation(text)}
+                        />
+                        <Text>Description/Agenda:</Text>
+                        <TextInput
+                            style={STYLES.texttype}
+                            value={description}
+                            onChangeText={(text) => setDescription(text)}
+                        />
+                        <Text>Attachment:</Text>
+                        <TextInput
+                            style={STYLES.texttype}
+                            value={notes}
+                            onChangeText={(text) => setNotes(text)}
+                        />
+                        <TouchableOpacity onPress={createEvent} style={{ color: 'blue', padding: 10, borderRadius: 5 }}>
+                            <Text style={{ color: 'blue', fontSize: 22, textAlign: 'center' }}>Create Event</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => toggleModal(null)} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 10 }}>
+                            <Text style={{ color: 'red', fontSize: 22, textAlign: 'center' }}>Close</Text>
                         </TouchableOpacity>
                     </View>
+                </ScrollView>
+            </Modal>
+        </ScrollView>
+    );
+};
 
-                </View>
-
-
-
-
-                <View style={{ marginTop: -65 }}>
-                    <Text style={{ fontSize: 19, marginLeft: 17, marginBottom: 10, fontWeight: 'bold', color: COLORS.dark }}>
-                        Hi,Welcome Back
-                    </Text>
-
-                </View>
-                <View style={STYLES.btnSecondary}>
-                    <TouchableHighlight onPress={() => navigation.navigate('NewEvent')}>
-                        <Text style={STYLES.text}>
-                            + New Event
-                        </Text>
-                    </TouchableHighlight>
-                </View>
-                <View style={STYLES.container}>
-                    <Calendar
-                        onDayPress={(day) => handleDateSelect(day.dateString)}
-                        markedDates={{
-                            [selectedDate]: { selected: true, selectedColor: 'blue' },
-                        }}
-                    />
-                </View>
-
-
-            </ScrollView>
-        </SafeAreaView>
-    )
-
-}
 export default Calendarr;

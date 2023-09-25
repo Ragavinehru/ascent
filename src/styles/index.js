@@ -113,7 +113,7 @@ const STYLES = StyleSheet.create({
         height: 170,
         width: 350,
         marginLeft: 17,
-        marginTop: -230,
+        marginTop: -350,
         borderRadius: 25,
         elevation: 13,
         position: 'absolute',
@@ -176,11 +176,12 @@ const STYLES = StyleSheet.create({
     postinput: {
         borderWidth: 1,
         borderColor: 'black',
-        height: '50',
+        // height: '32%',
         width: '70%',
         borderRadius: 6,
-        marginLeft: 15,
-        marginBottom: 50
+        marginLeft: 19,
+        marginTop: -70
+        // marginBottom: 50
     },
     texttitle: {
         marginLeft: 15,

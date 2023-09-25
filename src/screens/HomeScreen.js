@@ -428,7 +428,7 @@ const HomeScreen = () => {
 
 
 
-                        <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginBottom: 50 }}>Comments</Text>
+                        <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginBottom: 180 }}>Comments</Text>
                         <View style={{ marginTop: 200 }}>
                             <View style={STYLES.cardcomment}>
                                 <ScrollView>
@@ -450,17 +450,36 @@ const HomeScreen = () => {
                                     ))}
                                 </ScrollView>
                             </View>
-                            <TextInput
-                                placeholder="Enter your comment"
-                                style={STYLES.postinput}
-                                value={commentText}
-                                onChangeText={(text) => setCommentText(text)} />
+                            <Text onPress={postComment} style={{ fontSize: 17, color: 'blue', marginLeft: 360, marginBottom: 30 }}>Post</Text>
+                            <View>
+                                {/* <TouchableOpacity> */}
+
+                                {/* </TouchableOpacity> */}
+                                <TextInput
+                                    placeholder="Enter your comment"
+                                    style={STYLES.postinput}
+                                    value={commentText}
+                                    onChangeText={(text) => setCommentText(text)} />
+
+                                <TouchableOpacity onPress={pickAttachment}>
+                                    <Image style={{ width: 23, height: 27, marginLeft: 320, marginTop: -40 }} source={require('../assets/attachment.png')} />
+                                </TouchableOpacity>
+
+                            </View>
+
+                            {/* {/* <View >
+                                <TextInput
+                                    placeholder="Enter your comment"
+                                    style={STYLES.postinput}
+                                    value={commentText}
+                                    onChangeText={(text) => setCommentText(text)} /> */}
                             {/* <TouchableOpacity onPress={pickAttachment}> */}
-                            <Image style={{ width: 23, height: 27, marginLeft: 20, marginTop: -90 }} source={require('../assets/attachment.png')} />
-                            {/* </TouchableOpacity> */}
-                            <TouchableOpacity>
-                                <Text onPress={postComment} style={{ marginTop: -90, fontSize: 17, color: 'blue', marginLeft: 330 }}>post</Text>
-                            </TouchableOpacity>
+                            {/* <Image style={{ width: 23, height: 27, marginLeft: 20, marginTop: -50 }} source={require('../assets/attachment.png')} />
+                                {/* </TouchableOpacity> */}
+                            {/* <TouchableOpacity>
+                                    <Text onPress={postComment} style={{ marginTop: -20, fontSize: 17, color: 'blue', marginLeft: 370 }}>post</Text>
+                                </TouchableOpacity>
+                            </View> */}
                         </View>
 
                     </View>
