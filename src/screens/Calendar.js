@@ -85,8 +85,11 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
+import DateTimePickerModal from 'react-native-modal-datetime-picker'; // Import the date and time picker
 import axios from 'axios';
 import STYLES from '../styles';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 const Calendarr = ({ navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
@@ -98,7 +101,16 @@ const Calendarr = ({ navigation }) => {
     const [endTime, setEndTime] = useState('');
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');
-    const [notes, setNotes] = useState('');
+    const [attachement, setAttachement] = useState('');
+    const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
+    const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
+
+    const typeoption = [
+        { label: 'Option 1', value: 'Option 1' },
+        { label: 'Option 2', value: 'Option 2' },
+        // Add more options as needed
+    ];
+
     const apiUrl = 'https://walrus-app-v5mk9.ondigitalocean.app/createEvent';
 
     const toggleModal = (date) => {
@@ -121,7 +133,7 @@ const Calendarr = ({ navigation }) => {
                 endTime,
                 location,
                 description,
-                notes,
+                attachement
             });
 
             if (response.status === 200) {
@@ -132,6 +144,48 @@ const Calendarr = ({ navigation }) => {
         } catch (error) {
             // Handle any API request errors here
             console.error('Error creating event:', error);
+        }
+    };
+    // Functions to show/hide time pickers
+    const showStartTimePicker = () => {
+        setStartTimePickerVisible(true);
+    };
+
+    const hideStartTimePicker = () => {
+        setStartTimePickerVisible(false);
+    };
+
+    const showEndTimePicker = () => {
+        setEndTimePickerVisible(true);
+    };
+
+    const hideEndTimePicker = () => {
+        setEndTimePickerVisible(false);
+    };
+
+    const handleStartTimeChange = (event, selectedTime) => {
+        if (selectedTime !== undefined) {
+            // Format the selected time as needed
+            const formattedTime = selectedTime.toLocaleTimeString(); // Use toLocaleTimeString to format as HH:mm
+
+            // Update the state with the selected start time and hide the picker
+            setStartTime(formattedTime);
+            hideStartTimePicker();
+        } else {
+            hideStartTimePicker();
+        }
+    };
+
+    const handleEndTimeChange = (event, selectedTime) => {
+        if (selectedTime !== undefined) {
+            // Format the selected time as needed
+            const formattedTime = selectedTime.toLocaleTimeString(); // Use toLocaleTimeString to format as HH:mm
+
+            // Update the state with the selected end time and hide the picker
+            setEndTime(formattedTime);
+            hideEndTimePicker();
+        } else {
+            hideEndTimePicker();
         }
     };
 
@@ -168,6 +222,7 @@ const Calendarr = ({ navigation }) => {
                             placeholder="Select Type"
                             value={type}
                             onChangeText={(text) => setType(text)}
+                            items={typeoption}
                         />
                         <Text>Select Format:</Text>
                         <TextInput
@@ -183,18 +238,49 @@ const Calendarr = ({ navigation }) => {
                             onChangeText={(text) => setSelectedDate(text)}
                         />
                         <Text>Time:</Text>
-                        <TextInput
+                        {/* <TextInput
                             style={STYLES.texttype}
                             placeholder="Start Time"
                             value={startTime}
                             onChangeText={(text) => setStartTime(text)}
-                        />
-                        <TextInput
+                        /> */}
+                        {/* Start Time Picker */}
+                        <View style={{ flexDirection: 'row', marginLeft: 33, height: 23 }}>
+                            <TouchableOpacity onPress={showStartTimePicker}>
+                                <Text style={STYLES.texttype} >Start Time: {startTime}</Text>
+                            </TouchableOpacity>
+                            {isStartTimePickerVisible && (
+                                <DateTimePicker
+                                    value={new Date()} // You can set an initial time value if needed
+                                    mode="time"
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={handleStartTimeChange}
+                                />
+                            )}
+
+                            {/* <TextInput
                             style={STYLES.texttype}
                             placeholder="End Time"
                             value={endTime}
                             onChangeText={(text) => setEndTime(text)}
-                        />
+                        /> */}
+
+                            {/* End Time Picker */}
+                            {/* End Time Picker */}
+                            <TouchableOpacity onPress={showEndTimePicker}>
+                                <Text style={STYLES.texttype} >End Time: {endTime}</Text>
+                            </TouchableOpacity>
+                            {isEndTimePickerVisible && (
+                                <DateTimePicker
+                                    value={new Date()}
+                                    mode="time"
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={handleEndTimeChange}
+                                />
+                            )}
+                        </View>
                         <Text>Location/Meeting Link:</Text>
                         <TextInput
                             style={STYLES.texttype}
@@ -210,8 +296,8 @@ const Calendarr = ({ navigation }) => {
                         <Text>Attachment:</Text>
                         <TextInput
                             style={STYLES.texttype}
-                            value={notes}
-                            onChangeText={(text) => setNotes(text)}
+                            value={attachement}
+                            onChangeText={(text) => setAttachement(text)}
                         />
                         <TouchableOpacity onPress={createEvent} style={{ color: 'blue', padding: 10, borderRadius: 5 }}>
                             <Text style={{ color: 'blue', fontSize: 22, textAlign: 'center' }}>Create Event</Text>

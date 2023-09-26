@@ -156,6 +156,7 @@ const HomeScreen = () => {
 
                     for (const event of eventResult.events) {
                         const eventId = event.id;
+                        console.log("+++++++++++++++++++++++++++++++++++++++++", eventId);
                         const commentBody = {
                             eventId: eventId
                         };
@@ -174,6 +175,7 @@ const HomeScreen = () => {
 
                         allComments.push(...commentResult.comments);
                         setCommentData(allComments);
+
                     }
                     // Set all comments in state
                 }
