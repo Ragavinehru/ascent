@@ -103,6 +103,26 @@ const Login = ({ navigation }) => {
     //       });
     //   };
 
+    const test = async () => {
+        const response = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/postComments', {
+            method: 'POST',
+            // body: {
+            //     'eventId': selectedEvent.id,
+            //     'comment': commentText.text,
+            //     'attachment': commentText.imageUri,
+            // },
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                eventId: "0iPoaDKdKeY4R8VLXewN",
+                comment: "hii123"
+            }),
+        });
+        console.log("post response:", response);
+    }
+
     return (
 
         <SafeAreaView

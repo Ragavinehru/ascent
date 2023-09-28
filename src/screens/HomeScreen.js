@@ -39,96 +39,129 @@ import { useRoute } from '@react-navigation/native';
 const HomeScreen = () => {
     const route = useRoute();
     const userEmail = route.params?.userEmail;
-    console.log("homeeeeeeee", userEmail)
+    // console.log("homeeeeeeee", userEmail)
     //event images
     const images = [webs, webs2, webs1, webs2, webs3, webs4]
     // history of evnt icons
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const openEventModal = (event) => {
+    const openEventModal = (event, comments) => {
+        fetchData(event.id);
         setSelectedEvent(event);
+        setEventComments(comments); // Pass the comments to the state
         setShowModal(true);
     };
 
     const closeEventModal = () => {
         setSelectedEvent(null);
+        // setEventComments({});
         setShowModal(false);
     };
 
     const [userData, setUserData] = useState({});
+    const [urishow, setUri] = useState('');
     const [eventData, setEventData] = useState([]);
     const [commentData, setCommentData] = useState([]);
-    const [commentText, setCommentText] = useState('');
+    const [commentText, setCommentText] = useState({
+        text: '',
+        imageUri: null,
+    });
     const [selectedAttachment, setSelectedAttachment] = useState(null);
     const [showComments, setShowComments] = useState(true);
+    const [eventComments, setEventComments] = useState({});
 
     const pickAttachment = async () => {
         try {
             const result = await DocumentPicker.pick({
                 type: [DocumentPicker.types.allFiles],
             });
-            console.log("result", result);
-            console.log("Result URI:", result[0].uri);
-
-
+            console.log('result : ' + JSON.stringify(result));
+            console.log("result doc:" + result[0].uri);
             if (!result) {
                 console.error("DocumentPicker result is undefined.");
                 return;
             }
 
-            if (Platform.OS === 'android') {
-                if (result[0].uri) {
-                    console.log("Android URI:", result[0].uri);
-                    const realPath = await DocumentPicker.resolvePath({
-                        uri: result.uri,
-                        fileType: '*/*',
-                    });
+            const uri = result[0].uri;
+            setUri(uri);
+            console.log("URI: " + uri);
 
-                    console.log("Resolved Real Path:", realPath);
-
-                    if (realPath) {
-                        setSelectedAttachment(realPath);
-                        console.log("attach", realPath);
-                    } else {
-                        console.error("Real path is undefined.");
-                    }
-                } else {
-
-                    console.error("Result URI is undefined.");
-                }
-            } else {
-                if (result.uri) {
-                    setSelectedAttachment(result[0].uri);
-                    console.log("attach", result.uri);
-                } else {
-                    console.error("Result URI is undefined.");
-                }
-            }
-
+            // Set the selected attachment's URI in the commentText state
+            setCommentText((prevCommentText) => ({
+                ...prevCommentText,
+                imageUri: uri,
+            }));
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 // Handle cancelation
-            } else {
+                console.error("Error picking cancel:", err);
+            }
+            else {
                 console.error("Error picking attachment:", err);
                 throw err;
             }
         }
     };
 
+    const postComment = async () => {
+        console.log("post:", commentText);
+        if (!commentText.text) {
+            console.log("post if:", commentText);
+            return;
+        }
 
 
-    const fetchData = async () => {
+        console.log("post ifelse:", commentText);
+        try {
+            const formData = new FormData();
+
+            // Append event ID, comment text, and image attachment to the formData
+            formData.append('eventId', selectedEvent.id);
+            formData.append('comment', commentText.text);
+            console.log("post try:", commentText);
+            if (commentText.imageUri) {
+                formData.append('attachment', {
+                    uri: commentText.imageUri,
+                    name: 'attachment.ext',
+                    type: 'application/octet-stream',
+                });
+            }
+            console.log("post try:", commentText);
+
+            const response = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/postComments', {
+                method: 'POST',
+                // body: {
+                //     'eventId': selectedEvent.id,
+                //     'comment': commentText.text,
+                //     'attachment': commentText.imageUri,
+                // },
+                body: formData,
+            });
+            // console.log("post huhuhutry:", formData);
+            if (response.ok) {
+                setCommentText({ text: '', imageUri: null });
+                fetchComments(selectedEvent.id);
+            } else {
+                console.error('Failed to post comment. Server returned:', response.status, response.statusText);
+            }
+
+        } catch (error) {
+            console.error('Error posting comment:', error);
+        }
+    };
+
+    const fetchData = async (eventId) => {
         try {
 
             const userResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email, {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
             });
             const userDataResult = await userResponse.json();
-            // console.log("user info", userDataResult);
+
             setUserData(userDataResult);
             // const groupData = userData.userInfo.groups;
             // console.log("group", groupData);
@@ -142,7 +175,7 @@ const HomeScreen = () => {
                 const eventResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getEvents', {
                     method: 'POST',
                     headers: {
-                        Accept: 'application/json',
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(eventRequestBody)
@@ -150,86 +183,57 @@ const HomeScreen = () => {
                 const eventResult = await eventResponse.json();
                 console.log("events", eventResult);
                 setEventData(eventResult);
-                //
+
+
                 if (eventResult.events) {
                     const allComments = [];
 
+
                     for (const event of eventResult.events) {
                         const eventId = event.id;
-                        console.log("+++++++++++++++++++++++++++++++++++++++++", eventId);
-                        const commentBody = {
+                        console.log("Event ID:", eventId);
+
+                        // // Fetch comments for the current event
+                        // const commentRequestBody = {
+                        //     eventId: eventId
+                        // };
+                        const commentRequestBody = {
                             eventId: eventId
                         };
-                        // Fetch comments for each event
                         const commentResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getComments', {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify(commentBody)
+                            body: JSON.stringify(commentRequestBody)
                         });
                         const commentResult = await commentResponse.json();
+                        // console.log("Comments for Event ID:", eventId, commentResult);
+                        // allComments.push(commentResult);
+                        // console.log("++++++++", allComments);
 
-                        console.log("value1234", commentResult);
-
-                        allComments.push(...commentResult.comments);
-                        setCommentData(allComments);
-
+                        // setCommentData(allComments);
+                        setEventComments((prevComments) => ({
+                            ...prevComments,
+                            [eventId]: commentResult.comments,
+                        }));
                     }
-                    // Set all comments in state
+                    // console.log("length 1", eventResult?.events?.length);
                 }
-                console.log("length 1", eventResult?.events?.length)
-
-
             }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-
     };
 
     useEffect(() => {
         fetchData();
     }, []);
 
-    const postComment = async () => {
-        if (!commentText) {
-            return;
-        }
 
-        try {
-            const formData = new FormData();
-            formData.append('eventId', selectedEvent.id);
-            formData.append('comment', commentText);
 
-            if (selectedAttachment) {
-
-                formData.append('attachment', {
-                    uri: selectedAttachment,
-                    name: 'attachment.ext',
-                    type: 'application/octet-stream',
-                });
-            }
-
-            const response = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/postComment', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                setCommentText('');
-                setSelectedAttachment(null);
-                fetchComments(selectedEvent.id);
-            } else {
-                console.error('Failed to post comment. Server returned:', response.status, response.statusText);
-            }
-        } catch (error) {
-            console.error('Error posting comment:', error);
-        }
-    };
-
-    console.log('comment:', commentText);
+    // console.log('comment:', commentText);
 
     const navigation = useNavigation();
 
@@ -317,7 +321,8 @@ const HomeScreen = () => {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
                             <View >
-                                <TouchableOpacity onPress={() => openEventModal(item)}>
+                                <TouchableOpacity onPress={() => openEventModal(item, eventComments[item.id])}>
+
                                     <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, marginTop: 10 }}>
                                         <Image style={{ width: 23, height: 23, marginRight: 10 }} source={require('../assets/video.png')} />
                                         <Text style={{ fontSize: 16, color: 'black' }}>{item.label}</Text>
@@ -334,7 +339,8 @@ const HomeScreen = () => {
                                 {showComments && (
                                     <View>
                                         <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 48, color: 'black' }}>Comments</Text>
-                                        {commentData.map((comment, index) => (
+                                        {/* {commentData.map((comment, index) => ( */}
+                                        {eventComments[item.id]?.map((comment, index) => (
                                             <View key={comment.id}>
                                                 <Text style={{ marginLeft: 58, color: 'black' }}>{comment.name}</Text>
                                                 <Text style={{ marginLeft: 68 }}>{comment.comment}</Text>
@@ -356,14 +362,7 @@ const HomeScreen = () => {
                         )}
                         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
                     />
-
-
-
-
                 </View>
-
-
-
             </ScrollView >
 
             <Modal visible={showModal} animationType="slide" >
@@ -434,24 +433,33 @@ const HomeScreen = () => {
                         <View style={{ marginTop: 200 }}>
                             <View style={STYLES.cardcomment}>
                                 <ScrollView>
-                                    {commentData.map((comment, index) => (
-                                        <View key={comment.id}>
-                                            <Text style={{ marginLeft: 28, color: 'black' }}>{comment.name}</Text>
-                                            <Text style={{ marginLeft: 48 }}>{comment.comment}</Text>
+                                    {selectedEvent && eventComments[selectedEvent.id] ? (
 
-                                            {comment.attachmentName && (
-                                                <View>
-                                                    <Image
-                                                        style={{ width: 30, height: 30, marginLeft: 170, marginTop: -30 }} // You can adjust the image dimensions
-                                                        source={{ uri: comment.attachmentUrl }}
-                                                    />
-
-                                                </View>
-                                            )}
-                                        </View>
-                                    ))}
+                                        eventComments[selectedEvent.id].map((comment, index) => (
+                                            <View key={comment.id}>
+                                                <Text style={{ marginLeft: 28, color: 'black' }}>{comment.name}</Text>
+                                                <Text style={{ marginLeft: 48 }}>{comment.comment}</Text>
+                                                {comment.attachmentName && (
+                                                    <View>
+                                                        <Image
+                                                            style={{ width: 30, height: 30, marginLeft: 170, marginTop: -30 }}
+                                                            source={{ uri: comment.attachmentUrl }}
+                                                        />
+                                                    </View>
+                                                )}
+                                            </View>
+                                        ))
+                                    ) : (
+                                        <Text>No comments available.</Text>
+                                    )}
                                 </ScrollView>
                             </View>
+                            {urishow !== '' && (
+                                <Image
+                                    style={{ width: 100, height: 100, marginTop: 10 }}
+                                    source={{ uri: urishow }}
+                                />
+                            )}
                             <Text onPress={postComment} style={{ fontSize: 17, color: 'blue', marginLeft: 360, marginBottom: 30 }}>Post</Text>
                             <View>
                                 {/* <TouchableOpacity> */}
@@ -460,8 +468,8 @@ const HomeScreen = () => {
                                 <TextInput
                                     placeholder="Enter your comment"
                                     style={STYLES.postinput}
-                                    value={commentText}
-                                    onChangeText={(text) => setCommentText(text)} />
+                                    value={commentText.text}
+                                    onChangeText={(text) => setCommentText({ ...commentData, text })} />
 
                                 <TouchableOpacity onPress={pickAttachment}>
                                     <Image style={{ width: 23, height: 27, marginLeft: 320, marginTop: -40 }} source={require('../assets/attachment.png')} />

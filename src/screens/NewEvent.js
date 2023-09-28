@@ -25,7 +25,7 @@ import { Navigation } from 'react-native-navigation';
 import DatePicker from 'react-native-datepicker';
 import { SelectList } from 'react-native-dropdown-select-list'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { Alert } from 'react-native';
 
 
 const NewEvent = ({ navigation }) => {
