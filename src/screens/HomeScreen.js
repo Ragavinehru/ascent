@@ -38,28 +38,34 @@ import { useRoute } from '@react-navigation/native';
 
 const HomeScreen = () => {
     const route = useRoute();
+    const email = global.email;
+    const name = global.name;
+
+    console.log("name", name);
     const userEmail = route.params?.userEmail;
-    // console.log("homeeeeeeee", userEmail)
-    //event images
+
     const images = [webs, webs2, webs1, webs2, webs3, webs4]
-    // history of evnt icons
+    const [selectedEventId, setSelectedEventId] = useState(null);
+
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const openEventModal = (event, comments) => {
         fetchData(event.id);
         setSelectedEvent(event);
-        setEventComments(comments); // Pass the comments to the state
+        setEventComments(comments);
+        setSelectedEventId(event.id);
+
         setShowModal(true);
     };
 
     const closeEventModal = () => {
         setSelectedEvent(null);
-        // setEventComments({});
+
         setShowModal(false);
     };
 
     const [userData, setUserData] = useState({});
-    const [urishow, setUri] = useState('');
+    // const [urishow, setUri] = useState('');
     const [eventData, setEventData] = useState([]);
     const [commentData, setCommentData] = useState([]);
     const [commentText, setCommentText] = useState({
@@ -69,6 +75,7 @@ const HomeScreen = () => {
     const [selectedAttachment, setSelectedAttachment] = useState(null);
     const [showComments, setShowComments] = useState(true);
     const [eventComments, setEventComments] = useState({});
+
 
     const pickAttachment = async () => {
         try {
@@ -83,8 +90,10 @@ const HomeScreen = () => {
             }
 
             const uri = result[0].uri;
-            setUri(uri);
-            console.log("URI: " + uri);
+            const attachmentName = result[0].name;
+            // setUri(uri);
+            console.log("URI: ", uri);
+            console.log("attachment name", attachmentName);
 
             // Set the selected attachment's URI in the commentText state
             setCommentText((prevCommentText) => ({
@@ -109,36 +118,56 @@ const HomeScreen = () => {
             console.log("post if:", commentText);
             return;
         }
-
-
         console.log("post ifelse:", commentText);
         try {
-            const formData = new FormData();
+            // const formData = new FormData();
 
-            // Append event ID, comment text, and image attachment to the formData
-            formData.append('eventId', selectedEvent.id);
-            formData.append('comment', commentText.text);
+            // formData.append('eventId', selectedEvent.id);
+            // formData.append('comment', commentText.text);
+            // console.log("post try:", commentText);
+            // console.log("uri+++", commentText.imageUri);
+            // if (commentText.imageUri) {
+            //     formData.append('attachment', {
+            //         uri: commentText.imageUri,
+            // name: 'attachment.ext',
+            // type: 'application/octet-stream',
+            // });
+            // }
             console.log("post try:", commentText);
-            if (commentText.imageUri) {
-                formData.append('attachment', {
-                    uri: commentText.imageUri,
-                    name: 'attachment.ext',
-                    type: 'application/octet-stream',
-                });
+            // console.log("formmmmeee", formData)
+            // const formDataJSON = JSON.stringify(formData);
+            // const eventId = JSON.stringify(selectedEvent.id);
+            // const uri = JSON.stringify(commentText.imageUri);
+            // const comment = JSON.stringify(commentText.text);
+            const currentTime = new Date().toISOString();
+            let postData = {
+                "eventId": selectedEvent.id,
+                "comment": {
+                    "comment": commentText.text,
+                    "time": currentTime,
+                    "email": email,
+                    "name": name,
+                    "attachmentName": attachmentName,
+                    "attachmentUrl": commentText.imageUri
+                }
             }
-            console.log("post try:", commentText);
-
+            // console.log("+++++++=", formDataJSON);
             const response = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/postComments', {
                 method: 'POST',
-                // body: {
-                //     'eventId': selectedEvent.id,
-                //     'comment': commentText.text,
-                //     'attachment': commentText.imageUri,
-                // },
-                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                // body: JSON.stringify(formData),
+                // body: data
+                // body: formDataJSON,
+                body: JSON.stringify(postData),
+
             });
             // console.log("post huhuhutry:", formData);
             if (response.ok) {
+                const responseData = await response.json();
+                console.log("responseeee", responseData)
                 setCommentText({ text: '', imageUri: null });
                 fetchComments(selectedEvent.id);
             } else {
@@ -149,6 +178,7 @@ const HomeScreen = () => {
             console.error('Error posting comment:', error);
         }
     };
+
 
     const fetchData = async (eventId) => {
         try {
@@ -163,6 +193,8 @@ const HomeScreen = () => {
             const userDataResult = await userResponse.json();
 
             setUserData(userDataResult);
+            const name = userDataResult.userInfo.name;
+            global.name = name;
             // const groupData = userData.userInfo.groups;
             // console.log("group", groupData);
 
@@ -332,11 +364,11 @@ const HomeScreen = () => {
 
                                 <Text style={{ marginLeft: 49, fontSize: 12 }}>{item.date}| {item.startHour}-{item.endHour}</Text>
 
-                                <TouchableOpacity onPress={() => setShowComments(!showComments)}>
-                                    <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{showComments ? 'Hide Comments' : 'View Comments'}</Text>
+                                <TouchableOpacity onPress={() => setSelectedEventId(selectedEventId === item.id ? null : item.id)}>
+                                    <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{selectedEventId === item.id ? 'Hide Comments' : 'View Comments'}</Text>
                                 </TouchableOpacity>
 
-                                {showComments && (
+                                {selectedEventId === item.id && (
                                     <View>
                                         <Text style={{ fontSize: 14, marginTop: 10, marginLeft: 48, color: 'black' }}>Comments</Text>
                                         {/* {commentData.map((comment, index) => ( */}
@@ -442,7 +474,7 @@ const HomeScreen = () => {
                                                 {comment.attachmentName && (
                                                     <View>
                                                         <Image
-                                                            style={{ width: 30, height: 30, marginLeft: 170, marginTop: -30 }}
+                                                            style={{ width: 34, height: 30, marginLeft: 170, marginTop: -30 }}
                                                             source={{ uri: comment.attachmentUrl }}
                                                         />
                                                     </View>
@@ -454,13 +486,15 @@ const HomeScreen = () => {
                                     )}
                                 </ScrollView>
                             </View>
-                            {urishow !== '' && (
+                            {/* {urishow !== '' && (
                                 <Image
                                     style={{ width: 100, height: 100, marginTop: 10 }}
                                     source={{ uri: urishow }}
                                 />
-                            )}
-                            <Text onPress={postComment} style={{ fontSize: 17, color: 'blue', marginLeft: 360, marginBottom: 30 }}>Post</Text>
+                            )} */}
+                            <TouchableOpacity>
+                                <Text onPress={postComment} style={{ fontSize: 17, color: 'blue', marginLeft: 360, marginBottom: 30 }}>Post</Text>
+                            </TouchableOpacity>
                             <View>
                                 {/* <TouchableOpacity> */}
 

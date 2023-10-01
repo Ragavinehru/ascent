@@ -80,6 +80,8 @@ const Profile = ({ navigation }) => {
         result = await result.json();
         console.log("profileeeeeee", result);
         setData(result);
+        console.log("prints", result.userInfo.name);
+        global.name = result.userInfo.name;
         const userInfo = data.userInfo;
         setTextvalue(userInfo.name);
         setMobile(userInfo.mobileno);
@@ -98,21 +100,8 @@ const Profile = ({ navigation }) => {
 
     };
     // console.log("data postedddd", data.userInfo.name)
-    // console.log("name", data.userInfo.name)
+    // console.log("name ", data.userInfo.name)
     useEffect(() => {
-        // if (data.userInfo) {
-        //     setTextvalue(data.userInfo.name);
-        //     setMobile(data.userInfo.mobileno);
-        //     setBloodgroup(data.userInfo.bloodgroup);
-        // setemergencycon(data.userInfo.emergencycontact.name);
-        // setemergencynum(data.userInfo.emergencycontact.mobileno);
-        // setSelectedDate(new Date(data.userInfo.dob));
-        // setMarital(data.userInfo.marital);
-        // setSpouse(data.userInfo.spouse);
-        // setcompany(data.userInfo);
-        // setDob(data.userInfo.dob);
-        // setemergencycon(data.userInfo.Emergencycon.name);
-        // }
 
         Mydata();
     }, []);
