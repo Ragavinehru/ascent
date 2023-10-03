@@ -142,7 +142,8 @@ const STYLES = StyleSheet.create({
         // height: '17%',
         width: '98%',
         borderRadius: 6,
-        marginLeft: 3
+        marginLeft: 3,
+        // color: '#ffff'
     },
     searchinput: {
         borderWidth: 1,
@@ -160,27 +161,27 @@ const STYLES = StyleSheet.create({
         borderRadius: 6,
         marginLeft: 15
     },
-    yesinput:{
+    yesinput: {
         borderWidth: 1,
         borderColor: 'black',
         height: 22,
         width: '20%',
         borderRadius: 6,
         marginLeft: 15,
-        marginBottom:10,
+        marginBottom: 10,
         // position:'absolute'
     },
     containerf: {
         flex: 1,
-        flexDirection:'row',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-      },
-      checkboxContainer: {
+    },
+    checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop:10,
-      },
+        marginTop: 10,
+    },
     // modalContainer: {
     //     flex: 1,
     //     justifyContent: 'center',

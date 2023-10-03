@@ -82,9 +82,9 @@
 // }
 // export default Calendarr;
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image,Modal, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-// import Modal from 'react-native-modal';
+import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; // Import the date and time picker
 import axios from 'axios';
 import STYLES from '../styles';
@@ -124,28 +124,88 @@ const Calendarr = ({ navigation }) => {
 
     const createEvent = async () => {
         try {
-            const response = await axios.post(apiUrl, {
-                date: selectedDate,
-                title: eventTitle,
-                type,
-                format,
-                startTime,
-                endTime,
-                location,
-                description,
-                attachement
+            let GoalData = {
+                "event": {
+                    "label": eventTitle,
+                    "group": "PjIK87LDBDc5quWz76Ct",
+                    "description": description,
+                    "type": type,
+                    "format": format,
+                    "formatInfo": "",
+                    "color": "#039be5",
+                    "date": selectedDate,
+                    "startHour": "Invalid Date",
+                    "endHour": "Invalid Date",
+                    "createdBy": "vasanth@venzotechnologies.com",
+                    "user": "vasanth@venzotechnologies.com",
+                    "createdAt": "2023-10-03",
+                    "attachmentName": null,
+                    "attachmentUrl": null
+                }
+            }
+            const response = await axios.post(apiUrl, GoalData, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify(GoalData),
+
+
             });
 
             if (response.status === 200) {
-                // Event created successfully, you can display a confirmation to the user
+                // const resData = await response.json();
+                // console.log("responseeee", resData)
                 console.log('Event created:', response.data);
                 toggleModal(null); // Close the modal
+            } else {
+                console.error('Failed to  returned:', response.status, response.statusText);
             }
         } catch (error) {
             // Handle any API request errors here
             console.error('Error creating event:', error);
         }
     };
+    const events = async () => {
+        try {
+            const url = `https://walrus-app-v5mk9.ondigitalocean.app/updateRole`;
+            const body = JSON.stringify({ role: newRole, email, groupId });
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: body
+            });
+            const result = await response.json();
+            console.log("Role updated:", result);
+            console.log("Role updated:", newRole);
+
+            // Update the user's role in the local state (groupInfo.members) here.
+            // Find the member by their email and update their role.
+            const updatedMembers = groupInfo.members.map((member) => {
+                if (member.email === email) {
+                    // Update the role of the member
+                    return { ...member, role: newRole };
+                }
+                return member;
+            });
+
+            // Set the updated members array in your local state
+            setGroupInfo({ ...groupInfo, members: updatedMembers });
+            console.log("kkkkkkkk", updatedMembers);
+            // Close the role selection modal
+            setDots(false);
+        } catch (error) {
+            console.error('Error updating role:', error);
+            // Handle errors here.
+        }
+    };
+
+
     // Functions to show/hide time pickers
     const showStartTimePicker = () => {
         setStartTimePickerVisible(true);
@@ -197,6 +257,12 @@ const Calendarr = ({ navigation }) => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
                 </TouchableOpacity>
             </View>
+            <View style={{ marginTop: 40 }}>
+                <Text style={{ marginLeft: 15, fontSize: 24, fontWeight: 'bold', color: 'black' }}>
+                    Hi,Welcome Back
+                </Text>
+
+            </View>
             <Calendar
                 onDayPress={handleDateSelect}
                 markedDates={{
@@ -205,11 +271,11 @@ const Calendarr = ({ navigation }) => {
                 style={{ marginTop: 20, height: 400 }}
             />
 
-            <Modal isVisible={isModalVisible} style={{ backgroundColor: 'white' }}>
+            <Modal isVisible={isModalVisible} style={{ backgroundColor: 'white', borderRadius: 29 }}>
                 <ScrollView>
                     <View>
-                        <Text style={{ fontSize: 19, color: 'black' }}>Create new event</Text>
-                        <Text>Plan your day. Plan your success.</Text>
+                        <Text style={{ fontSize: 19, color: 'black', marginLeft: 99 }}>Create new event</Text>
+                        <Text style={{ color: 'grey', marginLeft: 75 }}>Plan your day. Plan your success.</Text>
                         <Text style={{ marginTop: 20 }}>Event name*</Text>
                         <TextInput
                             value={eventTitle}
@@ -238,13 +304,7 @@ const Calendarr = ({ navigation }) => {
                             onChangeText={(text) => setSelectedDate(text)}
                         />
                         <Text>Time:</Text>
-                        {/* <TextInput
-                            style={STYLES.texttype}
-                            placeholder="Start Time"
-                            value={startTime}
-                            onChangeText={(text) => setStartTime(text)}
-                        /> */}
-                        {/* Start Time Picker */}
+
                         <View style={{ flexDirection: 'row', marginLeft: 33, height: 23 }}>
                             <TouchableOpacity onPress={showStartTimePicker}>
                                 <Text style={STYLES.texttype} >Start Time: {startTime}</Text>
@@ -299,10 +359,10 @@ const Calendarr = ({ navigation }) => {
                             value={attachement}
                             onChangeText={(text) => setAttachement(text)}
                         />
-                        <TouchableOpacity onPress={createEvent} style={{ color: 'blue', padding: 10, borderRadius: 5 }}>
+                        <TouchableOpacity onPress={createEvent} style={{ color: 'blue', marginTop: 11, borderRadius: 5 }}>
                             <Text style={{ color: 'blue', fontSize: 22, textAlign: 'center' }}>Create Event</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => toggleModal(null)} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 10 }}>
+                        <TouchableOpacity onPress={() => toggleModal(null)} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 1 }}>
                             <Text style={{ color: 'red', fontSize: 22, textAlign: 'center' }}>Close</Text>
                         </TouchableOpacity>
                     </View>

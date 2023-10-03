@@ -120,25 +120,9 @@ const HomeScreen = () => {
         }
         console.log("post ifelse:", commentText);
         try {
-            // const formData = new FormData();
 
-            // formData.append('eventId', selectedEvent.id);
-            // formData.append('comment', commentText.text);
-            // console.log("post try:", commentText);
-            // console.log("uri+++", commentText.imageUri);
-            // if (commentText.imageUri) {
-            //     formData.append('attachment', {
-            //         uri: commentText.imageUri,
-            // name: 'attachment.ext',
-            // type: 'application/octet-stream',
-            // });
-            // }
             console.log("post try:", commentText);
-            // console.log("formmmmeee", formData)
-            // const formDataJSON = JSON.stringify(formData);
-            // const eventId = JSON.stringify(selectedEvent.id);
-            // const uri = JSON.stringify(commentText.imageUri);
-            // const comment = JSON.stringify(commentText.text);
+
             const currentTime = new Date().toISOString();
             let postData = {
                 "eventId": selectedEvent.id,
@@ -147,7 +131,6 @@ const HomeScreen = () => {
                     "time": currentTime,
                     "email": email,
                     "name": name,
-                    // "attachmentName": attachmentName,
                     "attachmentName": "attachmentName",
                     "attachmentUrl": commentText.imageUri
                 }
@@ -462,9 +445,9 @@ const HomeScreen = () => {
                         <View style={{ marginTop: 200 }}>
                             <View style={STYLES.cardcomment}>
                                 <ScrollView>
-                                    {selectedEvent && eventComments[selectedEvent.id]? (
+                                    {selectedEvent && eventComments[selectedEvent.id] ? (
 
-                                        eventComments[selectedEvent.id].map((comment,index) => (
+                                        eventComments[selectedEvent.id].map((comment, index) => (
                                             <View key={comment.id}>
                                                 <Text style={{ marginLeft: 28, color: 'black' }}>{comment.name}</Text>
                                                 <Text style={{ marginLeft: 48 }}>{comment.comment}</Text>
