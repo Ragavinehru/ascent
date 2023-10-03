@@ -177,9 +177,9 @@ const GroupInfo = ({ navigation, route }) => {
             // Render each member using the custom MemberItem component
             />
             <View>
-                <Text style={{ color: 'blue', fontSize: 17, marginLeft: 10, marginTop: -60, position: 'absolute' }}>  Invited Members:
+                <Text style={{ color: 'blue', fontSize: 17, marginLeft: 10, marginTop: -50, position: 'absolute' }}>  Invited Members:
                 </Text>
-                <Text style={{ color: 'black', fontSize: 15, marginLeft: 20, marginTop: -40 }}>{groupInfo.invitedMembers}</Text>
+                <Text style={{ color: 'black', fontSize: 15, marginLeft: 20, marginTop: -30 }}>{groupInfo.invitedMembers}</Text>
             </View>
             <Modal visible={show} transparent={true} animationType="slide" onRequestClose={() => setState(false)}>
 

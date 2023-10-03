@@ -14,19 +14,29 @@ import COLORS from '../consts/color';
 import STYLES from '../styles';
 import { useState, useEffect } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { Navigation } from 'react-native-navigation';
+import { Checkbox } from "react-native-paper";
+import { useNavigation } from '@react-navigation/native';
 import { SelectList } from 'react-native-dropdown-select-list'
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
+import { CheckBox } from 'react-native-elements';
 
 
-const Goals = ({ navigation }) => {
+const Goals = () => {
 
-
+  const navigation = useNavigation();
     const [newgoal, setGoal] = useState(false);
+    const [update, setUpdate] = useState(false);
     const [data, setData] = useState([]);
     const [showComments, setShowComments] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selected, setSelected] = useState("");
+    const [selectedGoalStatuses, setSelectedGoalStatuses] = useState(["Open"]); // Set an initial value with the desired default status
+    const [specific, setSpecific] = useState([false, false]);
+    const [measurable, setMeasurable] = useState([false, false]);
+    const [achievable, setAchievable] = useState([false, false]);
+    const [realistic, setRealistic] = useState([false, false]);
+    const [timely, setTimely] = useState([false, false]);
+    const [checked, setChecked] = React.useState(false);
 
     const year = [
       {key:'1', value:'2023'},
@@ -49,19 +59,22 @@ const Goals = ({ navigation }) => {
 const goals = [
   {key:'1', value:'Open'},
   {key:'2', value:'Complete and closed'},
-  {key:'3', value:'Not Completed and closed'},
-  {key:'3', value:'Not Completed and continue to next period'},
+  {key:'3', value:'Not Complete and closed'},
+  {key:'3', value:'Not Complete and continue to next period'},
 ]
+const [isChecked1, setIsChecked1] = useState(false);
+const [isChecked2, setIsChecked2] = useState(false);
 
-    const openEventModal = (event) => {
-      setData(event);
-      setShowModal(true);
-  };
+const toggleCheckBox1 = () => {
+  setIsChecked1(!isChecked1);
+};
 
-  const closeEventModal = () => {
-    setData(null);
-      setShowModal(false);
-  };
+const toggleCheckBox2 = () => {
+  setIsChecked2(!isChecked2);
+};
+
+
+  
 
     const getGoalData = async () => {
         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getAllGoals';
@@ -109,7 +122,7 @@ const goals = [
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
                 </TouchableOpacity>
                 <View style={STYLES.btnSecondary}>
-                <TouchableHighlight style={{}} onPress={() => { setGoal(true); }}>
+                <TouchableHighlight onPress={() => setGoal(true)}>
                     <Text style={STYLES.newgoal}>
                         + New Goal
                     </Text>
@@ -122,16 +135,15 @@ const goals = [
 
                 </View>
                 <MultipleSelectList 
-        setSelected={(val) => setSelected(val)} 
-        data={goals} 
-        save="value"
-        onSelect={() => alert(selected)} 
-        label="Categories"
-    />
+                 setSelected={(val) => setSelectedGoalStatuses(val)}
+                 data={goals}
+                 save="value"
+                 label="Goal Status"
+              />
                
          
             <FlatList
-                data={data.goals}
+              data={data.goals?.filter((goal) => selectedGoalStatuses.includes(goal.currentGoalStatus))}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <View style={STYLES.cardgoal}>
@@ -142,7 +154,7 @@ const goals = [
                                 
                     <Text style={{fontSize:14,color:'black',marginLeft:10}}>Purpose</Text>
                     <Text  style={{marginLeft:210,marginTop:10,position:'absolute',fontSize:11,color:'blue'}}>Update Progress</Text>
-                    <TouchableHighlight onPress={() => openEventModal(item)}>
+                    <TouchableHighlight onPress={() => setUpdate(true)}>
                     <Image style={{ width: 15, height: 15,position:'absolute',color:'blue',marginLeft:300 ,marginTop:-40}} source={require('../assets/pencil.png')} />
                    </TouchableHighlight>
                     <Text  style={{marginLeft:260,marginTop:50,position:'absolute',fontSize:15,color:'black'}}> {item.currentGoalStatus}</Text>
@@ -174,43 +186,163 @@ const goals = [
                     </View>
                      )}
                 />
-                   <Modal visible={showModal} animationType="slide" >
+                   <Modal visible={newgoal} animationType="slide" >
+                  
                     <View>
-                    <View style={STYLES.header}>
-                    <TouchableOpacity onPress={navigation.goBack}>
-                      <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
-                      <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}>Edit Goal </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <Text style={{fontSize:14,color:'black',marginLeft:10,marginBottom:10}}>Goal Execution Period</Text>
+                   
+                      <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10,color:"black" }}>New Goal </Text>
+                    
+                    <View style={{flexDirection:'row',justifyContent:'center'}}>
+                      <TouchableOpacity >
+                        <Text onPress={() => setGoal(false)} style={{ color: 'red' ,marginLeft:139}}>Cancel</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity >
+                        <Text  style={{ color: 'blue',marginLeft:19 }}>Create Goal</Text>
+                      </TouchableOpacity>
+                    </View>
+                  <Text style={{fontSize:14,color:'black',marginLeft:10,marginTop:15}}>Goal Execution Period</Text>
+                
+                 <View style={{ width: '70%',marginLeft:15 }}>
                  <Text>Year</Text>
-                  <SelectList 
+                  <SelectList
                     setSelected={(val) => setSelected(val)} 
                     data={year} 
-                    save="value"                                     
-                />
+                    save="value"
+                  />
+                </View>
+
+                <View style={{ width: '70%',marginLeft:15 }}>
                   <Text>Period</Text>
                   <SelectList 
                     setSelected={(val) => setSelected(val)} 
                     data={period} 
                     save="value"                
-                />
+                /></View>
                     <Text style={{fontSize:14,color:'black',marginLeft:10}}>Goal Description</Text>
                       <TextInput style={STYLES.goalinput} placeholder='Description'></TextInput>
                       <Text style={{fontSize:14,color:'black',marginLeft:10}}>Purpose of Goal</Text>  
                       <TextInput style={STYLES.goalinput} placeholder='Purpose'></TextInput>
-                     
-                     
+                     {/*  */}
+                     <Text style={{color:'black',fontSize:14}}>Goal Smartness (yes/no)</Text>
+                     <Text>Specific:</Text>
+                     <View style={STYLES.containerf}>
+                      <View style={STYLES.checkboxContainer}>
+                        <CheckBox
+                          title="yes"
+                          checked={isChecked1}
+                          onPress={toggleCheckBox1}
+                        />
+                      </View>
+                      <View style={STYLES.checkboxContainer}>
+                        <CheckBox
+                          title="No"
+                          checked={isChecked2}
+                          onPress={toggleCheckBox2}
+                        />
+                      </View>
+                    </View>
+                    <Text style={{marginTop:15,marginLeft:15,color:'black'}}>Measurable:</Text>
+                    <TextInput style={STYLES.yesinput} ></TextInput>
+                    <Text  style={{marginLeft:15,color:'black'}}>Timing:</Text>
+                    <TextInput style={STYLES.yesinput} ></TextInput>
+                    <Text style={{marginLeft:15,color:'black'}}>Achievable:</Text>
+                    <TextInput style={STYLES.yesinput} ></TextInput>
+                    <Text style={{marginLeft:15,color:'black'}}>Realistic:</Text>
+                    <TextInput style={STYLES.yesinput} ></TextInput>
+
                       <Text style={{fontSize:14,color:'black',marginLeft:10}}>Activities/Tasks to be performed for goal</Text>  
                       <TextInput style={STYLES.goalinput} ></TextInput>
                       <Text style={{fontSize:14,color:'black',marginLeft:10}}>Efforts planned for the execution of the goal</Text>  
                       <TextInput style={STYLES.goalinput} ></TextInput>
 
+                    
                     {/* <Button>Update Goal</Button> */}
                     
                     </View>
+                    
                    </Modal>
+                   {/* update */}
+                 
+                   <Modal visible={update} animationType="slide" >
+                
+                  <View>
+                 
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10,color:"black" }}>Update Goal </Text>
+                  
+                  <View style={{flexDirection:'row',justifyContent:'center'}}>
+                    <TouchableOpacity >
+                      <Text onPress={() => setUpdate(false)} style={{ color: 'red' ,marginLeft:139}}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity >
+                      <Text  style={{ color: 'blue',marginLeft:19 }}>Update Goal</Text>
+                    </TouchableOpacity>
+                  </View>
+                <Text style={{fontSize:14,color:'black',marginLeft:10,marginTop:15}}>Goal Execution Period</Text>
+              
+               <View style={{ width: '70%',marginLeft:15 }}>
+               <Text>Year</Text>
+                <SelectList
+                  setSelected={(val) => setSelected(val)} 
+                  data={year} 
+                  save="value"
+                />
+              </View>
 
+              <View style={{ width: '70%',marginLeft:15 }}>
+                <Text>Period</Text>
+                <SelectList 
+                  setSelected={(val) => setSelected(val)} 
+                  data={period} 
+                  save="value"                
+              />
+         
+              </View>
+                  <Text style={{fontSize:14,color:'black',marginLeft:10}}>Goal Description</Text>
+                    <TextInput style={STYLES.goalinput} placeholder='Description'></TextInput>
+                    <Text style={{fontSize:14,color:'black',marginLeft:10}}>Purpose of Goal</Text>  
+                    <TextInput style={STYLES.goalinput} placeholder='Purpose'></TextInput>
+                   {/*  */}
+                   <Text style={{color:'black',fontSize:14}}>Goal Smartness (yes/no)</Text>
+                   <Text>Specific:</Text>
+                   <View style={STYLES.containerf}>
+                    <View style={STYLES.checkboxContainer}>
+                      <CheckBox
+                        title="yes"
+                        checked={isChecked1}
+                        onPress={toggleCheckBox1}
+                      />
+                    </View>
+                    <View style={STYLES.checkboxContainer}>
+                      <CheckBox
+                        title="No"
+                        checked={isChecked2}
+                        onPress={toggleCheckBox2}
+                      />
+                    </View>
+                  </View>
+                  <Text style={{marginTop:15,marginLeft:15,color:'black'}}>Measurable:</Text>
+                  <TextInput style={STYLES.yesinput} ></TextInput>
+                  <Text  style={{marginLeft:15,color:'black'}}>Timing:</Text>
+                  <TextInput style={STYLES.yesinput} ></TextInput>
+                  <Text style={{marginLeft:15,color:'black'}}>Achievable:</Text>
+                  <TextInput style={STYLES.yesinput} ></TextInput>
+                  <Text style={{marginLeft:15,color:'black'}}>Realistic:</Text>
+                  <TextInput style={STYLES.yesinput} ></TextInput>
+
+                    <Text style={{fontSize:14,color:'black',marginLeft:10}}>Activities/Tasks to be performed for goal</Text>  
+                    <TextInput style={STYLES.goalinput} ></TextInput>
+                    <Text style={{fontSize:14,color:'black',marginLeft:10}}>Efforts planned for the execution of the goal</Text>  
+                    <TextInput style={STYLES.goalinput} ></TextInput>
+
+                  
+                  {/* <Button>Update Goal</Button> */}
+                  
+                  </View>
+              
+                 </Modal>
+
+
+                 
 
 
             </ScrollView>

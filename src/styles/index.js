@@ -155,11 +155,32 @@ const STYLES = StyleSheet.create({
     goalinput: {
         borderWidth: 1,
         borderColor: 'black',
-        height: '100',
-        width: '90%', paddingBottom: 1,
+        height: '10%',
+        width: '70%', paddingBottom: 1,
         borderRadius: 6,
         marginLeft: 15
     },
+    yesinput:{
+        borderWidth: 1,
+        borderColor: 'black',
+        height: 22,
+        width: '20%',
+        borderRadius: 6,
+        marginLeft: 15,
+        marginBottom:10,
+        // position:'absolute'
+    },
+    containerf: {
+        flex: 1,
+        flexDirection:'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop:10,
+      },
     // modalContainer: {
     //     flex: 1,
     //     justifyContent: 'center',

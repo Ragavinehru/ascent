@@ -82,9 +82,9 @@
 // }
 // export default Calendarr;
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image,Modal, TextInput, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; // Import the date and time picker
 import axios from 'axios';
 import STYLES from '../styles';
