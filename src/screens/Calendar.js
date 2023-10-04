@@ -87,6 +87,7 @@ import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; // Import the date and time picker
 import axios from 'axios';
+import { useEffect } from 'react';
 import STYLES from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -104,7 +105,7 @@ const Calendarr = ({ navigation }) => {
     const [attachement, setAttachement] = useState('');
     const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
     const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
-
+    const [event, setEvent] = useState('');
     const typeoption = [
         { label: 'Option 1', value: 'Option 1' },
         { label: 'Option 2', value: 'Option 2' },
@@ -170,40 +171,31 @@ const Calendarr = ({ navigation }) => {
     };
     const events = async () => {
         try {
-            const url = `https://walrus-app-v5mk9.ondigitalocean.app/updateRole`;
-            const body = JSON.stringify({ role: newRole, email, groupId });
+            const groupId = ["PjIK87LDBDc5quWz76Ct", "bX2rIpcfpnPUaRIMQT3M", "NJY0z2LNktMwv89ETkt4", "RHmBJgPACFHAxAvvpv95", "6YXXJZQcMuL42IjRsHSL"]
+            const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
+            // const body = groupId
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: body
+                body: groupId
             });
             const result = await response.json();
-            console.log("Role updated:", result);
-            console.log("Role updated:", newRole);
+            console.log("events updated:", result);
+            // console.log("Role updated:", newRole);
 
-            // Update the user's role in the local state (groupInfo.members) here.
-            // Find the member by their email and update their role.
-            const updatedMembers = groupInfo.members.map((member) => {
-                if (member.email === email) {
-                    // Update the role of the member
-                    return { ...member, role: newRole };
-                }
-                return member;
-            });
-
+            setEvent(result);
             // Set the updated members array in your local state
-            setGroupInfo({ ...groupInfo, members: updatedMembers });
-            console.log("kkkkkkkk", updatedMembers);
-            // Close the role selection modal
-            setDots(false);
+
         } catch (error) {
             console.error('Error updating role:', error);
             // Handle errors here.
         }
-    };
+    }; useEffect(() => {
+        events();
+    }, []);
 
 
     // Functions to show/hide time pickers
@@ -305,9 +297,9 @@ const Calendarr = ({ navigation }) => {
                         />
                         <Text>Time:</Text>
 
-                        <View style={{ flexDirection: 'row', marginLeft: 33, height: 23 }}>
+                        <View style={{ flexDirection: 'row', marginLeft: 33, height: 55 }}>
                             <TouchableOpacity onPress={showStartTimePicker}>
-                                <Text style={STYLES.texttype} >Start Time: {startTime}</Text>
+                                <Text style={STYLES.texttime} >Start Time: {startTime}</Text>
                             </TouchableOpacity>
                             {isStartTimePickerVisible && (
                                 <DateTimePicker
@@ -316,6 +308,7 @@ const Calendarr = ({ navigation }) => {
                                     is24Hour={true}
                                     display="default"
                                     onChange={handleStartTimeChange}
+
                                 />
                             )}
 
@@ -329,7 +322,7 @@ const Calendarr = ({ navigation }) => {
                             {/* End Time Picker */}
                             {/* End Time Picker */}
                             <TouchableOpacity onPress={showEndTimePicker}>
-                                <Text style={STYLES.texttype} >End Time: {endTime}</Text>
+                                <Text style={STYLES.texttime} >End Time: {endTime}</Text>
                             </TouchableOpacity>
                             {isEndTimePickerVisible && (
                                 <DateTimePicker

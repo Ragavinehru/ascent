@@ -188,6 +188,7 @@ const HomeScreen = () => {
                     groupIds: groupIds
                 };
                 // Fetch event data
+                console.log("ggggggggggg", groupIds);
                 const eventResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getEvents', {
                     method: 'POST',
                     headers: {

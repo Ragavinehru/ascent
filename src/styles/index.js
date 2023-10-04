@@ -98,6 +98,16 @@ const STYLES = StyleSheet.create({
         elevation: 9,
         backgroundColor: COLORS.white,
     },
+    cardcheck: {
+        height: 430,
+        width: 360,
+        marginLeft: 17,
+        marginTop: 60,
+        marginBottom: 20,
+        borderRadius: 25,
+        elevation: 9,
+        backgroundColor: COLORS.white,
+    },
     cardgoal: {
         height: 150,
         width: 330,
@@ -144,6 +154,17 @@ const STYLES = StyleSheet.create({
         borderRadius: 6,
         marginLeft: 3,
         // color: '#ffff'
+    },
+    texttime: {
+        borderWidth: 1,
+        borderColor: 'grey',
+        height: '77%',
+        width: '99%',
+        alignContent: 'center',
+        borderRadius: 6,
+        marginLeft: -26,
+        marginRight: 66,
+        color: 'blue'
     },
     searchinput: {
         borderWidth: 1,
