@@ -81,16 +81,14 @@
 
 // }
 // export default Calendarr;
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, TouchableHighlight, Image, TextInput, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
-import DateTimePickerModal from 'react-native-modal-datetime-picker'; // Import the date and time picker
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
-import { useEffect } from 'react';
 import STYLES from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 
 const Calendarr = ({ navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
@@ -105,11 +103,14 @@ const Calendarr = ({ navigation }) => {
     const [attachement, setAttachement] = useState('');
     const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
     const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
-    const [event, setEvent] = useState('');
+    const [events, setEvents] = useState([]); // Initialize events as an empty array
+    const [isNewEventModalVisible, setIsNewEventModalVisible] = useState(false);
+
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
     const typeoption = [
         { label: 'Option 1', value: 'Option 1' },
         { label: 'Option 2', value: 'Option 2' },
-        // Add more options as needed
     ];
 
     const apiUrl = 'https://walrus-app-v5mk9.ondigitalocean.app/createEvent';
@@ -119,9 +120,13 @@ const Calendarr = ({ navigation }) => {
         setModalVisible(!isModalVisible);
     };
 
-    const handleDateSelect = (day) => {
-        toggleModal(day.dateString);
+    const toggleNewEventModal = () => {
+        setIsNewEventModalVisible(!isNewEventModalVisible);
     };
+
+    // const handleDateSelect = (day) => {
+    //     toggleModal(day.dateString);
+    // };
 
     const createEvent = async () => {
         try {
@@ -144,59 +149,57 @@ const Calendarr = ({ navigation }) => {
                     "attachmentUrl": null
                 }
             }
+
             const response = await axios.post(apiUrl, GoalData, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-
                 body: JSON.stringify(GoalData),
-
-
             });
 
             if (response.status === 200) {
-                // const resData = await response.json();
-                // console.log("responseeee", resData)
                 console.log('Event created:', response.data);
-                toggleModal(null); // Close the modal
+                toggleModal(null);
             } else {
-                console.error('Failed to  returned:', response.status, response.statusText);
+                console.error('Failed to create event:', response.status, response.statusText);
             }
         } catch (error) {
-            // Handle any API request errors here
             console.error('Error creating event:', error);
         }
     };
-    const events = async () => {
+
+    const fetchEvents = async () => {
         try {
-            const groupId = ["PjIK87LDBDc5quWz76Ct", "bX2rIpcfpnPUaRIMQT3M", "NJY0z2LNktMwv89ETkt4", "RHmBJgPACFHAxAvvpv95", "6YXXJZQcMuL42IjRsHSL"]
+            const groupId = {
+                "groupIds": ["PjIK87LDBDc5quWz76Ct", "bX2rIpcfpnPUaRIMQT3M", "NJY0z2LNktMwv89ETkt4", "RHmBJgPACFHAxAvvpv95", "6YXXJZQcMuL42IjRsHSL"]
+            };
+
             const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getEvents';
-            // const body = groupId
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: groupId
+                body: JSON.stringify(groupId),
             });
-            const result = await response.json();
-            console.log("events updated:", result);
-            // console.log("Role updated:", newRole);
 
-            setEvent(result);
-            // Set the updated members array in your local state
-
+            if (response.status === 200) {
+                const result = await response.json();
+                setEvents(result.events); // Update the state with the fetched events
+            } else {
+                console.error('Failed to fetch events:', response.status, response.statusText);
+            }
         } catch (error) {
-            console.error('Error updating role:', error);
-            // Handle errors here.
+            console.error('Error fetching events:', error);
         }
-    }; useEffect(() => {
-        events();
-    }, []);
+    };
 
+    useEffect(() => {
+        fetchEvents();
+    }, []);
 
     // Functions to show/hide time pickers
     const showStartTimePicker = () => {
@@ -217,10 +220,7 @@ const Calendarr = ({ navigation }) => {
 
     const handleStartTimeChange = (event, selectedTime) => {
         if (selectedTime !== undefined) {
-            // Format the selected time as needed
-            const formattedTime = selectedTime.toLocaleTimeString(); // Use toLocaleTimeString to format as HH:mm
-
-            // Update the state with the selected start time and hide the picker
+            const formattedTime = selectedTime.toLocaleTimeString();
             setStartTime(formattedTime);
             hideStartTimePicker();
         } else {
@@ -230,16 +230,36 @@ const Calendarr = ({ navigation }) => {
 
     const handleEndTimeChange = (event, selectedTime) => {
         if (selectedTime !== undefined) {
-            // Format the selected time as needed
-            const formattedTime = selectedTime.toLocaleTimeString(); // Use toLocaleTimeString to format as HH:mm
-
-            // Update the state with the selected end time and hide the picker
+            const formattedTime = selectedTime.toLocaleTimeString();
             setEndTime(formattedTime);
             hideEndTimePicker();
         } else {
             hideEndTimePicker();
         }
     };
+    const handleDateSelect = (day) => {
+        const selectedEvent = events.find((event) => event.date === day.dateString);
+        setSelectedEvent(selectedEvent);
+        toggleModal(day.dateString); // Open the event creation modal if needed
+    };
+
+    // Create a function to format events for the calendar
+    const formatEventsForCalendar = (events) => {
+        const formattedEvents = {};
+
+        events.forEach((event) => {
+            const eventDate = event.date;
+            formattedEvents[eventDate] = {
+                selected: true,
+                // You can add other styling properties here if needed
+                // selectedColor: 'blue',
+            };
+        });
+
+        return formattedEvents;
+    };
+
+    const formattedEventsData = formatEventsForCalendar(events);
 
     return (
         <ScrollView>
@@ -249,6 +269,12 @@ const Calendarr = ({ navigation }) => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
                 </TouchableOpacity>
             </View>
+            <View style={STYLES.btnSecondary}>
+                <TouchableHighlight onPress={toggleNewEventModal}>
+                    <Text style={STYLES.text}>+ New Event</Text>
+                </TouchableHighlight>
+
+            </View>
             <View style={{ marginTop: 40 }}>
                 <Text style={{ marginLeft: 15, fontSize: 24, fontWeight: 'bold', color: 'black' }}>
                     Hi,Welcome Back
@@ -257,13 +283,21 @@ const Calendarr = ({ navigation }) => {
             </View>
             <Calendar
                 onDayPress={handleDateSelect}
-                markedDates={{
-                    [selectedDate]: { selected: true, marked: true },
-                }}
+                // markedDates={{
+                //     [selectedDate]: { selected: true, marked: true },
+                // }}
+                markedDates={formattedEventsData}
                 style={{ marginTop: 20, height: 400 }}
             />
-
-            <Modal isVisible={isModalVisible} style={{ backgroundColor: 'white', borderRadius: 29 }}>
+            {selectedEvent && (
+                <View style={{ marginTop: 10, marginLeft: 10 }}>
+                    <Text style={{ color: 'black', fontSize: 14 }}>Selected Event Details:</Text>
+                    <Text style={{ color: 'black' }}>Title: {selectedEvent.label}</Text>
+                    <Text style={{ color: 'black' }}>Date: {selectedEvent.date}</Text>
+                    {/* Add other event details here */}
+                </View>
+            )}
+            <Modal isVisible={isNewEventModalVisible} style={{ backgroundColor: 'white', borderRadius: 29 }}>
                 <ScrollView>
                     <View>
                         <Text style={{ fontSize: 19, color: 'black', marginLeft: 99 }}>Create new event</Text>
@@ -355,7 +389,8 @@ const Calendarr = ({ navigation }) => {
                         <TouchableOpacity onPress={createEvent} style={{ color: 'blue', marginTop: 11, borderRadius: 5 }}>
                             <Text style={{ color: 'blue', fontSize: 22, textAlign: 'center' }}>Create Event</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => toggleModal(null)} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 1 }}>
+                        <TouchableOpacity onPress={() => toggleNewEventModal()} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 1 }}>
+
                             <Text style={{ color: 'red', fontSize: 22, textAlign: 'center' }}>Close</Text>
                         </TouchableOpacity>
                     </View>

@@ -75,8 +75,9 @@ const STYLES = StyleSheet.create({
         color: COLORS.white,
         backgroundColor: COLORS.primary,
         borderRadius: 10,
-        marginTop: 20,
-        marginRight: 220,
+        marginTop: 30,
+        marginLeft: 70,
+        position: 'absolute'
     },
     searchhome: {
         alignItems: 'center',
@@ -102,7 +103,7 @@ const STYLES = StyleSheet.create({
         height: 430,
         width: 360,
         marginLeft: 17,
-        marginTop: 60,
+        marginTop: 20,
         marginBottom: 20,
         borderRadius: 25,
         elevation: 9,
