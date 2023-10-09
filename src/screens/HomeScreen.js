@@ -262,7 +262,22 @@ const HomeScreen = () => {
 
 
     const eventsarray = eventData.events;
-
+    const filterFutureEvents = (events) => {
+        const currentDate = new Date();
+      
+        // Filter events where the event date is greater than the current date
+        const futureEvents = events.filter((event) => {
+          const eventDate = new Date(event.date);
+          const eventStartTime = new Date(event.startHour);
+      
+          // Check if the event date is greater than the current date or
+          // if the event date is the same as the current date and the start time is in the future
+          return eventDate > currentDate || (eventDate.getTime() === currentDate.getTime() && eventStartTime > currentDate);
+        });
+      
+        return futureEvents;
+      };
+      
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -314,7 +329,26 @@ const HomeScreen = () => {
                 </View>
                 <View>
                     <Text style={{ marginTop: 17, marginLeft: 28, fontSize: 17, color: 'black' }}>Upcoming Events</Text>
-                    <SliderBox
+                    {/* <View style={STYLES.cardupcoming}> */}
+                    <View style={STYLES.cardupcoming}>
+                    {eventData && eventData.events && Array.isArray(eventData.events) ? (
+                        filterFutureEvents(eventData.events).map((item) => (
+                        <TouchableOpacity key={item.id} onPress={() => openEventModal(item, eventComments[item.id])}>
+                            <View>
+                            <Image style={{ width: 30, height: 30, marginRight: 10,marginTop:20,marginLeft:10,position:'absolute' }} source={require('../assets/video1.png')} />
+                            <Text style={{ fontSize: 16, color: 'black',marginLeft:48,marginTop:10 }}>{item.label}</Text>
+                            <Text  style={{ fontSize: 14, color: 'grey',marginLeft:48 }}>{item.date} | {item.startHour}-{item.endHour}</Text>
+                            {/* Add other event details here */}
+                            </View>
+                        </TouchableOpacity>
+                        ))
+                    ) : (
+                        <Text>No upcoming events found.</Text>
+                    )}
+                    </View>
+
+                    {/* </View> */}
+                    {/* <SliderBox
                         images={images}
                         dotColor="red"
                         inactiveDotColor="white"
@@ -327,7 +361,7 @@ const HomeScreen = () => {
                         firstItem={4}
                         paginationBoxVerticalPadding={20}
                         style={{ width: 360, height: 200, borderRadius: 25, marginLeft: 19, marginTop: 20 }}
-                    />
+                    /> */}
                 </View>
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
                 <View style={STYLES.card}>

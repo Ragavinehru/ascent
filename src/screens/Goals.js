@@ -304,7 +304,8 @@ const toggleCheckBox2 = () => {
                    {/*  */}
                    <Text style={{color:'black',fontSize:14}}>Goal Smartness (yes/no)</Text>
                    <Text>Specific:</Text>
-                   <View style={STYLES.containerf}>
+                   <TextInput style={STYLES.yesinput}></TextInput>
+                   {/* <View style={STYLES.containerf}>
                     <View style={STYLES.checkboxContainer}>
                       <CheckBox
                         title="yes"
@@ -319,7 +320,7 @@ const toggleCheckBox2 = () => {
                         onPress={toggleCheckBox2}
                       />
                     </View>
-                  </View>
+                  </View> */}
                   <Text style={{marginTop:15,marginLeft:15,color:'black'}}>Measurable:</Text>
                   <TextInput style={STYLES.yesinput} ></TextInput>
                   <Text  style={{marginLeft:15,color:'black'}}>Timing:</Text>

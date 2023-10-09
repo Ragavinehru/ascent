@@ -1,88 +1,6 @@
-// import React from 'react';
-// import { useState } from 'react';
-// import {
-//     SafeAreaView,
-//     View,
-//     Text,
-//     TextInput,
-//     Image,
-//     Button,
-//     ToastAndroid, Alert,
-// } from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
-// // import Icon from 'react-native-vector-icons/FontAwesome';
-// import COLORS from '../consts/color';
-// import STYLES from '../styles';
-// import { ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
-// import { Navigation } from 'react-native-navigation';
-// import { Calendar } from 'react-native-calendars';
-
-
-// const Calendarr = ({ navigation }) => {
-
-//     const [selectedDate, setSelectedDate] = useState(null);
-
-//     const handleDateSelect = (date) => {
-//         setSelectedDate(date);
-//     };
-
-//     return (
-//         <SafeAreaView
-//             style={{ paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white }}>
-
-//             <ScrollView showsVerticalScrollIndicator={true}>
-
-//                 <TouchableOpacity onPress={navigation.goBack}>
-//                     <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
-
-//                     {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
-//                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
-//                 </TouchableOpacity>
-
-//                 <View style={STYLES.header}>
-//                     <View>
-//                         <TouchableOpacity onPress={() => navigation.navigate('User')}>
-
-//                             <Image style={{ width: 50, marginLeft: 260, marginTop: 30, marginRight: 40, height: 50, }} source={require('../assets/person.png')} />
-//                         </TouchableOpacity>
-//                     </View>
-
-//                 </View>
-
-
-
-
-//                 <View style={{ marginTop: -65 }}>
-//                     <Text style={{ fontSize: 19, marginLeft: 17, marginBottom: 10, fontWeight: 'bold', color: COLORS.dark }}>
-//                         Hi,Welcome Back
-//                     </Text>
-
-//                 </View>
-//                 <View style={STYLES.btnSecondary}>
-//                     <TouchableHighlight onPress={() => navigation.navigate('NewEvent')}>
-//                         <Text style={STYLES.text}>
-//                             + New Event
-//                         </Text>
-//                     </TouchableHighlight>
-//                 </View>
-//                 <View style={STYLES.container}>
-//                     <Calendar
-//                         onDayPress={(day) => handleDateSelect(day.dateString)}
-//                         markedDates={{
-//                             [selectedDate]: { selected: true, selectedColor: 'blue' },
-//                         }}
-//                     />
-//                 </View>
-
-
-//             </ScrollView>
-//         </SafeAreaView>
-//     )
-
-// }
-// export default Calendarr;
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TouchableHighlight, Image, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableHighlight, Image, 
+    Alert,TextInput, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -104,9 +22,10 @@ const Calendarr = ({ navigation }) => {
     const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
     const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
     const [events, setEvents] = useState([]); // Initialize events as an empty array
-    const [isNewEventModalVisible, setIsNewEventModalVisible] = useState(false);
+    // const [isNewEventModalVisible, setIsNewEventModalVisible] = useState(false);
 
-    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedEvents, setSelectedEvents] = useState([]);
+
 
     const typeoption = [
         { label: 'Option 1', value: 'Option 1' },
@@ -114,20 +33,42 @@ const Calendarr = ({ navigation }) => {
     ];
 
     const apiUrl = 'https://walrus-app-v5mk9.ondigitalocean.app/createEvent';
+    const apiDel = 'https://walrus-app-v5mk9.ondigitalocean.app/deleteEvent';
 
     const toggleModal = (date) => {
-        setSelectedDate(date);
-        setModalVisible(!isModalVisible);
+        // Get the current date without the time component
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+    
+        // Convert the selectedDate string to a Date object
+        const selectedEventDate = new Date(date);
+    
+        // Check if the selected date is in the past
+        if (selectedEventDate < currentDate) {
+            // Display an error message to the user
+            // Alert.alert(
+            //     'Hello',
+            //     'You cannot create events for past dates. Please select a future date.',
+            //     [{ text: 'OK' }],
+            //     { cancelable: false }
+            // );
+        } else {
+            setSelectedDate(date);
+            setModalVisible(!isModalVisible);
+        }
     };
+    
+    
 
-    const toggleNewEventModal = () => {
-        setIsNewEventModalVisible(!isNewEventModalVisible);
-    };
+    // const toggleNewEventModal = () => {
+    //     setIsNewEventModalVisible(!isNewEventModalVisible);
+    // };
 
     // const handleDateSelect = (day) => {
     //     toggleModal(day.dateString);
     // };
-
+  
+    
     const createEvent = async () => {
         try {
             let GoalData = {
@@ -169,6 +110,53 @@ const Calendarr = ({ navigation }) => {
             console.error('Error creating event:', error);
         }
     };
+    const deleteEvent = async (selectedEvent) => {
+        try {
+            const selectedEventDate = new Date(selectedEvent.date);
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            if (selectedEventDate >= currentDate) {
+            let DelData = {
+                "event": {
+                    "id": selectedEvent.id,
+                    "label": eventTitle,
+                    "group": "PjIK87LDBDc5quWz76Ct",
+                    "description": description,
+                    "type": type,
+                    "format": format,
+                    "formatInfo": "",
+                    "color": "#039be5",
+                    "date": selectedDate,
+                    "startHour": "Invalid Date",
+                    "endHour": "Invalid Date",
+                    "createdBy": "vasanth@venzotechnologies.com",
+                    "user": "vasanth@venzotechnologies.com",
+                    "createdAt": "2023-10-03",
+                    "attachmentName": null,
+                    "attachmentUrl": null
+                }
+            }
+
+            const response = await axios.post(apiDel, DelData, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(DelData),
+            });
+
+            if (response.status === 200) {
+                console.log('Event Deleted:', response.data);
+                setEvents(events.filter(event => event.id !== selectedEvent.id));
+            }
+            } else {
+                console.error('Failed to delete event:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error Delete event:', error);
+        }
+    };
 
     const fetchEvents = async () => {
         try {
@@ -188,7 +176,8 @@ const Calendarr = ({ navigation }) => {
 
             if (response.status === 200) {
                 const result = await response.json();
-                setEvents(result.events); // Update the state with the fetched events
+                setEvents(result.events);
+                console.log("pal",result); // Update the state with the fetched events
             } else {
                 console.error('Failed to fetch events:', response.status, response.statusText);
             }
@@ -238,10 +227,11 @@ const Calendarr = ({ navigation }) => {
         }
     };
     const handleDateSelect = (day) => {
-        const selectedEvent = events.find((event) => event.date === day.dateString);
-        setSelectedEvent(selectedEvent);
+        const eventsForSelectedDate = events.filter((event) => event.date === day.dateString);
+        setSelectedEvents(eventsForSelectedDate);
         toggleModal(day.dateString); // Open the event creation modal if needed
     };
+    
 
     // Create a function to format events for the calendar
     const formatEventsForCalendar = (events) => {
@@ -252,7 +242,7 @@ const Calendarr = ({ navigation }) => {
             formattedEvents[eventDate] = {
                 selected: true,
                 // You can add other styling properties here if needed
-                // selectedColor: 'blue',
+                 selectedColor: 'violet',
             };
         });
 
@@ -260,7 +250,13 @@ const Calendarr = ({ navigation }) => {
     };
 
     const formattedEventsData = formatEventsForCalendar(events);
-
+    const isEventInFuture = (event) => {
+        const eventDate = new Date(event.date);
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+        return eventDate >= currentDate;
+      };
+      
     return (
         <ScrollView>
             <View style={STYLES.header}>
@@ -269,12 +265,12 @@ const Calendarr = ({ navigation }) => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
                 </TouchableOpacity>
             </View>
-            <View style={STYLES.btnSecondary}>
-                <TouchableHighlight onPress={toggleNewEventModal}>
+            {/* <View style={STYLES.btnSecondary}>
+                <TouchableHighlight onPress={toggleModal}>
                     <Text style={STYLES.text}>+ New Event</Text>
                 </TouchableHighlight>
 
-            </View>
+            </View> */}
             <View style={{ marginTop: 40 }}>
                 <Text style={{ marginLeft: 15, fontSize: 24, fontWeight: 'bold', color: 'black' }}>
                     Hi,Welcome Back
@@ -289,15 +285,29 @@ const Calendarr = ({ navigation }) => {
                 markedDates={formattedEventsData}
                 style={{ marginTop: 20, height: 400 }}
             />
-            {selectedEvent && (
-                <View style={{ marginTop: 10, marginLeft: 10 }}>
-                    <Text style={{ color: 'black', fontSize: 14 }}>Selected Event Details:</Text>
-                    <Text style={{ color: 'black' }}>Title: {selectedEvent.label}</Text>
-                    <Text style={{ color: 'black' }}>Date: {selectedEvent.date}</Text>
-                    {/* Add other event details here */}
-                </View>
-            )}
-            <Modal isVisible={isNewEventModalVisible} style={{ backgroundColor: 'white', borderRadius: 29 }}>
+            <ScrollView>
+            {selectedEvents.length > 0 && (
+    <View>
+        <Text style={{ color: 'black', fontSize: 16, marginLeft: 10, marginTop: 12 }}>Selected Event Details:</Text>
+        {selectedEvents.map((event) => (
+            <View key={event.id} style={STYLES.cardevent}>
+                  {isEventInFuture(event) && (
+                <TouchableOpacity onPress={() => deleteEvent(event)}>
+                    <Image style={{ width: 22, height: 22, marginTop: 10, marginLeft: 250 }} source={require('../assets/del.png')} />
+                </TouchableOpacity>
+                  )}
+                <Text style={{ color: 'black', marginLeft: 17, marginTop: 7 }}>Title: <Text style={{ color: 'grey', marginLeft: 20 }}>{event.label}</Text></Text>
+                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Date:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.date}</Text></Text>
+                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Mode:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.format}</Text></Text>
+                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Type:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.type}</Text></Text>
+            </View>
+        ))}
+    </View>
+)}
+
+</ScrollView>
+
+            <Modal isVisible={isModalVisible} style={{ backgroundColor: 'white', borderRadius: 29 }}>
                 <ScrollView>
                     <View>
                         <Text style={{ fontSize: 19, color: 'black', marginLeft: 99 }}>Create new event</Text>
@@ -389,7 +399,7 @@ const Calendarr = ({ navigation }) => {
                         <TouchableOpacity onPress={createEvent} style={{ color: 'blue', marginTop: 11, borderRadius: 5 }}>
                             <Text style={{ color: 'blue', fontSize: 22, textAlign: 'center' }}>Create Event</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => toggleNewEventModal()} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 1 }}>
+                        <TouchableOpacity onPress={() => toggleModal()} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 1 }}>
 
                             <Text style={{ color: 'red', fontSize: 22, textAlign: 'center' }}>Close</Text>
                         </TouchableOpacity>

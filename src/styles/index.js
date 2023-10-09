@@ -99,6 +99,26 @@ const STYLES = StyleSheet.create({
         elevation: 9,
         backgroundColor: COLORS.white,
     },
+    cardupcoming:{ 
+        height: 180,
+        width: 360,
+        marginLeft: 17,
+        marginTop: 40,
+        marginBottom: 20,
+        borderRadius: 25,
+        elevation: 9,
+        backgroundColor: COLORS.white},
+
+    cardevent: {
+        height: 140,
+        width: 300,
+        marginLeft: 10,
+        marginTop: 20,
+        marginBottom: 20,
+        borderRadius: 25,
+        elevation: 9,
+        backgroundColor: COLORS.light,
+    },
     cardcheck: {
         height: 430,
         width: 360,
