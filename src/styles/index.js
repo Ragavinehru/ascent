@@ -99,7 +99,7 @@ const STYLES = StyleSheet.create({
         elevation: 9,
         backgroundColor: COLORS.white,
     },
-    cardupcoming:{ 
+    cardupcoming: {
         height: 180,
         width: 360,
         marginLeft: 17,
@@ -107,7 +107,8 @@ const STYLES = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 25,
         elevation: 9,
-        backgroundColor: COLORS.white},
+        backgroundColor: COLORS.white
+    },
 
     cardevent: {
         height: 140,
@@ -198,7 +199,7 @@ const STYLES = StyleSheet.create({
     goalinput: {
         borderWidth: 1,
         borderColor: 'black',
-        height: '10%',
+        // height: '10%',
         width: '70%', paddingBottom: 1,
         borderRadius: 6,
         marginLeft: 15
@@ -206,7 +207,7 @@ const STYLES = StyleSheet.create({
     yesinput: {
         borderWidth: 1,
         borderColor: 'black',
-        height: 22,
+        height: 34,
         width: '20%',
         borderRadius: 6,
         marginLeft: 15,

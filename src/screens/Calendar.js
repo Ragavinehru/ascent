@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TouchableHighlight, Image, 
-    Alert,TextInput, ScrollView } from 'react-native';
+import {
+    View, Text, TouchableOpacity, TouchableHighlight, Image,
+    Alert, TextInput, ScrollView
+} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -39,10 +41,10 @@ const Calendarr = ({ navigation }) => {
         // Get the current date without the time component
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
-    
+
         // Convert the selectedDate string to a Date object
         const selectedEventDate = new Date(date);
-    
+
         // Check if the selected date is in the past
         if (selectedEventDate < currentDate) {
             // Display an error message to the user
@@ -57,8 +59,8 @@ const Calendarr = ({ navigation }) => {
             setModalVisible(!isModalVisible);
         }
     };
-    
-    
+
+
 
     // const toggleNewEventModal = () => {
     //     setIsNewEventModalVisible(!isNewEventModalVisible);
@@ -67,8 +69,8 @@ const Calendarr = ({ navigation }) => {
     // const handleDateSelect = (day) => {
     //     toggleModal(day.dateString);
     // };
-  
-    
+
+
     const createEvent = async () => {
         try {
             let GoalData = {
@@ -83,8 +85,8 @@ const Calendarr = ({ navigation }) => {
                     "date": selectedDate,
                     "startHour": "Invalid Date",
                     "endHour": "Invalid Date",
-                    "createdBy": "vasanth@venzotechnologies.com",
-                    "user": "vasanth@venzotechnologies.com",
+                    "createdBy": global.email,
+                    "user": global.email,
                     "createdAt": "2023-10-03",
                     "attachmentName": null,
                     "attachmentUrl": null
@@ -116,40 +118,40 @@ const Calendarr = ({ navigation }) => {
             const currentDate = new Date();
             currentDate.setHours(0, 0, 0, 0);
             if (selectedEventDate >= currentDate) {
-            let DelData = {
-                "event": {
-                    "id": selectedEvent.id,
-                    "label": eventTitle,
-                    "group": "PjIK87LDBDc5quWz76Ct",
-                    "description": description,
-                    "type": type,
-                    "format": format,
-                    "formatInfo": "",
-                    "color": "#039be5",
-                    "date": selectedDate,
-                    "startHour": "Invalid Date",
-                    "endHour": "Invalid Date",
-                    "createdBy": "vasanth@venzotechnologies.com",
-                    "user": "vasanth@venzotechnologies.com",
-                    "createdAt": "2023-10-03",
-                    "attachmentName": null,
-                    "attachmentUrl": null
+                let DelData = {
+                    "event": {
+                        "id": selectedEvent.id,
+                        "label": eventTitle,
+                        "group": "PjIK87LDBDc5quWz76Ct",
+                        "description": description,
+                        "type": type,
+                        "format": format,
+                        "formatInfo": "",
+                        "color": "#039be5",
+                        "date": selectedDate,
+                        "startHour": "Invalid Date",
+                        "endHour": "Invalid Date",
+                        "createdBy": "vasanth@venzotechnologies.com",
+                        "user": "vasanth@venzotechnologies.com",
+                        "createdAt": "2023-10-03",
+                        "attachmentName": null,
+                        "attachmentUrl": null
+                    }
                 }
-            }
 
-            const response = await axios.post(apiDel, DelData, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(DelData),
-            });
+                const response = await axios.post(apiDel, DelData, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(DelData),
+                });
 
-            if (response.status === 200) {
-                console.log('Event Deleted:', response.data);
-                setEvents(events.filter(event => event.id !== selectedEvent.id));
-            }
+                if (response.status === 200) {
+                    console.log('Event Deleted:', response.data);
+                    setEvents(events.filter(event => event.id !== selectedEvent.id));
+                }
             } else {
                 console.error('Failed to delete event:', response.status, response.statusText);
             }
@@ -177,7 +179,7 @@ const Calendarr = ({ navigation }) => {
             if (response.status === 200) {
                 const result = await response.json();
                 setEvents(result.events);
-                console.log("pal",result); // Update the state with the fetched events
+                console.log("pal", result); // Update the state with the fetched events
             } else {
                 console.error('Failed to fetch events:', response.status, response.statusText);
             }
@@ -231,7 +233,7 @@ const Calendarr = ({ navigation }) => {
         setSelectedEvents(eventsForSelectedDate);
         toggleModal(day.dateString); // Open the event creation modal if needed
     };
-    
+
 
     // Create a function to format events for the calendar
     const formatEventsForCalendar = (events) => {
@@ -242,7 +244,7 @@ const Calendarr = ({ navigation }) => {
             formattedEvents[eventDate] = {
                 selected: true,
                 // You can add other styling properties here if needed
-                 selectedColor: 'violet',
+                selectedColor: 'violet',
             };
         });
 
@@ -255,8 +257,8 @@ const Calendarr = ({ navigation }) => {
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
         return eventDate >= currentDate;
-      };
-      
+    };
+
     return (
         <ScrollView>
             <View style={STYLES.header}>
@@ -286,26 +288,26 @@ const Calendarr = ({ navigation }) => {
                 style={{ marginTop: 20, height: 400 }}
             />
             <ScrollView>
-            {selectedEvents.length > 0 && (
-    <View>
-        <Text style={{ color: 'black', fontSize: 16, marginLeft: 10, marginTop: 12 }}>Selected Event Details:</Text>
-        {selectedEvents.map((event) => (
-            <View key={event.id} style={STYLES.cardevent}>
-                  {isEventInFuture(event) && (
-                <TouchableOpacity onPress={() => deleteEvent(event)}>
-                    <Image style={{ width: 22, height: 22, marginTop: 10, marginLeft: 250 }} source={require('../assets/del.png')} />
-                </TouchableOpacity>
-                  )}
-                <Text style={{ color: 'black', marginLeft: 17, marginTop: 7 }}>Title: <Text style={{ color: 'grey', marginLeft: 20 }}>{event.label}</Text></Text>
-                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Date:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.date}</Text></Text>
-                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Mode:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.format}</Text></Text>
-                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Type:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.type}</Text></Text>
-            </View>
-        ))}
-    </View>
-)}
+                {selectedEvents.length > 0 && (
+                    <View>
+                        <Text style={{ color: 'black', fontSize: 16, marginLeft: 10, marginTop: 12 }}>Selected Event Details:</Text>
+                        {selectedEvents.map((event) => (
+                            <View key={event.id} style={STYLES.cardevent}>
+                                {isEventInFuture(event) && (
+                                    <TouchableOpacity onPress={() => deleteEvent(event)}>
+                                        <Image style={{ width: 22, height: 22, marginTop: 10, marginLeft: 250 }} source={require('../assets/del.png')} />
+                                    </TouchableOpacity>
+                                )}
+                                <Text style={{ color: 'black', marginLeft: 17, marginTop: 7 }}>Title: <Text style={{ color: 'grey', marginLeft: 20 }}>{event.label}</Text></Text>
+                                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Date:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.date}</Text></Text>
+                                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Mode:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.format}</Text></Text>
+                                <Text style={{ color: 'black', marginLeft: 17, marginTop: 5 }}>Type:<Text style={{ color: 'grey', marginLeft: 15 }}>{event.type}</Text></Text>
+                            </View>
+                        ))}
+                    </View>
+                )}
 
-</ScrollView>
+            </ScrollView>
 
             <Modal isVisible={isModalVisible} style={{ backgroundColor: 'white', borderRadius: 29 }}>
                 <ScrollView>
