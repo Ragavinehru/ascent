@@ -208,10 +208,11 @@ const STYLES = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         height: 34,
-        width: '20%',
+        width: '50%',
         borderRadius: 6,
-        marginLeft: 15,
+        marginLeft: 95,
         marginBottom: 10,
+
         // position:'absolute'
     },
     containerf: {
