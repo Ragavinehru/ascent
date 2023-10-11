@@ -368,8 +368,9 @@ const HomeScreen = () => {
                     /> */}
                 </View>
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
+                <Text style={{ marginLeft: 24, fontSize: 17, color: 'black' }}>History of Events</Text>
+
                 <View style={STYLES.card}>
-                    <Text style={{ marginTop: 10, marginLeft: 15, fontSize: 17, color: 'black' }}>History of Events</Text>
 
                     <FlatList
                         data={eventData.events}

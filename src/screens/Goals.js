@@ -58,15 +58,30 @@ const Goals = () => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [selectedGoalId, setSelectedGoalId] = useState(null);
   const [selectedGoal, setSelectedGoal] = useState(null);
+  const [selectedGoals, setSelectedGoals] = useState([]);
+
+
   // ... other state variables for updating goals
   const openUpdateModal = (goalId) => {
     const goal = data.goals.find((goal) => goal.id === goalId);
     if (goal) {
       setSelectedGoalId(goalId);
       setSelectedGoal(goal);
+      setupSpecificValue(goal.specific);
+      setupMeasurableValue(goal.measurable);
+      setupAchievableValue(goal.achievable);
+      setupRealisticValue(goal.realistic);
+      setupTimingValue(goal.timely);
+      setupGoalDescription(goal.description);
+      setupGoalPurpose(goal.purpose);
+      setupActivitiesValue(goal.activities);
+      setupEffortsValue(goal.efforts);
+      setupSelectedYear(goal.year);
+      setupSelectedPeriod(goal.period);
       setUpdateModalVisible(true);
     }
   };
+
 
   const year = [
     { key: '1', value: '2023' },
@@ -128,7 +143,7 @@ const Goals = () => {
       console.log("goal,", Goal);
       if (response.status === 200) {
         console.log('Goal created:', response.data);
-
+        setGoal(false);
       } else {
         console.error('Failed to create goal:', response.status, response.statusText);
       }
@@ -158,6 +173,15 @@ const Goals = () => {
         createdBy: global.email,
         currentGoalStatus: selectedGoal.currentGoalStatus,
       };
+
+      console.log("check", selectedGoal.id,
+        upspecificValue, upmeasurableValue,
+        upachievableValue, uprealisticValue,
+        uptimingValue, upgoalDescription,
+        upgoalPurpose, upactivitiesValue,
+        upeffortsValue, upselectedYear,
+        upselectedPeriod, selectedGoal.currentGoalStatus
+      );
 
 
       const response = await axios.post(apiupdate, updatedGoal, {
@@ -224,6 +248,16 @@ const Goals = () => {
     getGoalData();
   }, []);
 
+  const toggleSelectedGoal = (goalId) => {
+    setSelectedGoals((prevSelectedGoals) => {
+      if (prevSelectedGoals.includes(goalId)) {
+        return prevSelectedGoals.filter((id) => id !== goalId);
+      } else {
+        return [...prevSelectedGoals, goalId];
+      }
+    });
+  };
+
   return (
     <SafeAreaView
       style={{ paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white }}>
@@ -260,6 +294,7 @@ const Goals = () => {
           data={data.goals?.filter((goal) => selectedGoalStatuses.includes(goal.currentGoalStatus))}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
+
             <View style={STYLES.cardgoal}>
               <ScrollView>
                 <Text style={{ fontSize: 16, color: 'blue', marginTop: 10, marginLeft: 7 }}> {item.description} | {item.period}</Text>
@@ -271,13 +306,19 @@ const Goals = () => {
 
                 <Text style={{ marginLeft: 220, marginTop: 40, justifyContent: 'flex-start', position: 'absolute', fontSize: 14, width: -250, color: 'black' }}> {item.currentGoalStatus}</Text>
 
-                <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+                {/* <TouchableOpacity onPress={() => setShowComments(!showComments)}>
                   <Text style={{ marginLeft: 120, fontSize: 12, color: 'blue' }}>{showComments ? 'Show Less' : 'Show More'}</Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity onPress={() => toggleSelectedGoal(item.id)}>
+                  <Text style={{ marginLeft: 120, fontSize: 12, color: 'blue' }}>
+                    {selectedGoals.includes(item.id) ? 'Show Less' : 'Show More'}
+                  </Text>
                 </TouchableOpacity>
+
                 <Text style={{ marginLeft: 10, marginTop: -10 }}>{item.purpose}</Text>
 
 
-                {showComments && (
+                {selectedGoals.includes(item.id) && (
                   <View>
                     <Text style={{ fontSize: 14, color: 'black', marginLeft: 10, marginBottom: 10 }}>Goal Smartness</Text>
                     <Text style={{ marginLeft: 10 }}>Specific: {item.specific}</Text>
@@ -299,117 +340,26 @@ const Goals = () => {
           )}
         />
         <Modal visible={newgoal} animationType="slide" style={{ borderRadius: 22 }}>
-          <ScrollView>
-            <View style={{ flex: 1 }}>
 
-              <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10, color: "black" }}>New Goal </Text>
+          <View style={{ flex: 1 }}>
 
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <TouchableOpacity >
-                  <Text onPress={() => setGoal(false)} style={{ color: 'red', marginLeft: 139 }}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity >
-                  <Text style={{ color: 'blue', marginLeft: 19 }} onPress={createGoal}>Create Goal</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 14, color: 'black', marginLeft: 10, marginTop: 15 }}>Goal Execution Period</Text>
-
-                <View style={{ width: '70%', marginLeft: 15 }}>
-                  <Text>Year</Text>
-                  <SelectList
-                    setSelected={(val) => setSelectedYear(val)} // Update selectedYear
-                    data={year}
-                    save="value"
-                  />
-                </View>
-
-                <View style={{ width: '70%', marginLeft: 15 }}>
-                  <Text>Period</Text>
-                  <SelectList
-                    setSelected={(val) => setSelectedPeriod(val)} // Update selectedPeriod
-                    data={period}
-                    save="value"
-                  /></View>
-
-                <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Goal Description</Text>
-                <TextInput
-                  style={STYLES.goalinput}
-                  placeholder='Description'
-                  value={goalDescription}
-                  onChangeText={(text) => setGoalDescription(text)}
-                />
-                <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Purpose of Goal</Text>
-                <TextInput
-                  style={STYLES.goalinput}
-                  placeholder='Purpose'
-                  value={goalPurpose}
-                  onChangeText={(text) => setGoalPurpose(text)}
-                />
-                {/*  */}
-                <Text style={{ color: 'black', fontSize: 14 }}>Goal Smartness (yes/no)</Text>
-                <Text style={{ marginBottom: -20, marginTop: 15, marginRight: 230, color: 'black', }}>Specific:</Text>
-
-                <TextInput style={STYLES.yesinput}
-                  value={specificValue}
-                  onChangeText={(text) => setSpecificValue(text)} ></TextInput>
-
-                <Text style={{ marginTop: 15, marginBottom: -20, marginRight: 230, marginLeft: 15, color: 'black' }}>Measurable:</Text>
-                <TextInput style={STYLES.yesinput}
-                  value={measurableValue}
-                  onChangeText={(text) => setMeasurableValue(text)}></TextInput>
-
-                <Text style={{ marginLeft: 15, marginBottom: -20, marginRight: 250, color: 'black' }}>Timing:</Text>
-                <TextInput style={STYLES.yesinput}
-                  value={timingValue}
-                  onChangeText={(text) => setTimingValue(text)} ></TextInput>
-
-                <Text style={{ marginLeft: 15, marginTop: 19, marginBottom: -20, marginRight: 230, color: 'black' }}>Achievable:</Text>
-                <TextInput style={STYLES.yesinput} value={achievableValue}
-                  onChangeText={(text) => setAchievableValue(text)}></TextInput>
-
-                <Text style={{ marginLeft: 15, marginBottom: -20, marginRight: 230, color: 'black' }}>Realistic:</Text>
-                <TextInput style={STYLES.yesinput} value={realisticValue}
-                  onChangeText={(text) => setRealisticValue(text)}></TextInput>
-
-                <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Activities/Tasks to be performed for goal</Text>
-                <TextInput style={STYLES.goalinput} value={activitiesValue}
-                  onChangeText={(text) => setActivitiesValue(text)}></TextInput>
-                <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Efforts planned for the execution of the goal</Text>
-                <TextInput style={STYLES.goalinput} value={effortsValue}
-                  onChangeText={(text) => setEffortsValue(text)}></TextInput>
-
-              </View>
-              {/* <Button>Update Goal</Button> */}
-              {/* </ScrollView> */}
-            </View>
-          </ScrollView>
-        </Modal>
-        {/* update */}
-
-        <Modal visible={updateModalVisible} animationType="slide" >
-
-          <ScrollView>
-
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10, color: "black" }}>Update Goal </Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10, color: "black" }}>New Goal </Text>
 
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <TouchableOpacity >
-                <Text onPress={() => setUpdate(false)} style={{ color: 'red', marginLeft: 139 }}>Cancel</Text>
+                <Text onPress={() => setGoal(false)} style={{ color: 'red', marginLeft: 139 }}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableHighlight onPress={updateGoal}>
-                <Text style={{ color: 'blue', marginLeft: 19 }}>Update Goal</Text>
-              </TouchableHighlight>
+              <TouchableOpacity >
+                <Text style={{ color: 'blue', marginLeft: 19 }} onPress={createGoal}>Create Goal</Text>
+              </TouchableOpacity>
             </View>
             <View style={{ alignItems: 'center' }}>
-
-
               <Text style={{ fontSize: 14, color: 'black', marginLeft: 10, marginTop: 15 }}>Goal Execution Period</Text>
 
               <View style={{ width: '70%', marginLeft: 15 }}>
                 <Text>Year</Text>
                 <SelectList
-                  setSelected={(val) => setupSelectedYear(val)} // Update selectedYear
+                  setSelected={(val) => setSelectedYear(val)} // Update selectedYear
                   data={year}
                   save="value"
                 />
@@ -418,61 +368,149 @@ const Goals = () => {
               <View style={{ width: '70%', marginLeft: 15 }}>
                 <Text>Period</Text>
                 <SelectList
-                  setSelected={(val) => setupSelectedPeriod(val)} // Update selectedPeriod
+                  setSelected={(val) => setSelectedPeriod(val)} // Update selectedPeriod
                   data={period}
                   save="value"
                 /></View>
-              <Text style={{ fontSize: 14, marginTop: 15, color: 'black', marginLeft: 10 }}>Goal Description</Text>
+
+              <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Goal Description</Text>
               <TextInput
                 style={STYLES.goalinput}
                 placeholder='Description'
-                value={upgoalDescription}
-                onChangeText={(text) => setupGoalDescription(text)}
+                value={goalDescription}
+                onChangeText={(text) => setGoalDescription(text)}
               />
-              <Text style={{ fontSize: 14, marginTop: 15, color: 'black', marginLeft: 10 }}>Purpose of Goal</Text>
+              <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Purpose of Goal</Text>
               <TextInput
                 style={STYLES.goalinput}
                 placeholder='Purpose'
-                value={upgoalPurpose}
-                onChangeText={(text) => setupGoalPurpose(text)}
+                value={goalPurpose}
+                onChangeText={(text) => setGoalPurpose(text)}
               />
               {/*  */}
-              <Text style={{ color: 'black', marginTop: 15, fontSize: 14 }}>Goal Smartness (yes/no)</Text>
+              <Text style={{ color: 'black', fontSize: 14 }}>Goal Smartness (yes/no)</Text>
               <Text style={{ marginBottom: -20, marginTop: 15, marginRight: 230, color: 'black', }}>Specific:</Text>
 
               <TextInput style={STYLES.yesinput}
-                value={upspecificValue}
-                onChangeText={(text) => setupSpecificValue(text)} ></TextInput>
+                value={specificValue}
+                onChangeText={(text) => setSpecificValue(text)} ></TextInput>
 
               <Text style={{ marginTop: 15, marginBottom: -20, marginRight: 230, marginLeft: 15, color: 'black' }}>Measurable:</Text>
               <TextInput style={STYLES.yesinput}
-                value={upmeasurableValue}
-                onChangeText={(text) => setupMeasurableValue(text)}></TextInput>
+                value={measurableValue}
+                onChangeText={(text) => setMeasurableValue(text)}></TextInput>
 
               <Text style={{ marginLeft: 15, marginBottom: -20, marginRight: 250, color: 'black' }}>Timing:</Text>
               <TextInput style={STYLES.yesinput}
-                value={uptimingValue}
-                onChangeText={(text) => setupTimingValue(text)} ></TextInput>
+                value={timingValue}
+                onChangeText={(text) => setTimingValue(text)} ></TextInput>
 
               <Text style={{ marginLeft: 15, marginTop: 19, marginBottom: -20, marginRight: 230, color: 'black' }}>Achievable:</Text>
-              <TextInput style={STYLES.yesinput} value={upachievableValue}
-                onChangeText={(text) => setupAchievableValue(text)}></TextInput>
+              <TextInput style={STYLES.yesinput} value={achievableValue}
+                onChangeText={(text) => setAchievableValue(text)}></TextInput>
 
               <Text style={{ marginLeft: 15, marginBottom: -20, marginRight: 230, color: 'black' }}>Realistic:</Text>
-              <TextInput style={STYLES.yesinput} value={uprealisticValue}
-                onChangeText={(text) => setupRealisticValue(text)}></TextInput>
+              <TextInput style={STYLES.yesinput} value={realisticValue}
+                onChangeText={(text) => setRealisticValue(text)}></TextInput>
 
               <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Activities/Tasks to be performed for goal</Text>
-              <TextInput style={STYLES.goalinput} value={upactivitiesValue}
-                onChangeText={(text) => setupActivitiesValue(text)}></TextInput>
+              <TextInput style={STYLES.goalinput} value={activitiesValue}
+                onChangeText={(text) => setActivitiesValue(text)}></TextInput>
               <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Efforts planned for the execution of the goal</Text>
-              <TextInput style={STYLES.goalinput} value={upeffortsValue}
-                onChangeText={(text) => setupEffortsValue(text)}></TextInput>
+              <TextInput style={STYLES.goalinput} value={effortsValue}
+                onChangeText={(text) => setEffortsValue(text)}></TextInput>
+
             </View>
 
-            {/* <Button>Update Goal</Button> */}
+          </View>
 
-          </ScrollView>
+        </Modal>
+        {/* update */}
+
+        <Modal visible={updateModalVisible} animationType="slide" >
+
+
+
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10, color: "black" }}>Update Goal </Text>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <TouchableOpacity >
+              <Text onPress={() => setUpdateModalVisible(false)} style={{ color: 'red', marginLeft: 139 }}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableHighlight onPress={updateGoal}>
+              <Text style={{ color: 'blue', marginLeft: 19 }}>Update Goal</Text>
+            </TouchableHighlight>
+          </View>
+          <View style={{ alignItems: 'center' }}>
+
+
+            <Text style={{ fontSize: 14, color: 'black', marginLeft: 10, marginTop: 15 }}>Goal Execution Period</Text>
+
+            <View style={{ width: '70%', marginLeft: 15 }}>
+              <Text>Year</Text>
+              <SelectList
+                setSelected={(val) => setupSelectedYear(val)} // Update selectedYear
+                data={year}
+                save="value"
+              />
+            </View>
+
+            <View style={{ width: '70%', marginLeft: 15 }}>
+              <Text>Period</Text>
+              <SelectList
+                setSelected={(val) => setupSelectedPeriod(val)} // Update selectedPeriod
+                data={period}
+                save="value"
+              /></View>
+            <Text style={{ fontSize: 14, marginTop: 15, color: 'black', marginLeft: 10 }}>Goal Description</Text>
+            <TextInput
+              style={STYLES.goalinput}
+              placeholder='Description'
+              value={upgoalDescription}
+              onChangeText={(text) => setupGoalDescription(text)}
+            />
+            <Text style={{ fontSize: 14, marginTop: 15, color: 'black', marginLeft: 10 }}>Purpose of Goal</Text>
+            <TextInput
+              style={STYLES.goalinput}
+              placeholder='Purpose'
+              value={upgoalPurpose}
+              onChangeText={(text) => setupGoalPurpose(text)}
+            />
+            {/*  */}
+            <Text style={{ color: 'black', marginTop: 15, fontSize: 14 }}>Goal Smartness (yes/no)</Text>
+            <Text style={{ marginBottom: -20, marginTop: 15, marginRight: 230, color: 'black', }}>Specific:</Text>
+
+            <TextInput style={STYLES.yesinput}
+              value={upspecificValue}
+              onChangeText={(text) => setupSpecificValue(text)} ></TextInput>
+
+            <Text style={{ marginTop: 15, marginBottom: -20, marginRight: 230, marginLeft: 15, color: 'black' }}>Measurable:</Text>
+            <TextInput style={STYLES.yesinput}
+              value={upmeasurableValue}
+              onChangeText={(text) => setupMeasurableValue(text)}></TextInput>
+
+            <Text style={{ marginLeft: 15, marginBottom: -20, marginRight: 250, color: 'black' }}>Timing:</Text>
+            <TextInput style={STYLES.yesinput}
+              value={uptimingValue}
+              onChangeText={(text) => setupTimingValue(text)} ></TextInput>
+
+            <Text style={{ marginLeft: 15, marginTop: 19, marginBottom: -20, marginRight: 230, color: 'black' }}>Achievable:</Text>
+            <TextInput style={STYLES.yesinput} value={upachievableValue}
+              onChangeText={(text) => setupAchievableValue(text)}></TextInput>
+
+            <Text style={{ marginLeft: 15, marginBottom: -20, marginRight: 230, color: 'black' }}>Realistic:</Text>
+            <TextInput style={STYLES.yesinput} value={uprealisticValue}
+              onChangeText={(text) => setupRealisticValue(text)}></TextInput>
+
+            <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Activities/Tasks to be performed for goal</Text>
+            <TextInput style={STYLES.goalinput} value={upactivitiesValue}
+              onChangeText={(text) => setupActivitiesValue(text)}></TextInput>
+            <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Efforts planned for the execution of the goal</Text>
+            <TextInput style={STYLES.goalinput} value={upeffortsValue}
+              onChangeText={(text) => setupEffortsValue(text)}></TextInput>
+          </View>
+
+          {/* <Button>Update Goal</Button> */}
 
         </Modal>
 

@@ -104,7 +104,21 @@ const Calendarr = ({ navigation }) => {
 
             if (response.status === 200) {
                 console.log('Event created:', response.data);
-                toggleModal(null);
+                setModalVisible(false);
+
+                setEventTitle('');
+                setType('');
+                setFormat('');
+                setStartTime('');
+                setEndTime('');
+                setLocation('');
+                setDescription('');
+                setAttachement('');
+
+
+
+                formatEventsForCalendar(events);
+
             } else {
                 console.error('Failed to create event:', response.status, response.statusText);
             }
@@ -112,6 +126,7 @@ const Calendarr = ({ navigation }) => {
             console.error('Error creating event:', error);
         }
     };
+
     const deleteEvent = async (selectedEvent) => {
         try {
             const selectedEventDate = new Date(selectedEvent.date);
@@ -150,7 +165,19 @@ const Calendarr = ({ navigation }) => {
 
                 if (response.status === 200) {
                     console.log('Event Deleted:', response.data);
+                    // setEvents(events.filter(event => event.id !== selectedEvent.id));
+                    setEventTitle('');
+                    setType('');
+                    setFormat('');
+                    setStartTime('');
+                    setEndTime('');
+                    setLocation('');
+                    setDescription('');
+                    setAttachement('');
+
+                    setSelectedEvents(selectedEvents.filter(event => event.id !== selectedEvent.id));
                     setEvents(events.filter(event => event.id !== selectedEvent.id));
+
                 }
             } else {
                 console.error('Failed to delete event:', response.status, response.statusText);
@@ -231,11 +258,11 @@ const Calendarr = ({ navigation }) => {
     const handleDateSelect = (day) => {
         const eventsForSelectedDate = events.filter((event) => event.date === day.dateString);
         setSelectedEvents(eventsForSelectedDate);
-        toggleModal(day.dateString); // Open the event creation modal if needed
+        toggleModal(day.dateString);
     };
 
 
-    // Create a function to format events for the calendar
+
     const formatEventsForCalendar = (events) => {
         const formattedEvents = {};
 
@@ -243,7 +270,7 @@ const Calendarr = ({ navigation }) => {
             const eventDate = event.date;
             formattedEvents[eventDate] = {
                 selected: true,
-                // You can add other styling properties here if needed
+
                 selectedColor: 'violet',
             };
         });
@@ -398,13 +425,15 @@ const Calendarr = ({ navigation }) => {
                             value={attachement}
                             onChangeText={(text) => setAttachement(text)}
                         />
-                        <TouchableOpacity onPress={createEvent} style={{ color: 'blue', marginTop: 11, borderRadius: 5 }}>
-                            <Text style={{ color: 'blue', fontSize: 22, textAlign: 'center' }}>Create Event</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => toggleModal()} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 1 }}>
+                        <View style={{ flexDirection: 'row', marginLeft: 100 }}>
+                            <TouchableOpacity onPress={createEvent} style={{ color: 'blue', marginTop: 11, borderRadius: 5, marginRight: 10 }}>
+                                <Text style={{ color: 'blue', fontSize: 17, textAlign: 'center' }}>Create Event</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => toggleModal()} style={{ color: 'red', padding: 10, borderRadius: 5, marginTop: 1 }}>
 
-                            <Text style={{ color: 'red', fontSize: 22, textAlign: 'center' }}>Close</Text>
-                        </TouchableOpacity>
+                                <Text style={{ color: 'red', fontSize: 17, textAlign: 'center' }}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </ScrollView>
             </Modal>

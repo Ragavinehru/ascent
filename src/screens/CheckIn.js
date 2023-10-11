@@ -15,13 +15,14 @@ import COLORS from '../consts/color';
 import STYLES from '../styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Navigation } from 'react-native-navigation';
-
+import axios from 'axios';
 const stages = ['Work Highs ', 'Work Lows ', 'Personal Highs ', 'Personal Lows', 'Discoveries&Presentations'];
 
 const Checkin = ({ navigation }) => {
     const [currentStage, setCurrentStage] = useState(0);
     const [showCheckIn, setShowCheckIn] = useState(true);
     const [showViewResponse, setShowViewResponse] = useState(false);
+    const [responses, setResponses] = useState([]);
 
     const handleCheckInClick = () => {
         setShowCheckIn(true);
@@ -31,6 +32,7 @@ const Checkin = ({ navigation }) => {
     const handleViewResponseClick = () => {
         setShowCheckIn(false);
         setShowViewResponse(true);
+        ViewResponse();
     };
 
     const handleNextClick = () => {
@@ -44,6 +46,54 @@ const Checkin = ({ navigation }) => {
             setCurrentStage(currentStage - 1);
         }
     };
+
+    const apiresponse = 'https://walrus-app-v5mk9.ondigitalocean.app/getRowData';
+
+    const ViewResponse = async () => {
+        try {
+            let ViewData = {
+                "months": [
+                    7,
+                    8,
+                    9
+                ],
+                "year": 2023,
+                "email": "vasanth@venzotechnologies.com"
+            }
+
+            const response = await axios.post(apiresponse, ViewData, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ViewData),
+            });
+            console.log("happy", response);
+
+            if (response.status === 200) {
+
+                // const responseData = response.data.rowData.find(
+                //     (item) => item.checkin[0].title === stages[currentStage]
+                // );
+                // setResponses(responseData.checkin[0].content);
+
+                // console.log('View Response:', response.data.rowData.checkin.content.question);
+                console.log('View Response:', response.data.rowData[0].checkin[0].content);
+            } else {
+                console.error('Failed to view:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error view response:', error);
+        }
+    };
+
+
+
+
+
+
+
 
     return (
         <View style={{ paddingHorizontal: 20, flex: 1, backgroundColor: 'white' }}>
@@ -119,12 +169,31 @@ const Checkin = ({ navigation }) => {
 
             {showViewResponse && (
                 <View>
-                    <View style={STYLES.cardcheck}>
+                    <View style={STYLES.cardview}>
                         <ScrollView>
                             <Text style={{ color: 'black', marginLeft: 10 }}>Title</Text>
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Highs</Text>
+                            {/* <ScrollView>
+                            {responses.map((response, index) => (
+
+                                <View key={index}>
+                                    <Text style={{ color: 'black', marginLeft: 10 }}>
+                                        {response.question}
+                                    </Text>
+                                    <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>
+                                        {stages[currentStage]}
+                                    </Text>
+                                    <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>
+                                        {response.response}
+                                    </Text>
+                                </View>
+                            ))}
+
+                        </ScrollView> */}
+
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
+                                {/* <Text>{response.data.rowData[0].checkin[0].content[0].response}</Text> */}
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
                             </View>
@@ -160,4 +229,4 @@ const Checkin = ({ navigation }) => {
     );
 };
 
-export default Checkin;
+export default Checkin; 
