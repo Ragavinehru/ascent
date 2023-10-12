@@ -13,7 +13,7 @@ import STYLES from '../styles';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
-
+import axios from 'axios';
 
 
 const Group = () => {
@@ -25,6 +25,8 @@ const Group = () => {
   const [groupdata, setGroupData] = useState({});
   const [newgroup, setgroup] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [name, setname] = useState('');
+  const [description, setdescription] = useState('');
 
 
   const fetchUserData = async () => {
@@ -68,6 +70,54 @@ const Group = () => {
   };
   // const memberCount = groupdata.groupInfo.members.length;
   // console.log("test", memberCount)
+  const apigroup = 'https://walrus-app-v5mk9.ondigitalocean.app/createGroup';
+
+  const createGroup = async () => {
+    try {
+      let GroupData = {
+        "group": {
+          "name": name,
+          "description": description,
+          "status": "active",
+          "owner": {
+            "name": global.name,
+            "email": global.email,
+          },
+          "members": [
+            {
+              "email": global.email,
+              "role": "facilitator",
+              "status": "active"
+            }
+          ],
+          "createdon": "2023-10-12"
+        }
+      }
+
+      const response = await axios.post(apigroup, GroupData, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(GroupData),
+      });
+
+      if (response.status === 200) {
+        console.log('Group created:', response.data);
+
+
+
+
+
+
+      } else {
+        console.error('Failed to create group:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error group create:', error);
+    }
+  };
 
 
 
@@ -94,17 +144,17 @@ const Group = () => {
           {/* <Text style={{ marginTop: 10, marginLeft: 19, fontSize: 20, color: 'black' }}>Your Groups</Text> */}
           {/* ... */}
           <FlatList
-            data={groupdata.groups} // Use the groups array for the data source
+            data={groupdata.groups}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View>
-                <Image style={{ width: 45, height: 45, marginTop: 30, marginBottom: 10, marginLeft: 30 }} source={require('../assets/group.png')} />
+                <Image style={{ width: 39, height: 39, marginTop: 30, marginBottom: 10, marginLeft: 30 }} source={require('../assets/group.png')} />
                 <TouchableOpacity onPress={() => navigateToClearGroup(item.id)}>
-                  <Text style={{ marginTop: -60, marginLeft: 89, fontSize: 17, color: 'blue' }} >{item.name}</Text>
+                  <Text style={{ marginTop: -50, marginLeft: 89, fontSize: 17, color: 'blue' }} >{item.name}</Text>
                 </TouchableOpacity>
-                <Text style={{ marginTop: -35, marginLeft: 92, fontSize: 15, }}>{item.createdon}</Text>
-                {/* Display owner information here */}
-                {/* Assuming you have access to owner data in the group object */}
+                <Text style={{ marginTop: -30, marginLeft: 92, fontSize: 15, }}>{item.createdon}</Text>
+
+
                 {/* <Text style={{ marginTop: 10, marginLeft: 94, fontSize: 15, }}> Owner: {item.owner[0]}</Text> */}
               </View>
             )}
@@ -117,21 +167,29 @@ const Group = () => {
           alignItems: 'center',
           backgroundColor: '#fff5ee',
           borderRadius: 30,
-          // margin: 120,
           marginLeft: 70,
           padding: 80, width: '70%'
         }}>
           <Text style={{ fontWeight: 'bold', fontSize: 22, width: 200 }}>Create new Group</Text>
           <Text style={{ fontWeight: 'bold', fontSize: 15, width: 260, marginBottom: 30 }}>Be more Organized.Be more Focused.</Text>
 
-          <TextInput style={STYLES.searchinput} placeholder='Group Name *'></TextInput>
+          <TextInput style={STYLES.searchinput}
+            value={name}
+            onChangeText={(text) => setname(text)}
+            placeholder='Group Name *'></TextInput>
+
           <View style={STYLES.space}></View>
-          <TextInput style={STYLES.searchinput} placeholder='Description*'></TextInput>
+
+          <TextInput style={STYLES.searchinput}
+            value={description}
+            onChangeText={(text) => setdescription(text)}
+            placeholder='Description*'></TextInput>
+
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => setgroup(false)} style={{ marginTop: 10 }}>
               <Text style={{ color: 'red', marginTop: 10 }}>Cancel</Text>
             </TouchableOpacity>
-            <Text style={{ fontWeight: 'bold', fontSize: 13, color: 'blue', marginTop: 20, marginLeft: 10 }}>Create Group</Text>
+            <Text onPress={createGroup} style={{ fontWeight: 'bold', fontSize: 13, color: 'blue', marginTop: 20, marginLeft: 10 }}>Create Group</Text>
           </View>
 
         </View>

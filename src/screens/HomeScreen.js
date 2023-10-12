@@ -65,7 +65,7 @@ const HomeScreen = () => {
     };
 
     const [userData, setUserData] = useState({});
-    
+
     // const [urishow, setUri] = useState('');
     const [eventData, setEventData] = useState([]);
     const [commentData, setCommentData] = useState([]);
@@ -338,10 +338,10 @@ const HomeScreen = () => {
                                 filterFutureEvents(eventData.events).map((item) => (
                                     <TouchableOpacity key={item.id} onPress={() => openEventModal(item, eventComments[item.id])}>
                                         <View>
-                                            <Image style={{ width: 30, height: 30, marginRight: 10, marginTop: 20, marginLeft: 10, position: 'absolute' }} source={require('../assets/video1.png')} />
+                                            <Image style={{ width: 25, height: 25, marginRight: 10, marginTop: 15, marginLeft: 10, position: 'absolute' }} source={require('../assets/video1.png')} />
                                             <Text style={{ fontSize: 16, color: 'black', marginLeft: 48, marginTop: 10 }}>{item.label}</Text>
                                             <Text style={{ fontSize: 14, color: 'grey', marginLeft: 48 }}>{item.date} | {item.startHour}-{item.endHour}</Text>
-                                            {/* Add other event details here */}
+
                                         </View>
                                     </TouchableOpacity>
                                 ))
@@ -482,7 +482,7 @@ const HomeScreen = () => {
                             }
                             }
                         />
-                        <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginBottom: 180 }}>Comments</Text>
+                        <Text style={{ fontSize: 15, color: 'black', marginLeft: 12, marginTop: 430, position: 'absolute', }}>Comments</Text>
                         <View style={{ marginTop: 200 }}>
                             <View style={STYLES.cardcomment}>
                                 <ScrollView>
@@ -527,7 +527,7 @@ const HomeScreen = () => {
                                     onChangeText={(text) => setCommentText({ ...commentData, text })} />
 
                                 <TouchableOpacity onPress={pickAttachment}>
-                                    <Image style={{ width: 23, height: 27, marginLeft: 300, marginTop: -40 }} source={require('../assets/attachment.png')} />
+                                    <Image style={{ width: 23, height: 27, marginLeft: 290, marginTop: -40 }} source={require('../assets/attachment.png')} />
                                 </TouchableOpacity>
 
                             </View>

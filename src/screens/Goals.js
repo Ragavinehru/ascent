@@ -119,7 +119,7 @@ const Goals = () => {
           "achievable": achievableValue,
           "activities": activitiesValue,
           "createdBy": global.email,
-          "currentGoalStatus": "Complete and closed",
+          "currentGoalStatus": "Open",
           "description": goalDescription,
           "efforts": effortsValue,
           "measurable": measurableValue,

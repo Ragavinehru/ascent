@@ -6,16 +6,16 @@ import {
     Image, TouchableOpacity, TouchableHighlight,
     Button, FlatList, Modal
 } from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useRoute } from '@react-navigation/native';
 import COLORS from '../consts/color';
-// import { ScrollView } from 'react-native-gesture-handler';
 import STYLES from '../styles';
 import { useState, useEffect, useRef } from 'react';
-// import { useNavigation } from '@react-navigation/native';
+
 
 
 const GroupInfo = ({ navigation, route }) => {
     // const navigation = useNavigation();
+
     const [groupInfo, setGroupInfo] = useState([]);
     const [role, setRole] = useState([]);
 
@@ -47,6 +47,7 @@ const GroupInfo = ({ navigation, route }) => {
     useEffect(() => {
         fetchGroupData();
     }, []);
+
     const updateRole = async (newRole, email, groupId) => {
         try {
             const url = `https://walrus-app-v5mk9.ondigitalocean.app/updateRole`;
@@ -96,9 +97,10 @@ const GroupInfo = ({ navigation, route }) => {
     const [selectedMember, setSelectedMember] = useState([]);
     // console.log("members log", membersData);
     // search filter
-    const filterMembersByName = (query) => {
+    const filterMembers = (query) => {
         const filtered = groupInfo.members.filter((member) =>
-            member.name.toLowerCase().includes(query.toLowerCase())
+            member.name.toLowerCase().includes(query.toLowerCase()) ||
+            member.company.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredMembers(filtered);
     };
@@ -147,7 +149,7 @@ const GroupInfo = ({ navigation, route }) => {
                     ref={searchRef}
                     onChangeText={txt => {
                         SetSearch(txt);
-                        filterMembersByName(txt);
+                        filterMembers(txt);
 
                     }}
                     placeholder="Search"
@@ -171,10 +173,10 @@ const GroupInfo = ({ navigation, route }) => {
             </View>
 
             <FlatList
-                data={groupInfo.members}
+                data={filteredMembers.length > 0 ? filteredMembers : groupInfo.members}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => <MemberItem member={item} />}
-            // Render each member using the custom MemberItem component
+
             />
             <View>
                 <Text style={{ color: 'blue', fontSize: 17, marginLeft: 10, marginTop: -50, position: 'absolute' }}>  Invited Members:

@@ -80,7 +80,7 @@ const Checkin = ({ navigation }) => {
                 },
                 body: JSON.stringify(ViewData),
             });
-            console.log("happy", response.data.rowData[0].checkin[0]);
+            // console.log("happy", response.data.rowData[0].checkin[0]);
             setCheckData(response);
 
             if (response.status === 200) {
@@ -91,7 +91,8 @@ const Checkin = ({ navigation }) => {
                 // setResponses(responseData.checkin[0].content);
 
                 // console.log('View Response:', response.data.rowData.checkin.content.question);
-                console.log('View Response:', response.data.rowData[0].checkin[0].content);
+
+                // console.log('View Response:', response.data.rowData[0].checkin[0].content);
 
             } else {
                 console.error('Failed to view:', response.status, response.statusText);
@@ -100,12 +101,45 @@ const Checkin = ({ navigation }) => {
             console.error('Error view response:', error);
         }
     };
-  
-// const Content= CheckData.data.rowData.checkin[0].content;
+
+    // const Content= CheckData.data.rowData.checkin[0].content;
     // const [CheckData, setCheckData] = useState([]);
     // console.log("hajjjjjj",CheckData.data.rowData[0].checkin[0]);
-// const groupedResponses = CheckData.data.rowData[0].checkin[0];
-// console.log("hgrtrewwssjj",groupedResponses.content[0]);
+    // const groupedResponses = CheckData.data.rowData[0].checkin[0];
+    // console.log("hgrtrewwssjj",groupedResponses.content[0]);
+    const apicheckin = 'https://walrus-app-v5mk9.ondigitalocean.app/checkin';
+
+    const checkin = async () => {
+        try {
+            let checkinData = {
+
+            }
+
+            const response = await axios.post(apicheckin, checkinData, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(checkinData),
+            });
+
+            if (response.status === 200) {
+                console.log('checkin created:', response.data);
+
+
+
+
+
+            } else {
+                console.error('Failed to create check:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error creating checkin:', error);
+        }
+    };
+
+
     return (
         <View style={{ paddingHorizontal: 20, flex: 1, backgroundColor: 'white' }}>
             <View style={STYLES.header}>
@@ -155,15 +189,15 @@ const Checkin = ({ navigation }) => {
                     </View>
 
                     <View style={STYLES.cardcheck}>
-                       
+
                         <View>
                             <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
                             <Text style={{ color: 'grey', marginTop: 30 }}>Situation: What are the most important things that happened? *</Text>
-                            <TextInput style={STYLES.texttype} />
+                            <TextInput style={STYLES.textcheck} />
                             <Text style={{ color: 'grey' }}>Impact: What impact did it have on you? *</Text>
-                            <TextInput style={STYLES.texttype} />
+                            <TextInput style={STYLES.textcheck} />
                             <Text style={{ color: 'grey' }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
-                            <TextInput style={STYLES.texttype} />
+                            <TextInput style={STYLES.textcheck} />
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -174,10 +208,10 @@ const Checkin = ({ navigation }) => {
                             <Text>Next</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{color:'blue',marginLeft:150}}>CheckIN</Text>
+                    <Text style={{ color: 'blue', marginLeft: 170 }}>CheckIN</Text>
 
                 </View>
-                
+
             )}
 
             {showViewResponse && (
@@ -185,6 +219,7 @@ const Checkin = ({ navigation }) => {
                     <View style={STYLES.cardview}>
                         <ScrollView>
                             <Text style={{ color: 'black', marginLeft: 10 }}>Title</Text>
+
                             {/* {CheckData && CheckData.rowData
                 ? CheckData.rowData.map((rowData, index) => (
                     <View key={index}>
@@ -220,15 +255,15 @@ const Checkin = ({ navigation }) => {
                             ))}
 
                         </ScrollView> */}
-                           <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Highs</Text>
+                            <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Highs</Text>
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
-                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[0].content[0].response}</Text>
+                                {/* <Text style={{ marginTop: 20, position: 'absolute', marginLeft: 200 }}>{CheckData.data.rowData[0].checkin[0].content[0].response}</Text> */}
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
-                                <Text style={{ marginTop: 80,position:'absolute',marginLeft:200}}>{CheckData.data.rowData[0].checkin[0].content[1].response}</Text>
+                                {/* <Text style={{ marginTop: 80, position: 'absolute', marginLeft: 200 }}>{CheckData.data.rowData[0].checkin[0].content[1].response}</Text> */}
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
-                                <Text style={{ marginTop: 130,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[0].content[2].response}</Text>
-                            </View>  
+                                {/* <Text style={{ marginTop: 130, position: 'absolute', marginLeft: 200 }}>{CheckData.data.rowData[0].checkin[0].content[2].response}</Text> */}
+                            </View>
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Lows</Text>
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>

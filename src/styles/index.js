@@ -163,10 +163,10 @@ const STYLES = StyleSheet.create({
     },
     cardcomment: {
 
-        height: 170,
+        height: 200,
         width: 350,
         marginLeft: 17,
-        marginTop: -350,
+        marginTop: -290,
         borderRadius: 25,
         elevation: 13,
         position: 'absolute',
@@ -193,7 +193,16 @@ const STYLES = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'grey',
         // height: '17%',
-        width: '98%',
+        width: '78%',
+        borderRadius: 6,
+        marginLeft: 35,
+        // color: '#ffff'
+    },
+    textcheck: {
+        borderWidth: 1,
+        borderColor: 'grey',
+        // height: '17%',
+        width: '88%',
         borderRadius: 6,
         marginLeft: 3,
         // color: '#ffff'
@@ -202,12 +211,23 @@ const STYLES = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'grey',
         height: '77%',
-        width: '99%',
+        width: '78%',
         alignContent: 'center',
         borderRadius: 6,
-        marginLeft: -26,
+        marginLeft: -35,
         marginRight: 66,
-        color: 'blue'
+        color: 'blue',
+    },
+    starttime: {
+        borderWidth: 1,
+        borderColor: 'grey',
+        height: '77%',
+        width: '78%',
+        alignContent: 'center',
+        borderRadius: 6,
+        marginLeft: -25,
+        marginRight: 66,
+        color: 'blue',
     },
     searchinput: {
         borderWidth: 1,
@@ -278,7 +298,7 @@ const STYLES = StyleSheet.create({
     smallinput: {
         borderWidth: 1,
         borderColor: 'black',
-        // marginTop: '1%',
+        marginTop: '2%',
         marginLeft: '4%',
         width: '37%',
         borderRadius: 6,

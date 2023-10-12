@@ -43,7 +43,7 @@ const Profile = ({ navigation }) => {
     // // const [selectedDate, setSelectedDate] = useState(new Date());
     // const [company, setcompany] = useState('');
 
-    const [dob, setDob] = useState();
+    const [dob, setDob] = useState('');
     // const []
 
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -63,10 +63,9 @@ const Profile = ({ navigation }) => {
     //
     const [data, setData] = useState([]);
     const [postdata, setPosTData] = useState([]);
+
     const Mydata = async () => {
         const url = 'https://walrus-app-v5mk9.ondigitalocean.app/getUserInfo?email=' + global.email;
-        // const token = await AsyncStorage.getItem('authToken');
-        // console.log("token", url, token, token?.accessToken);
 
         let result = await fetch(url, {
             method: 'GET',
@@ -79,10 +78,14 @@ const Profile = ({ navigation }) => {
 
         result = await result.json();
         console.log("profileeeeeee", result);
+
         setData(result);
         console.log("prints", result.userInfo.name);
+
         global.name = result.userInfo.name;
+
         const userInfo = data.userInfo;
+
         setTextvalue(userInfo.name);
         setMobile(userInfo.mobileno);
         setBloodgroup(userInfo.bloodgroup);
@@ -94,45 +97,46 @@ const Profile = ({ navigation }) => {
         setWedd(userInfo.weddingann);
         setMarital(userInfo.maritalStatus);
         setChildrenData(userInfo.children);
-        // setSex(userInfo.sex);
+        setSex(userInfo.sex);
 
 
 
     };
-    // console.log("data postedddd", data.userInfo.name)
-    // console.log("name ", data.userInfo.name)
+
     useEffect(() => {
 
         Mydata();
     }, []);
-    // const fetchpostdata = async () => {
-    //     const url = 'https://walrus-app-v5mk9.ondigitalocean.app/updateProfile';
 
-    //     const updatedProfileData = {
-    //         name: textValue,
-    //         mobile: mobile,
-    //         bloodgroup: bloodgroup,
+    const fetchpostdata = async () => {
+        const url = 'https://walrus-app-v5mk9.ondigitalocean.app/updateProfile';
 
-    //     };
+        const updatedProfileData = {
+            name: textValue,
+            mobile: mobile,
+            bloodgroup: bloodgroup,
 
-    //     try {
-    //         let result = await fetch(url, {
-    //             method: 'POST',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(updatedProfileData),
-    //         });
 
-    //         result = await result.json();
-    //         console.log('Profile Updated', result);
+        };
 
-    //     } catch (error) {
-    //         console.error('Error updating profile', error);
-    //         // Handle errors
-    //     }
-    // };
+        try {
+            let result = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedProfileData),
+            });
+
+            result = await result.json();
+            console.log('Profile Updated', result);
+
+        } catch (error) {
+            console.error('Error updating profile', error);
+            // Handle errors
+        }
+    };
 
 
 
@@ -144,7 +148,6 @@ const Profile = ({ navigation }) => {
                 <View style={STYLES.header}>
                     <TouchableOpacity onPress={navigation.goBack}>
                         <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
-
                         {/* <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} /> */}
                         <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
                     </TouchableOpacity>
@@ -177,24 +180,26 @@ const Profile = ({ navigation }) => {
 
                         <TextInput
                             value={sex}
-                            onChangeText={text => setTextvalue(text)}
+                            onChangeText={text => setSex(text)}
                             style={STYLES.sidebox} />
                     </View>
                     <Text style={STYLES.texttitle}>Date of Birth *</Text>
-                    <TouchableOpacity onPress={showDatepicker}>
+                    {/* <TouchableOpacity onPress={showDatepicker}>
                         <Text style={{ borderWidth: 1, width: 345, height: 54, borderRadius: 6, padding: 10, marginLeft: 15 }}>
                             {selectedDate.toDateString()}
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                    <TextInput style={STYLES.textinput} value={dob}
+                        onChangeText={text => setDob(text)}></TextInput>
 
-                    {showDatePicker && (
+                    {/* {showDatePicker && (
                         <DateTimePicker
                             value={selectedDate}
                             mode="date"
                             display="calendar"
                             onChange={onDateChange}
                         />
-                    )}
+                    )} */}
                     <Text style={STYLES.texttitle}>Emergency Contact:</Text>
                     <TextInput
                         value={Emergencycon}
@@ -243,7 +248,7 @@ const Profile = ({ navigation }) => {
 
                         <Text style={STYLES.texttitle}>Child 1 Name*</Text>
                         <TextInput
-                            // value={child}
+                            value={child}
                             onChangeText={text => setMobile(text)}
                             style={STYLES.textinput} />
                         <View stye={{ flexDirection: 'row' }}>
@@ -251,11 +256,11 @@ const Profile = ({ navigation }) => {
                             <Text style={{ marginLeft: 15, marginTop: 11 }}>Child 1 Gender *</Text>
                             <Text style={STYLES.gender}>Child 1 DOB*</Text>
                             <TextInput
-                                // value={bloodgroup}
+                                value={bloodgroup}
                                 onChangeText={text => setBloodgroup(text)}
                                 style={STYLES.smallinput} />
                             <TextInput
-                                value={textValue}
+                                // value={textValue}
                                 onChangeText={text => setTextvalue(text)}
                                 style={STYLES.sidebox} />
                         </View>
@@ -319,7 +324,7 @@ const Profile = ({ navigation }) => {
                     </View> */}
 
                     <View style={STYLES.space} />
-                    <Button title="Update Profile"  > </Button>
+                    <Button title="Update Profile" onPress={fetchpostdata} > </Button>
 
                 </View>
             </ScrollView>

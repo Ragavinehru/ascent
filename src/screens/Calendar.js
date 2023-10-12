@@ -338,16 +338,16 @@ const Calendarr = ({ navigation }) => {
 
             <Modal isVisible={isModalVisible} style={{ backgroundColor: 'white', borderRadius: 29 }}>
                 <ScrollView>
-                    <View>
+                    <View style={{}}>
                         <Text style={{ fontSize: 19, color: 'black', marginLeft: 99 }}>Create new event</Text>
                         <Text style={{ color: 'grey', marginLeft: 75 }}>Plan your day. Plan your success.</Text>
-                        <Text style={{ marginTop: 20 }}>Event name*</Text>
+                        <Text style={{ marginTop: 20, marginLeft: 35 }}>Event name*</Text>
                         <TextInput
                             value={eventTitle}
                             onChangeText={(text) => setEventTitle(text)}
                             style={STYLES.texttype}
                         />
-                        <Text>Select Type:</Text>
+                        <Text style={{ marginLeft: 35 }}>Select Type:</Text>
                         <TextInput
                             style={STYLES.texttype}
                             placeholder="Select Type"
@@ -355,24 +355,24 @@ const Calendarr = ({ navigation }) => {
                             onChangeText={(text) => setType(text)}
                             items={typeoption}
                         />
-                        <Text>Select Format:</Text>
+                        <Text style={{ marginLeft: 35 }}>Select Format:</Text>
                         <TextInput
                             style={STYLES.texttype}
                             placeholder="Select Format"
                             value={format}
                             onChangeText={(text) => setFormat(text)}
                         />
-                        <Text>Date:</Text>
+                        <Text style={{ marginLeft: 35 }}>Date:</Text>
                         <TextInput
                             style={STYLES.texttype}
                             value={selectedDate}
                             onChangeText={(text) => setSelectedDate(text)}
                         />
-                        <Text>Time:</Text>
+                        <Text style={{ marginLeft: 35 }}>Time:</Text>
 
-                        <View style={{ flexDirection: 'row', marginLeft: 33, height: 55 }}>
+                        <View style={{ flexDirection: 'row', marginLeft: 63, height: 55 }}>
                             <TouchableOpacity onPress={showStartTimePicker}>
-                                <Text style={STYLES.texttime} >Start Time: {startTime}</Text>
+                                <Text style={STYLES.starttime} >Start Time: {startTime}</Text>
                             </TouchableOpacity>
                             {isStartTimePickerVisible && (
                                 <DateTimePicker
@@ -407,25 +407,25 @@ const Calendarr = ({ navigation }) => {
                                 />
                             )}
                         </View>
-                        <Text>Location/Meeting Link:</Text>
+                        <Text style={{ marginLeft: 35 }}>Location/Meeting Link:</Text>
                         <TextInput
                             style={STYLES.texttype}
                             value={location}
                             onChangeText={(text) => setLocation(text)}
                         />
-                        <Text>Description/Agenda:</Text>
+                        <Text style={{ marginLeft: 35 }}>Description/Agenda:</Text>
                         <TextInput
                             style={STYLES.texttype}
                             value={description}
                             onChangeText={(text) => setDescription(text)}
                         />
-                        <Text>Attachment:</Text>
+                        <Text style={{ marginLeft: 35 }}>Attachment:</Text>
                         <TextInput
                             style={STYLES.texttype}
                             value={attachement}
                             onChangeText={(text) => setAttachement(text)}
                         />
-                        <View style={{ flexDirection: 'row', marginLeft: 100 }}>
+                        <View style={{ flexDirection: 'row', marginLeft: 100, marginTop: 10 }}>
                             <TouchableOpacity onPress={createEvent} style={{ color: 'blue', marginTop: 11, borderRadius: 5, marginRight: 10 }}>
                                 <Text style={{ color: 'blue', fontSize: 17, textAlign: 'center' }}>Create Event</Text>
                             </TouchableOpacity>
@@ -436,8 +436,8 @@ const Calendarr = ({ navigation }) => {
                         </View>
                     </View>
                 </ScrollView>
-            </Modal>
-        </ScrollView>
+            </Modal >
+        </ScrollView >
     );
 };
 

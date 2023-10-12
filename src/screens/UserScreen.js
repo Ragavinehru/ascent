@@ -17,14 +17,22 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
-
+import { useState } from 'react';
 import COLORS from '../consts/color';
 import STYLES from '../styles';
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const UserScreen = ({ navigation }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const handleLogout = () => {
 
+    setUsername('');
+    setPassword('');
+
+    navigation.navigate('Login');
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={STYLES.header}>
@@ -50,7 +58,7 @@ const UserScreen = ({ navigation }) => {
           <Text>SETTINGS</Text>
         </View>
         <View style={{ marginLeft: 30, marginTop: 10 }}>
-          <Text style={{ color: 'red' }} onPress={() => navigation.navigate('Login')}>LOGOUT</Text>
+          <Text style={{ color: 'red' }} onPress={handleLogout}>LOGOUT</Text>
         </View>
       </View>
     </SafeAreaView>
