@@ -22,19 +22,21 @@ const Calendar = ({ navigation }) => {
         <SafeAreaView
             style={{ paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-
-                <View>
-                    <TouchableOpacity onPress={() => navigation.navigate('User')}>
-
-                        <Image style={{ width: 50, marginLeft: 280, marginTop: 30, marginRight: 40, height: 50, }} source={require('../assets/person.png')} />
-                    </TouchableOpacity>
-                </View>
+            <View style={STYLES.header}>
+                <TouchableOpacity onPress={navigation.goBack}>
+                    <Image style={STYLES.inputIcon} source={require('../assets/arrow.png')} />
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
+                </TouchableOpacity>
+            </View>
+               
                 <View style={{ marginTop: 70 }}>
                     <Text style={{ fontSize: 27, fontWeight: 'bold', color: COLORS.dark }}>
-                        Hi,Welcome Back
+                        Topic For Discussions
                     </Text>
-
+<Text style={{marginTop:20}}>All  | Planned  | Completed  | No ActionTaken</Text>
                 </View>
+                <Text style={STYLES.new}>Add Topic For Discussion</Text>
+           <View style={STYLES.cardcheck}></View>
             </ScrollView>
         </SafeAreaView>
     )

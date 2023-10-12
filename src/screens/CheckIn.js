@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import {
     SafeAreaView,
     View,
@@ -16,13 +17,23 @@ import STYLES from '../styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Navigation } from 'react-native-navigation';
 import axios from 'axios';
+
 const stages = ['Work Highs ', 'Work Lows ', 'Personal Highs ', 'Personal Lows', 'Discoveries&Presentations'];
 
+// const Checkin = ({ navigation }) => {
+//     const [currentStage, setCurrentStage] = useState(0);
+//     const [showCheckIn, setShowCheckIn] = useState(true);
+//     const [showViewResponse, setShowViewResponse] = useState(false);
+//     const [responses, setResponses] = useState([]);
+//     const [CheckData, setCheckData] = useState([]);
 const Checkin = ({ navigation }) => {
     const [currentStage, setCurrentStage] = useState(0);
     const [showCheckIn, setShowCheckIn] = useState(true);
     const [showViewResponse, setShowViewResponse] = useState(false);
     const [responses, setResponses] = useState([]);
+    const [CheckData, setCheckData] = useState([]);
+    // const [groupedResponses, setGroupedResponses] = useState({});
+
 
     const handleCheckInClick = () => {
         setShowCheckIn(true);
@@ -69,7 +80,8 @@ const Checkin = ({ navigation }) => {
                 },
                 body: JSON.stringify(ViewData),
             });
-            console.log("happy", response);
+            console.log("happy", response.data.rowData[0].checkin[0]);
+            setCheckData(response);
 
             if (response.status === 200) {
 
@@ -80,6 +92,7 @@ const Checkin = ({ navigation }) => {
 
                 // console.log('View Response:', response.data.rowData.checkin.content.question);
                 console.log('View Response:', response.data.rowData[0].checkin[0].content);
+
             } else {
                 console.error('Failed to view:', response.status, response.statusText);
             }
@@ -87,14 +100,12 @@ const Checkin = ({ navigation }) => {
             console.error('Error view response:', error);
         }
     };
-
-
-
-
-
-
-
-
+  
+// const Content= CheckData.data.rowData.checkin[0].content;
+    // const [CheckData, setCheckData] = useState([]);
+    // console.log("hajjjjjj",CheckData.data.rowData[0].checkin[0]);
+// const groupedResponses = CheckData.data.rowData[0].checkin[0];
+// console.log("hgrtrewwssjj",groupedResponses.content[0]);
     return (
         <View style={{ paddingHorizontal: 20, flex: 1, backgroundColor: 'white' }}>
             <View style={STYLES.header}>
@@ -144,7 +155,7 @@ const Checkin = ({ navigation }) => {
                     </View>
 
                     <View style={STYLES.cardcheck}>
-
+                       
                         <View>
                             <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
                             <Text style={{ color: 'grey', marginTop: 30 }}>Situation: What are the most important things that happened? *</Text>
@@ -163,8 +174,10 @@ const Checkin = ({ navigation }) => {
                             <Text>Next</Text>
                         </TouchableOpacity>
                     </View>
+                    <Text style={{color:'blue',marginLeft:150}}>CheckIN</Text>
 
                 </View>
+                
             )}
 
             {showViewResponse && (
@@ -172,7 +185,24 @@ const Checkin = ({ navigation }) => {
                     <View style={STYLES.cardview}>
                         <ScrollView>
                             <Text style={{ color: 'black', marginLeft: 10 }}>Title</Text>
-                            <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Highs</Text>
+                            {/* {CheckData && CheckData.rowData
+                ? CheckData.rowData.map((rowData, index) => (
+                    <View key={index}>
+                      <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>
+                        {rowData.checkin[0].title}
+                      </Text>
+                      {rowData.checkin[0].content.map((content, i) => (
+                        <View key={i}>
+                          <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>
+                            {content.question}
+                          </Text>
+                          <Text>{content.response}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  ))
+                : null} */}
+                            {/* <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Highs</Text> */}
                             {/* <ScrollView>
                             {responses.map((response, index) => (
 
@@ -190,18 +220,23 @@ const Checkin = ({ navigation }) => {
                             ))}
 
                         </ScrollView> */}
-
+                           <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Highs</Text>
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
-                                {/* <Text>{response.data.rowData[0].checkin[0].content[0].response}</Text> */}
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[0].content[0].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
+                                <Text style={{ marginTop: 80,position:'absolute',marginLeft:200}}>{CheckData.data.rowData[0].checkin[0].content[1].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
-                            </View>
+                                <Text style={{ marginTop: 130,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[0].content[2].response}</Text>
+                            </View>  
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Lows</Text>
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
+                                {/* <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[1].content[0].response}</Text> */}
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
+                                {/* <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[1].content[1].response}</Text> */}
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
+                                {/* <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[1].content[2].response}</Text> */}
                             </View>
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Personal Highs</Text>
                             <View >

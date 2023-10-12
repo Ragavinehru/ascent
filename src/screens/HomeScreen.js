@@ -65,6 +65,7 @@ const HomeScreen = () => {
     };
 
     const [userData, setUserData] = useState({});
+    
     // const [urishow, setUri] = useState('');
     const [eventData, setEventData] = useState([]);
     const [commentData, setCommentData] = useState([]);
