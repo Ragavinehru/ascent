@@ -18,7 +18,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Navigation } from 'react-native-navigation';
 import axios from 'axios';
 
-const stages = ['Work Highs ', 'Work Lows ', 'Personal Highs ', 'Personal Lows', 'Discoveries&Presentations'];
+
 
 // const Checkin = ({ navigation }) => {
 //     const [currentStage, setCurrentStage] = useState(0);
@@ -28,13 +28,26 @@ const stages = ['Work Highs ', 'Work Lows ', 'Personal Highs ', 'Personal Lows',
 //     const [CheckData, setCheckData] = useState([]);
 const Checkin = ({ navigation }) => {
     const [currentStage, setCurrentStage] = useState(0);
-    const [showCheckIn, setShowCheckIn] = useState(true);
+    const [showCheckIn, setShowCheckIn] = useState(false);
+    // const [showCheckIn, setShowCheckIn] = useState(true);
     const [showViewResponse, setShowViewResponse] = useState(false);
     const [responses, setResponses] = useState([]);
     const [CheckData, setCheckData] = useState([]);
     // const [groupedResponses, setGroupedResponses] = useState({});
 
-
+    const stages = ['Work Highs ', 'Work Lows ', 'Personal Highs ', 'Personal Lows', 'Discoveries&Presentations'];
+    const questions = {
+        common: [
+            'Situation: What are the most important things that happened? *',
+            'Impact: What impact did it have on you? *',
+            'Feelings: Any feelings associated with this (3 feelings)? *',
+        ],
+        discoveries: [
+            'New Discovery: What new thing did you discover? *',
+            'Presentation: Did you present anything today? *',
+        ],
+    };
+    
     const handleCheckInClick = () => {
         setShowCheckIn(true);
         setShowViewResponse(false);
@@ -49,6 +62,7 @@ const Checkin = ({ navigation }) => {
     const handleNextClick = () => {
         if (currentStage < stages.length - 1) {
             setCurrentStage(currentStage + 1);
+            setShowCheckIn(false);
         }
     };
 
@@ -69,7 +83,7 @@ const Checkin = ({ navigation }) => {
                     9
                 ],
                 "year": 2023,
-                "email": "vasanth@venzotechnologies.com"
+                "email":global.email,
             }
 
             const response = await axios.post(apiresponse, ViewData, {
@@ -164,8 +178,32 @@ const Checkin = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-
-            {showCheckIn && (
+             {showCheckIn && (
+                <View>
+                    <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
+                    {currentStage === 4 ? ( // Check if it's the "Discoveries" stage
+                        questions.discoveries.map((question, index) => (
+                            <View key={index}>
+                                <Text style={{ color: 'grey', marginTop: 30 }}>{question}</Text>
+                                <TextInput style={STYLES.textcheck} />
+                            </View>
+                        ))
+                    ) : (
+                        questions.common.map((question, index) => (
+                            <View key={index}>
+                                <Text style={{ color: 'grey', marginTop: 30 }}>{question}</Text>
+                                <TextInput style={STYLES.textcheck} />
+                            </View>
+                        ))
+                    )}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <TouchableOpacity onPress={handleNextClick}>
+                            <Text>{currentStage === 4 ? 'Check-In' : 'Next'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )}
+            {/* {showCheckIn && (
                 <View>
                     <View style={{
                         flexDirection: 'row',
@@ -212,7 +250,7 @@ const Checkin = ({ navigation }) => {
 
                 </View>
 
-            )}
+            )} */}
 
             {showViewResponse && (
                 <View>

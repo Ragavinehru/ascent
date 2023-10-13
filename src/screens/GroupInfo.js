@@ -77,7 +77,7 @@ const GroupInfo = ({ navigation, route }) => {
             // Set the updated members array in your local state
             setGroupInfo({ ...groupInfo, members: updatedMembers });
             console.log("kkkkkkkk", updatedMembers);
-            // Close the role selection modal
+           
             setDots(false);
         } catch (error) {
             console.error('Error updating role:', error);
