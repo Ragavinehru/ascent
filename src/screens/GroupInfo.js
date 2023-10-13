@@ -64,24 +64,23 @@ const GroupInfo = ({ navigation, route }) => {
             console.log("Role updated:", result);
             console.log("Role updated:", newRole);
 
-            // Update the user's role in the local state (groupInfo.members) here.
-            // Find the member by their email and update their role.
+
             const updatedMembers = groupInfo.members.map((member) => {
                 if (member.email === email) {
-                    // Update the role of the member
+
                     return { ...member, role: newRole };
                 }
                 return member;
             });
 
-            // Set the updated members array in your local state
+
             setGroupInfo({ ...groupInfo, members: updatedMembers });
             console.log("kkkkkkkk", updatedMembers);
-           
+
             setDots(false);
         } catch (error) {
             console.error('Error updating role:', error);
-            // Handle errors here.
+
         }
     };
 

@@ -47,7 +47,7 @@ const Checkin = ({ navigation }) => {
             'Presentation: Did you present anything today? *',
         ],
     };
-    
+
     const handleCheckInClick = () => {
         setShowCheckIn(true);
         setShowViewResponse(false);
@@ -83,7 +83,7 @@ const Checkin = ({ navigation }) => {
                     9
                 ],
                 "year": 2023,
-                "email":global.email,
+                "email": global.email,
             }
 
             const response = await axios.post(apiresponse, ViewData, {
@@ -178,8 +178,9 @@ const Checkin = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-             {showCheckIn && (
-                <View>
+            {showCheckIn && (
+                <View style={STYLES.cardcheck}>
+
                     <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
                     {currentStage === 4 ? ( // Check if it's the "Discoveries" stage
                         questions.discoveries.map((question, index) => (
@@ -203,6 +204,7 @@ const Checkin = ({ navigation }) => {
                     </View>
                 </View>
             )}
+
             {/* {showCheckIn && (
                 <View>
                     <View style={{

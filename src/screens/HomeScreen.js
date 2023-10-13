@@ -96,14 +96,14 @@ const HomeScreen = () => {
             console.log("URI: ", uri);
             console.log("attachment name", attachmentName);
 
-            // Set the selected attachment's URI in the commentText state
+
             setCommentText((prevCommentText) => ({
                 ...prevCommentText,
                 imageUri: uri,
             }));
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
-                // Handle cancelation
+
                 console.error("Error picking cancel:", err);
             }
             else {
@@ -188,7 +188,6 @@ const HomeScreen = () => {
                 const eventRequestBody = {
                     groupIds: groupIds
                 };
-                // Fetch event data
 
                 const eventResponse = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/getEvents', {
                     method: 'POST',
@@ -211,7 +210,7 @@ const HomeScreen = () => {
                         const eventId = event.id;
                         console.log("Event ID:", eventId);
 
-                        // // Fetch comments for the current event
+
                         // const commentRequestBody = {
                         //     eventId: eventId
                         // };
@@ -266,13 +265,12 @@ const HomeScreen = () => {
     const filterFutureEvents = (events) => {
         const currentDate = new Date();
 
-        // Filter events where the event date is greater than the current date
+
         const futureEvents = events.filter((event) => {
             const eventDate = new Date(event.date);
             const eventStartTime = new Date(event.startHour);
 
-            // Check if the event date is greater than the current date or
-            // if the event date is the same as the current date and the start time is in the future
+
             return eventDate > currentDate || (eventDate.getTime() === currentDate.getTime() && eventStartTime > currentDate);
         });
 
@@ -367,6 +365,7 @@ const HomeScreen = () => {
                         paginationBoxVerticalPadding={20}
                         style={{ width: 360, height: 200, borderRadius: 25, marginLeft: 19, marginTop: 20 }}
                     /> */}
+
                 </View>
                 {/* <Text style={{ marginTop: 17, marginLeft: 15, fontSize: 17 }}>History of Events</Text> */}
                 <Text style={{ marginLeft: 24, fontSize: 17, color: 'black' }}>History of Events</Text>
@@ -486,6 +485,7 @@ const HomeScreen = () => {
                         <View style={{ marginTop: 200 }}>
                             <View style={STYLES.cardcomment}>
                                 <ScrollView>
+
                                     {selectedEvent && eventComments[selectedEvent.id] ? (
 
                                         eventComments[selectedEvent.id].map((comment, index) => (

@@ -38,16 +38,16 @@ const Calendarr = ({ navigation }) => {
     const apiDel = 'https://walrus-app-v5mk9.ondigitalocean.app/deleteEvent';
 
     const toggleModal = (date) => {
-        // Get the current date without the time component
+
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
 
-        // Convert the selectedDate string to a Date object
+
         const selectedEventDate = new Date(date);
 
-        // Check if the selected date is in the past
+
         if (selectedEventDate < currentDate) {
-            // Display an error message to the user
+
             // Alert.alert(
             //     'Hello',
             //     'You cannot create events for past dates. Please select a future date.',
@@ -206,7 +206,7 @@ const Calendarr = ({ navigation }) => {
             if (response.status === 200) {
                 const result = await response.json();
                 setEvents(result.events);
-                console.log("pal", result); // Update the state with the fetched events
+                console.log("pal", result);
             } else {
                 console.error('Failed to fetch events:', response.status, response.statusText);
             }
@@ -219,7 +219,7 @@ const Calendarr = ({ navigation }) => {
         fetchEvents();
     }, []);
 
-    // Functions to show/hide time pickers
+
     const showStartTimePicker = () => {
         setStartTimePickerVisible(true);
     };
@@ -294,12 +294,13 @@ const Calendarr = ({ navigation }) => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}> Back </Text>
                 </TouchableOpacity>
             </View>
+
             {/* <View style={STYLES.btnSecondary}>
                 <TouchableHighlight onPress={toggleModal}>
                     <Text style={STYLES.text}>+ New Event</Text>
                 </TouchableHighlight>
-
             </View> */}
+
             <View style={{ marginTop: 40 }}>
                 <Text style={{ marginLeft: 15, fontSize: 24, fontWeight: 'bold', color: 'black' }}>
                     Hi,Welcome Back
@@ -372,11 +373,11 @@ const Calendarr = ({ navigation }) => {
 
                         <View style={{ flexDirection: 'row', marginLeft: 63, height: 55 }}>
                             <TouchableOpacity onPress={showStartTimePicker}>
-                                <Text style={STYLES.starttime} >Start Time: {startTime}</Text>
+                                <Text style={STYLES.starttime}> Start Time: {startTime}</Text>
                             </TouchableOpacity>
                             {isStartTimePickerVisible && (
                                 <DateTimePicker
-                                    value={new Date()} // You can set an initial time value if needed
+                                    value={new Date()}
                                     mode="time"
                                     is24Hour={true}
                                     display="default"
