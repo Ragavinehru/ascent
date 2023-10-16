@@ -9,13 +9,15 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
 import STYLES from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { SelectList } from 'react-native-dropdown-select-list';
+
 
 const Calendarr = ({ navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [eventTitle, setEventTitle] = useState('');
-    const [type, setType] = useState('');
-    const [format, setFormat] = useState('');
+    const [typevalue, setType] = useState('');
+    const [formatvalue, setFormat] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [location, setLocation] = useState('');
@@ -23,16 +25,27 @@ const Calendarr = ({ navigation }) => {
     const [attachement, setAttachement] = useState('');
     const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
     const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
-    const [events, setEvents] = useState([]); // Initialize events as an empty array
+    const [events, setEvents] = useState([]);
+    const [formattedevents, setFormattedEventsData] = useState([]);
+    const [startEventTime, setStartEventTime] = useState(new Date());
+
+    const [endEventTime, setEndEventTime] = useState(new Date());
     // const [isNewEventModalVisible, setIsNewEventModalVisible] = useState(false);
 
     const [selectedEvents, setSelectedEvents] = useState([]);
 
+    const type = [
+        { key: '1', value: 'Regular Meeting' },
+        { key: '2', value: 'Conference' },
+        { key: '3', value: 'Guest Presentation' },
 
-    const typeoption = [
-        { label: 'Option 1', value: 'Option 1' },
-        { label: 'Option 2', value: 'Option 2' },
-    ];
+    ]
+    const format = [
+        { key: '1', value: 'Online' },
+        { key: '2', value: 'Offline' },
+
+    ]
+
 
     const apiUrl = 'https://walrus-app-v5mk9.ondigitalocean.app/createEvent';
     const apiDel = 'https://walrus-app-v5mk9.ondigitalocean.app/deleteEvent';
@@ -78,13 +91,13 @@ const Calendarr = ({ navigation }) => {
                     "label": eventTitle,
                     "group": "PjIK87LDBDc5quWz76Ct",
                     "description": description,
-                    "type": type,
-                    "format": format,
+                    "type": typevalue,
+                    "format": formatvalue,
                     "formatInfo": "",
                     "color": "#039be5",
                     "date": selectedDate,
-                    "startHour": "Invalid Date",
-                    "endHour": "Invalid Date",
+                    "startHour": startEventTime,
+                    "endHour": endEventTime,
                     "createdBy": global.email,
                     "user": global.email,
                     "createdAt": "2023-10-03",
@@ -115,9 +128,17 @@ const Calendarr = ({ navigation }) => {
                 setDescription('');
                 setAttachement('');
 
+                // formatEventsForCalendar(events);
 
+                // Step 1: Update the events state
+                const updatedEvents = [...events, GoalData.event]; // Add the new event to the events state
+                setEvents(updatedEvents);
 
-                formatEventsForCalendar(events);
+                // Step 2: Update the formattedEventsData state for the calendar
+                const updatedEventsData = formatEventsForCalendar(updatedEvents);
+                setFormattedEventsData(updatedEventsData);
+
+                console.log('Formatted Events Data:', updatedEventsData);
 
             } else {
                 console.error('Failed to create event:', response.status, response.statusText);
@@ -126,6 +147,8 @@ const Calendarr = ({ navigation }) => {
             console.error('Error creating event:', error);
         }
     };
+
+
 
     const deleteEvent = async (selectedEvent) => {
         try {
@@ -144,10 +167,10 @@ const Calendarr = ({ navigation }) => {
                         "formatInfo": "",
                         "color": "#039be5",
                         "date": selectedDate,
-                        "startHour": "Invalid Date",
-                        "endHour": "Invalid Date",
-                        "createdBy": "vasanth@venzotechnologies.com",
-                        "user": "vasanth@venzotechnologies.com",
+                        "startHour": startEventTime,
+                        "endHour": endEventTime,
+                        "createdBy": global.email,
+                        "user": global.email,
                         "createdAt": "2023-10-03",
                         "attachmentName": null,
                         "attachmentUrl": null
@@ -220,6 +243,22 @@ const Calendarr = ({ navigation }) => {
     }, []);
 
 
+    // const showStartTimePicker = () => {
+    //     setStartTimePickerVisible(true);
+    // };
+
+    // const hideStartTimePicker = () => {
+    //     setStartTimePickerVisible(false);
+    // };
+
+    // const showEndTimePicker = () => {
+    //     setEndTimePickerVisible(true);
+    // };
+
+    // const hideEndTimePicker = () => {
+    //     setEndTimePickerVisible(false);
+    // };
+
     const showStartTimePicker = () => {
         setStartTimePickerVisible(true);
     };
@@ -236,25 +275,34 @@ const Calendarr = ({ navigation }) => {
         setEndTimePickerVisible(false);
     };
 
-    const handleStartTimeChange = (event, selectedTime) => {
-        if (selectedTime !== undefined) {
-            const formattedTime = selectedTime.toLocaleTimeString();
-            setStartTime(formattedTime);
-            hideStartTimePicker();
-        } else {
-            hideStartTimePicker();
-        }
+    const handleStartTimeChange = (time) => {
+        setStartEventTime(time);
+        hideStartTimePicker();
     };
 
-    const handleEndTimeChange = (event, selectedTime) => {
-        if (selectedTime !== undefined) {
-            const formattedTime = selectedTime.toLocaleTimeString();
-            setEndTime(formattedTime);
-            hideEndTimePicker();
-        } else {
-            hideEndTimePicker();
-        }
+    const handleEndTimeChange = (time) => {
+        setEndEventTime(time);
+        hideEndTimePicker();
     };
+    // const handleStartTimeChange = (event, selectedTime) => {
+    //     if (selectedTime !== undefined) {
+    //         const formattedTime = selectedTime.toLocaleTimeString();
+    //         setStartTime(formattedTime);
+    //         hideStartTimePicker();
+    //     } else {
+    //         hideStartTimePicker();
+    //     }
+    // };
+
+    // const handleEndTimeChange = (event, selectedTime) => {
+    //     if (selectedTime !== undefined) {
+    //         const formattedTime = selectedTime.toLocaleTimeString();
+    //         setEndTime(formattedTime);
+    //         hideEndTimePicker();
+    //     } else {
+    //         hideEndTimePicker();
+    //     }
+    // };
     const handleDateSelect = (day) => {
         const eventsForSelectedDate = events.filter((event) => event.date === day.dateString);
         setSelectedEvents(eventsForSelectedDate);
@@ -349,20 +397,35 @@ const Calendarr = ({ navigation }) => {
                             style={STYLES.texttype}
                         />
                         <Text style={{ marginLeft: 35 }}>Select Type:</Text>
-                        <TextInput
+                        {/* <TextInput
                             style={STYLES.texttype}
                             placeholder="Select Type"
                             value={type}
                             onChangeText={(text) => setType(text)}
                             items={typeoption}
-                        />
+                        /> */}
+                        <View style={{ width: 310, marginLeft: 33 }}>
+                            <SelectList
+                                setSelected={(val) => setType(val)} // Update selectedYear
+                                data={type}
+                                save="value"
+                            />
+                        </View>
                         <Text style={{ marginLeft: 35 }}>Select Format:</Text>
-                        <TextInput
+                        {/* <TextInput
                             style={STYLES.texttype}
                             placeholder="Select Format"
                             value={format}
                             onChangeText={(text) => setFormat(text)}
-                        />
+                        /> */}
+                        <View style={{ width: 310, marginLeft: 33 }}>
+
+                            <SelectList
+                                setSelected={(val) => setFormat(val)} // Update selectedYear
+                                data={format}
+                                save="value" />
+                        </View>
+
                         <Text style={{ marginLeft: 35 }}>Date:</Text>
                         <TextInput
                             style={STYLES.texttype}
@@ -373,16 +436,31 @@ const Calendarr = ({ navigation }) => {
 
                         <View style={{ flexDirection: 'row', marginLeft: 63, height: 55 }}>
                             <TouchableOpacity onPress={showStartTimePicker}>
-                                <Text style={STYLES.starttime}> Start Time: {startTime}</Text>
+                                <Text style={STYLES.starttime}> Start Time: {startEventTime.toLocaleTimeString()}</Text>
+
                             </TouchableOpacity>
                             {isStartTimePickerVisible && (
-                                <DateTimePicker
-                                    value={new Date()}
+                                <DateTimePickerModal
+                                    isVisible={isStartTimePickerVisible}
                                     mode="time"
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={handleStartTimeChange}
+                                    value={startEventTime}
+                                    onConfirm={(time) => {
 
+                                        const selectedTime = new Date(time);
+                                        if (selectedTime >= new Date()) {
+                                            setStartEventTime(selectedTime);
+                                        } else {
+                                            Alert.alert(
+                                                'Hello',
+                                                'Please select a future time.',
+                                                [{ text: 'OK' }],
+                                                { cancelable: false }
+                                            );
+                                            setStartEventTime(new Date());
+                                        }
+                                        hideStartTimePicker();
+                                    }}
+                                    onCancel={hideStartTimePicker}
                                 />
                             )}
 
@@ -393,20 +471,60 @@ const Calendarr = ({ navigation }) => {
                             onChangeText={(text) => setEndTime(text)}
                         /> */}
 
-                            {/* End Time Picker */}
-                            {/* End Time Picker */}
                             <TouchableOpacity onPress={showEndTimePicker}>
-                                <Text style={STYLES.texttime} >End Time: {endTime}</Text>
+                                <Text style={STYLES.texttime}>End Time: {endEventTime.toLocaleTimeString()}</Text>
+
+                            </TouchableOpacity>
+                            {isEndTimePickerVisible && (
+                                <DateTimePickerModal
+                                    isVisible={isEndTimePickerVisible}
+                                    mode="time"
+                                    value={endEventTime}
+                                    onConfirm={(time) => {
+                                        // Ensure the selected time is not earlier than the start time
+                                        const selectedTime = new Date(time);
+                                        if (selectedTime >= startEventTime) {
+                                            setEndEventTime(selectedTime);
+                                        } else {
+
+                                            Alert.alert(
+                                                'Hello',
+                                                'Please select a future time.',
+                                                [{ text: 'OK' }],
+                                                { cancelable: false }
+                                            );
+                                            setEndEventTime(startEventTime);
+                                        }
+                                        hideEndTimePicker();
+                                    }}
+                                    onCancel={hideEndTimePicker}
+                                />
+
+                            )}
+                            {/* End Time Picker */}
+                            {/* <TouchableOpacity onPress={showEndTimePicker}>
+                                <Text style={STYLES.texttime} >End Time: {endEventTime}</Text>
                             </TouchableOpacity>
                             {isEndTimePickerVisible && (
                                 <DateTimePicker
-                                    value={new Date()}
+                                    // value={new Date()}
+                                    // mode="time"
+                                    // is24Hour={true}
+                                    // display="default"
+                                    // onChange={handleEndTimeChange}
+
+                                    isVisible={isEndTimePickerVisible}
                                     mode="time"
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={handleEndTimeChange}
+                                    value={new Date()}
+                                    onConfirm={(time) => {
+                                        // Handle selected time for start time
+                                        setEndEventTime(time.toLocaleTimeString());
+                                        hideEndTimePicker();
+                                    }}
+                                    onCancel={hideEndTimePicker}
                                 />
-                            )}
+                            )} */}
+
                         </View>
                         <Text style={{ marginLeft: 35 }}>Location/Meeting Link:</Text>
                         <TextInput

@@ -60,8 +60,9 @@ const Goals = () => {
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [selectedGoals, setSelectedGoals] = useState([]);
 
+  const [progressModalVisible, setprogress] = useState(false);
 
-  // ... other state variables for updating goals
+
   const openUpdateModal = (goalId) => {
     const goal = data.goals.find((goal) => goal.id === goalId);
     if (goal) {
@@ -151,6 +152,7 @@ const Goals = () => {
       console.error('Error creating goal:', error);
     }
   };
+
 
   const updateGoal = async (selectedId, currentGoalStatus) => {
     if (!selectedGoalId) {
@@ -299,7 +301,9 @@ const Goals = () => {
               <ScrollView>
                 <Text style={{ fontSize: 16, color: 'blue', marginTop: 10, marginLeft: 7 }}> {item.description} | {item.period}</Text>
                 <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Purpose</Text>
-                <Text style={{ marginLeft: 210, marginTop: 10, position: 'absolute', fontSize: 11, color: 'blue' }}>Update Progress</Text>
+                <TouchableHighlight onPress={() => setprogress(true)}>
+                  <Text style={{ marginLeft: 210, marginTop: -40, position: 'absolute', fontSize: 11, color: 'blue' }}>Update Progress</Text>
+                </TouchableHighlight>
                 <TouchableHighlight onPress={() => openUpdateModal(item.id)}>
                   <Image style={{ width: 15, height: 15, position: 'absolute', color: 'blue', marginLeft: 300, marginTop: -40 }} source={require('../assets/pencil.png')} />
                 </TouchableHighlight>
@@ -339,6 +343,7 @@ const Goals = () => {
             </View>
           )}
         />
+
         <Modal visible={newgoal} animationType="slide" style={{ borderRadius: 22 }}>
 
           <View style={{ flex: 1 }}>
@@ -387,7 +392,7 @@ const Goals = () => {
                 value={goalPurpose}
                 onChangeText={(text) => setGoalPurpose(text)}
               />
-              {/*  */}
+
               <Text style={{ color: 'black', fontSize: 14 }}>Goal Smartness (yes/no)</Text>
               <Text style={{ marginBottom: -20, marginTop: 15, marginRight: 230, color: 'black', }}>Specific:</Text>
 
@@ -513,7 +518,12 @@ const Goals = () => {
           {/* <Button>Update Goal</Button> */}
 
         </Modal>
+        <Modal visible={progressModalVisible} animationType="slide" >
+          <TouchableOpacity >
+            <Text onPress={() => setprogress(false)} style={{ color: 'red', marginLeft: 139 }}>Cancel</Text>
+          </TouchableOpacity>
 
+        </Modal>
 
 
 

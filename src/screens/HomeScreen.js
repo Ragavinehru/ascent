@@ -18,10 +18,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { useState, useEffect } from 'react';
-
 import COLORS from '../consts/color';
 import STYLES from '../styles';
-
 import { SliderBox } from 'react-native-image-slider-box';
 import webs from '../assets/images/images.jpeg';
 import webs1 from '../assets/images/images1.jpg';
@@ -31,6 +29,7 @@ import webs4 from '../assets/images/image4.jpg';
 import { DrawerActions } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 // import PopupEvent from "./src/screens/PopupEvent";
+import { format } from 'date-fns';
 import DocumentPicker from 'react-native-document-picker';
 import { Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
@@ -68,6 +67,7 @@ const HomeScreen = () => {
 
     // const [urishow, setUri] = useState('');
     const [eventData, setEventData] = useState([]);
+    const [upcoming, setUpcoming] = useState([]);
     const [commentData, setCommentData] = useState([]);
     const [commentText, setCommentText] = useState({
         text: '',
@@ -123,8 +123,8 @@ const HomeScreen = () => {
         try {
 
             console.log("post try:", commentText);
-
             const currentTime = new Date().toISOString();
+
             let postData = {
                 "eventId": selectedEvent.id,
                 "comment": {
@@ -200,6 +200,7 @@ const HomeScreen = () => {
                 const eventResult = await eventResponse.json();
                 console.log("events", eventResult);
                 setEventData(eventResult);
+                setUpcoming(eventResult);
 
 
                 if (eventResult.events) {
@@ -265,17 +266,22 @@ const HomeScreen = () => {
     const filterFutureEvents = (events) => {
         const currentDate = new Date();
 
-
         const futureEvents = events.filter((event) => {
             const eventDate = new Date(event.date);
             const eventStartTime = new Date(event.startHour);
-
-
-            return eventDate > currentDate || (eventDate.getTime() === currentDate.getTime() && eventStartTime > currentDate);
+            console.log("time", event.startHour);
+            // const t = event.startHour;
+            // const formattedTime = format(new Date(t), 'hh:mm a');
+            // console.log("timehhhhhhhhhhh", formattedTime);
+            return (
+                eventDate > currentDate ||
+                (eventDate.getTime() === currentDate.getTime() && eventStartTime > currentDate)
+            );
         });
 
         return futureEvents;
     };
+
 
 
     return (
@@ -332,20 +338,22 @@ const HomeScreen = () => {
 
                     <View style={STYLES.cardupcoming}>
                         <ScrollView>
-                            {eventData && eventData.events && Array.isArray(eventData.events) ? (
-                                filterFutureEvents(eventData.events).map((item) => (
+                            {upcoming && upcoming.events && Array.isArray(upcoming.events) ? (
+                                filterFutureEvents(upcoming.events).map((item) => (
                                     <TouchableOpacity key={item.id} onPress={() => openEventModal(item, eventComments[item.id])}>
                                         <View>
                                             <Image style={{ width: 25, height: 25, marginRight: 10, marginTop: 15, marginLeft: 10, position: 'absolute' }} source={require('../assets/video1.png')} />
                                             <Text style={{ fontSize: 16, color: 'black', marginLeft: 48, marginTop: 10 }}>{item.label}</Text>
-                                            <Text style={{ fontSize: 14, color: 'grey', marginLeft: 48 }}>{item.date} | {item.startHour}-{item.endHour}</Text>
-
+                                            <Text style={{ fontSize: 14, color: 'grey', marginLeft: 48 }}>
+                                                {format(new Date(item.date), 'dd MMM yyyy')} | {item.startHour}-{item.endHour}
+                                            </Text>
                                         </View>
                                     </TouchableOpacity>
                                 ))
                             ) : (
                                 <Text>No upcoming events found.</Text>
                             )}
+
                         </ScrollView>
                     </View>
 
@@ -386,7 +394,7 @@ const HomeScreen = () => {
                                 </TouchableOpacity>
 
 
-                                <Text style={{ marginLeft: 49, fontSize: 12 }}>{item.date}| {item.startHour}-{item.endHour}</Text>
+                                <Text style={{ marginLeft: 49, fontSize: 12 }}>{format(new Date(item.date), 'dd MMM yyyy')}| {item.startHour}-{item.endHour}</Text>
 
                                 <TouchableOpacity onPress={() => setSelectedEventId(selectedEventId === item.id ? null : item.id)}>
                                     <Text style={{ marginLeft: 250, marginTop: -20, fontSize: 12, color: 'blue' }}>{selectedEventId === item.id ? 'Hide Comments' : 'View Comments'}</Text>
