@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 import COLORS from '../consts/color';
 import { Navigation } from 'react-native-navigation';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 const STYLES = StyleSheet.create({
     inputContainer: { flexDirection: 'row', marginTop: 20, },
 

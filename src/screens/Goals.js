@@ -518,10 +518,67 @@ const Goals = () => {
           {/* <Button>Update Goal</Button> */}
 
         </Modal>
+
         <Modal visible={progressModalVisible} animationType="slide" >
           <TouchableOpacity >
             <Text onPress={() => setprogress(false)} style={{ color: 'red', marginLeft: 139 }}>Cancel</Text>
           </TouchableOpacity>
+
+
+
+          <FlatList
+
+            data={data.goals?.filter((goal) => selectedGoalStatuses.includes(goal.currentGoalStatus))}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+
+              <View style={STYLES.cardgoal}>
+                <ScrollView>
+                  <Text style={{ fontSize: 16, color: 'blue', marginTop: 10, marginLeft: 7 }}> {item.description} | {item.period}</Text>
+                  <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Purpose</Text>
+                  <TouchableHighlight onPress={() => setprogress(true)}>
+                    <Text style={{ marginLeft: 210, marginTop: -40, position: 'absolute', fontSize: 11, color: 'blue' }}>Update Progress</Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight onPress={() => openUpdateModal(item.id)}>
+                    <Image style={{ width: 15, height: 15, position: 'absolute', color: 'blue', marginLeft: 300, marginTop: -40 }} source={require('../assets/pencil.png')} />
+                  </TouchableHighlight>
+
+                  <Text style={{ marginLeft: 220, marginTop: 40, justifyContent: 'flex-start', position: 'absolute', fontSize: 14, width: -250, color: 'black' }}> {item.currentGoalStatus}</Text>
+
+
+                  <TouchableOpacity onPress={() => toggleSelectedGoal(item.id)}>
+                    <Text style={{ marginLeft: 120, fontSize: 12, color: 'blue' }}>
+                      {selectedGoals.includes(item.id) ? 'Show Less' : 'Show More'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <Text style={{ marginLeft: 10, marginTop: -10 }}>{item.purpose}</Text>
+
+                  {selectedGoals.includes(item.id) && (
+                    <View>
+                      <Text style={{ fontSize: 14, color: 'black', marginLeft: 10, marginBottom: 10 }}>Goal Smartness</Text>
+                      <Text style={{ marginLeft: 10 }}>Specific: {item.specific}</Text>
+                      <Text style={{ marginLeft: 10 }}>Measurable: {item.measurable}</Text>
+                      <Text style={{ marginLeft: 10 }}>Achievable: {item.achieavable}</Text>
+                      <Text style={{ marginLeft: 10 }}>Realistic: {item.realistic}</Text>
+                      <Text style={{ marginLeft: 10 }}>Timely: {item.timely}</Text>
+                      <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Activities/Tasks to be performed for the goal</Text>
+                      <Text style={{ marginLeft: 10 }}>{item.activities}</Text>
+                      <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>Efforts planned for the execution of the goal</Text>
+                      <Text style={{ marginLeft: 10 }}> {item.efforts}</Text>
+
+                    </View>
+                  )}
+
+                </ScrollView>
+
+              </View>
+            )}
+          />
+          <Text>POsitive </Text>
+          <TextInput></TextInput>
+          <Text>POsitive </Text>
+          <TextInput></TextInput>
 
         </Modal>
 

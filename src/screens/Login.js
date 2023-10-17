@@ -19,7 +19,7 @@ import 'firebase/auth';
 import { FIREBASE_AUTH } from '../firebase/firebaseConfig';
 import { ActivityIndicator } from 'react-native-paper';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 
@@ -54,74 +54,8 @@ const Login = ({ navigation }) => {
 
     }
 
-    ////start 12 minutes
-    // const signUp = async ()=>{
-    //     setLoading(true);
-    //     try{
-    //         const response = await auth.createUserWithEmailAndPassword(auth,email,password);
-    //         console.log(response);
-    //         Alert('chck ur emails')
-    //     }catch(error){
-    //         console.log(error);
-    //         Alert('signup failed'+error.message);  
-    //     }finally{
-    //         setLoading(false);
-    //     }
-    //     }
 
 
-    // const handleSubmit = () => {
-    //   setIsSubmitting(true);
-
-    //   // Firebase login
-    //   auth()
-    //     .signInWithEmailAndPassword(email, password)
-    //     .then((userCredential) => {
-    //       setIsSubmitting(false);
-    //       // You can access the signed-in user with userCredential.user
-    //       // Example: const user = userCredential.user;
-    //       // Perform actions after successful login here
-    //     })
-    //     .catch((error) => {
-    //       setIsSubmitting(false);
-    //       Alert.alert("Error", error.message);
-    //     });
-
-    //   setEmail("");
-    //   setPassword("");
-    // };
-    // const handleLogin = () => {
-    //     firebase.auth().signInWithEmailAndPassword(email, password)
-    //       .then(() => {
-    //         // User logged in successfully
-    //         console.log('User logged in successfully');
-    //         // You can navigate to another screen or perform other actions here
-
-    //       })
-    //       .catch(error => {
-    //         console.error('Login failed:', error.message);
-    //       });
-    //   };
-
-    const test = async () => {
-        const response = await fetch('https://walrus-app-v5mk9.ondigitalocean.app/postComments', {
-            method: 'POST',
-            // body: {
-            //     'eventId': selectedEvent.id,
-            //     'comment': commentText.text,
-            //     'attachment': commentText.imageUri,
-            // },
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                eventId: "0iPoaDKdKeY4R8VLXewN",
-                comment: "hii123"
-            }),
-        });
-        console.log("post response:", response);
-    }
 
     return (
 

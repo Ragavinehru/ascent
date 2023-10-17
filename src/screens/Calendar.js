@@ -18,8 +18,8 @@ const Calendarr = ({ navigation }) => {
     const [eventTitle, setEventTitle] = useState('');
     const [typevalue, setType] = useState('');
     const [formatvalue, setFormat] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
+    const [startTime, setStartTime] = useState(new Date());
+    const [endTime, setEndTime] = useState(new Date());
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');
     const [attachement, setAttachement] = useState('');
@@ -27,9 +27,9 @@ const Calendarr = ({ navigation }) => {
     const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
     const [events, setEvents] = useState([]);
     const [formattedevents, setFormattedEventsData] = useState([]);
-    const [startEventTime, setStartEventTime] = useState(new Date());
+    // const [startEventTime, setStartEventTime] = useState(new Date());
 
-    const [endEventTime, setEndEventTime] = useState(new Date());
+    // const [endEventTime, setEndEventTime] = useState(new Date());
     // const [isNewEventModalVisible, setIsNewEventModalVisible] = useState(false);
 
     const [selectedEvents, setSelectedEvents] = useState([]);
@@ -151,6 +151,7 @@ const Calendarr = ({ navigation }) => {
 
 
     const deleteEvent = async (selectedEvent) => {
+
         try {
             const selectedEventDate = new Date(selectedEvent.date);
             const currentDate = new Date();
@@ -276,14 +277,41 @@ const Calendarr = ({ navigation }) => {
     };
 
     const handleStartTimeChange = (time) => {
-        setStartEventTime(time);
+        if (time >= new Date()) { // Ensure the selected time is later than the current time
+            setStartTime(time);
+        } else {
+            Alert.alert(
+                'Hello',
+                'Please select a future time.',
+                [{ text: 'OK' }],
+                { cancelable: false }
+            );
+        }
         hideStartTimePicker();
     };
 
     const handleEndTimeChange = (time) => {
-        setEndEventTime(time);
+        if (time >= new Date() && time > startTime) { // Ensure the selected time is later than the current time and the start time
+            setEndTime(time);
+        } else {
+            Alert.alert(
+                'Hello',
+                'Please select a future time and ensure it\'s later than the start time.',
+                [{ text: 'OK' }],
+                { cancelable: false }
+            );
+        }
         hideEndTimePicker();
     };
+    // const handleStartTimeChange = (time) => {
+    //     setStartEventTime(time);
+    //     hideStartTimePicker();
+    // };
+
+    // const handleEndTimeChange = (time) => {
+    //     setEndEventTime(time);
+    //     hideEndTimePicker();
+    // };
     // const handleStartTimeChange = (event, selectedTime) => {
     //     if (selectedTime !== undefined) {
     //         const formattedTime = selectedTime.toLocaleTimeString();
@@ -436,34 +464,19 @@ const Calendarr = ({ navigation }) => {
 
                         <View style={{ flexDirection: 'row', marginLeft: 63, height: 55 }}>
                             <TouchableOpacity onPress={showStartTimePicker}>
-                                <Text style={STYLES.starttime}> Start Time: {startEventTime.toLocaleTimeString()}</Text>
+                                <Text style={STYLES.starttime}> Start Time: {startTime.toLocaleTimeString()}</Text>
 
                             </TouchableOpacity>
+
                             {isStartTimePickerVisible && (
                                 <DateTimePickerModal
                                     isVisible={isStartTimePickerVisible}
                                     mode="time"
-                                    value={startEventTime}
-                                    onConfirm={(time) => {
-
-                                        const selectedTime = new Date(time);
-                                        if (selectedTime >= new Date()) {
-                                            setStartEventTime(selectedTime);
-                                        } else {
-                                            Alert.alert(
-                                                'Hello',
-                                                'Please select a future time.',
-                                                [{ text: 'OK' }],
-                                                { cancelable: false }
-                                            );
-                                            setStartEventTime(new Date());
-                                        }
-                                        hideStartTimePicker();
-                                    }}
+                                    value={startTime}
+                                    onConfirm={handleStartTimeChange}
                                     onCancel={hideStartTimePicker}
                                 />
                             )}
-
                             {/* <TextInput
                             style={STYLES.texttype}
                             placeholder="End Time"
@@ -472,34 +485,17 @@ const Calendarr = ({ navigation }) => {
                         /> */}
 
                             <TouchableOpacity onPress={showEndTimePicker}>
-                                <Text style={STYLES.texttime}>End Time: {endEventTime.toLocaleTimeString()}</Text>
+                                <Text style={STYLES.texttime}>End Time: {endTime.toLocaleTimeString()}</Text>
 
                             </TouchableOpacity>
                             {isEndTimePickerVisible && (
                                 <DateTimePickerModal
                                     isVisible={isEndTimePickerVisible}
                                     mode="time"
-                                    value={endEventTime}
-                                    onConfirm={(time) => {
-                                        // Ensure the selected time is not earlier than the start time
-                                        const selectedTime = new Date(time);
-                                        if (selectedTime >= startEventTime) {
-                                            setEndEventTime(selectedTime);
-                                        } else {
-
-                                            Alert.alert(
-                                                'Hello',
-                                                'Please select a future time.',
-                                                [{ text: 'OK' }],
-                                                { cancelable: false }
-                                            );
-                                            setEndEventTime(startEventTime);
-                                        }
-                                        hideEndTimePicker();
-                                    }}
+                                    value={endTime}
+                                    onConfirm={handleEndTimeChange}
                                     onCancel={hideEndTimePicker}
                                 />
-
                             )}
                             {/* End Time Picker */}
                             {/* <TouchableOpacity onPress={showEndTimePicker}>

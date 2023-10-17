@@ -33,6 +33,7 @@ import { format } from 'date-fns';
 import DocumentPicker from 'react-native-document-picker';
 import { Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const HomeScreen = () => {
@@ -263,24 +264,30 @@ const HomeScreen = () => {
 
 
     const eventsarray = eventData.events;
-    const filterFutureEvents = (events) => {
-        const currentDate = new Date();
 
-        const futureEvents = events.filter((event) => {
-            const eventDate = new Date(event.date);
-            const eventStartTime = new Date(event.startHour);
-            console.log("time", event.startHour);
-            // const t = event.startHour;
-            // const formattedTime = format(new Date(t), 'hh:mm a');
-            // console.log("timehhhhhhhhhhh", formattedTime);
-            return (
-                eventDate > currentDate ||
-                (eventDate.getTime() === currentDate.getTime() && eventStartTime > currentDate)
-            );
-        });
+    // const filterFutureEvents = (events) => {
+    //     const currentDate = new Date();
 
-        return futureEvents;
-    };
+    //     const futureEvents = events.filter((event) => {
+    //         const eventDate = new Date(event.date);
+    //         const eventStartTime = new Date(event.startHour);
+    //         const eventEndTime = new Date(event.endHour);
+    //         return (
+    //             eventDate >= currentDate ||
+    //             (eventDate.getTime() === currentDate.getTime() && eventEndTime >= currentDate)
+    //         );
+    //     });
+
+    //     return futureEvents;
+    // };
+    const currentDate = new Date();
+
+    const upcomingEvents = eventData?.events?.filter((event) => {
+        const eventDatetime = new Date(`${event.date}T${event.startHour}`);
+        return eventDatetime > currentDate;
+    }) || [];
+
+
 
 
 
@@ -338,23 +345,22 @@ const HomeScreen = () => {
 
                     <View style={STYLES.cardupcoming}>
                         <ScrollView>
-                            {upcoming && upcoming.events && Array.isArray(upcoming.events) ? (
-                                filterFutureEvents(upcoming.events).map((item) => (
-                                    <TouchableOpacity key={item.id} onPress={() => openEventModal(item, eventComments[item.id])}>
-                                        <View>
-                                            <Image style={{ width: 25, height: 25, marginRight: 10, marginTop: 15, marginLeft: 10, position: 'absolute' }} source={require('../assets/video1.png')} />
-                                            <Text style={{ fontSize: 16, color: 'black', marginLeft: 48, marginTop: 10 }}>{item.label}</Text>
-                                            <Text style={{ fontSize: 14, color: 'grey', marginLeft: 48 }}>
-                                                {format(new Date(item.date), 'dd MMM yyyy')} | {item.startHour}-{item.endHour}
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                ))
-                            ) : (
-                                <Text>No upcoming events found.</Text>
+                            {upcomingEvents.map((item) => (
+                                <TouchableOpacity key={item.id} onPress={() => openEventModal(item, eventComments[item.id])}>
+                                    <View>
+                                        <Image style={{ width: 25, height: 25, marginRight: 10, marginTop: 15, marginLeft: 10, position: 'absolute' }} source={require('../assets/video1.png')} />
+                                        <Text style={{ fontSize: 16, color: 'black', marginLeft: 48, marginTop: 10 }}>{item.label}</Text>
+                                        <Text style={{ fontSize: 14, color: 'grey', marginLeft: 48 }}>
+                                            {format(new Date(item.date), 'dd MMM yyyy')} | {item.startHour}-{item.endHour}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+                            {upcomingEvents.length === 0 && (
+                                <Text style={{ marginLeft: 19, marginTop: 10 }}>No upcoming events found !</Text>
                             )}
-
                         </ScrollView>
+
                     </View>
 
 
