@@ -20,6 +20,7 @@ const Calendarr = ({ navigation }) => {
     const [formatvalue, setFormat] = useState('');
     const [startTime, setStartTime] = useState(new Date());
     const [endTime, setEndTime] = useState(new Date());
+
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');
     const [attachement, setAttachement] = useState('');
@@ -96,8 +97,8 @@ const Calendarr = ({ navigation }) => {
                     "formatInfo": "",
                     "color": "#039be5",
                     "date": selectedDate,
-                    "startHour": startEventTime,
-                    "endHour": endEventTime,
+                    "startHour": startTime,
+                    "endHour": endTime,
                     "createdBy": global.email,
                     "user": global.email,
                     "createdAt": "2023-10-03",
@@ -168,8 +169,8 @@ const Calendarr = ({ navigation }) => {
                         "formatInfo": "",
                         "color": "#039be5",
                         "date": selectedDate,
-                        "startHour": startEventTime,
-                        "endHour": endEventTime,
+                        "startHour": startTime,
+                        "endHour": endTime,
                         "createdBy": global.email,
                         "user": global.email,
                         "createdAt": "2023-10-03",

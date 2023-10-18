@@ -64,7 +64,7 @@ const Checkin = ({ navigation }) => {
             setCurrentStage(currentStage + 1);
         }
     };
-    
+
 
     const handleBackClick = () => {
         if (currentStage > 0) {
@@ -120,7 +120,7 @@ const Checkin = ({ navigation }) => {
     // console.log("hajjjjjj",CheckData.data.rowData[0].checkin[0]);
     // const groupedResponses = CheckData.data.rowData[0].checkin[0];
     // console.log("hgrtrewwssjj",groupedResponses.content[0]);
-    
+
     const apicheckin = 'https://walrus-app-v5mk9.ondigitalocean.app/checkin';
 
 
@@ -129,93 +129,93 @@ const Checkin = ({ navigation }) => {
             let checkinData = {
                 "checkin": [
                     {
-                      "title": "Work - Highs",
-                      "content": [
-                        {
-                          "question": "Situation: What are the most important things that happened?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Impact: What impact did it have on you?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                          "response": "test"
-                        }
-                      ]
+                        "title": "Work - Highs",
+                        "content": [
+                            {
+                                "question": "Situation: What are the most important things that happened?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Impact: What impact did it have on you?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                                "response": "test"
+                            }
+                        ]
                     },
                     {
-                      "title": "Work - Lows",
-                      "content": [
-                        {
-                          "question": "Situation: What are the most important things that happened?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Impact: What impact did it have on you?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                          "response": "test"
-                        }
-                      ]
+                        "title": "Work - Lows",
+                        "content": [
+                            {
+                                "question": "Situation: What are the most important things that happened?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Impact: What impact did it have on you?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                                "response": "test"
+                            }
+                        ]
                     },
                     {
-                      "title": "Personal - Highs",
-                      "content": [
-                        {
-                          "question": "Situation: What are the most important things that happened?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Impact: What impact did it have on you?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                          "response": "test"
-                        }
-                      ]
+                        "title": "Personal - Highs",
+                        "content": [
+                            {
+                                "question": "Situation: What are the most important things that happened?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Impact: What impact did it have on you?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                                "response": "test"
+                            }
+                        ]
                     },
                     {
-                      "title": "Personal - Lows",
-                      "content": [
-                        {
-                          "question": "Situation: What are the most important things that happened?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Impact: What impact did it have on you?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                          "response": "test"
-                        }
-                      ]
+                        "title": "Personal - Lows",
+                        "content": [
+                            {
+                                "question": "Situation: What are the most important things that happened?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Impact: What impact did it have on you?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                                "response": "test"
+                            }
+                        ]
                     },
                     {
-                      "title": "Discoveries & Presentations",
-                      "content": [
-                        {
-                          "question": "Any interesting article, book, new technology or something interesting the group might benefit from?",
-                          "response": "test"
-                        },
-                        {
-                          "question": "Select one topic that you would like to present to the group and would like their input on",
-                          "response": "test"
-                        }
-                      ]
+                        "title": "Discoveries & Presentations",
+                        "content": [
+                            {
+                                "question": "Any interesting article, book, new technology or something interesting the group might benefit from?",
+                                "response": "test"
+                            },
+                            {
+                                "question": "Select one topic that you would like to present to the group and would like their input on",
+                                "response": "test"
+                            }
+                        ]
                     }
-                  ],
-                  "email": "vasanth@venzotechnologies.com",
-                  "month": 9,
-                  "year": 2023
+                ],
+                "email": global.email,
+                "month": 9,
+                "year": 2023
             }
 
-            
+
             const response = await axios.post(apicheckin, checkinData, {
                 method: 'POST',
                 headers: {
@@ -262,36 +262,36 @@ const Checkin = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             {showCheckIn && (
-                
-              <View style={STYLES.cardcheck}>
-              <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
-              {currentStage === 4 ? ( // Check if it's the "Discoveries" stage
-                  questions.discoveries.map((question, index) => (
-                      <View key={index}>
-                          <Text style={{ color: 'grey', marginTop: 30 }}>{question}</Text>
-                          <TextInput style={STYLES.textcheck} />
-                      </View>
-                  ))
-              ) : (
-                  questions.common.map((question, index) => (
-                      <View key={index}>
-                          <Text style={{ color: 'grey', marginTop: 30 }}>{question}</Text>
-                          <TextInput style={STYLES.textcheck} />
-                      </View>
-                  ))
-              )}
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  {currentStage > 0 && (
-                      <TouchableOpacity onPress={handleBackClick}>
-                          <Text>Back</Text>
-                      </TouchableOpacity>
-                  )}
-                  <TouchableOpacity onPress={handleNextClick}>
-                      <Text>{currentStage === 4 ? 'Check-In' : 'Next'}</Text>
-                  </TouchableOpacity>
-              </View>
-          </View>
-          
+
+                <View style={STYLES.cardcheck}>
+                    <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
+                    {currentStage === 4 ? ( // Check if it's the "Discoveries" stage
+                        questions.discoveries.map((question, index) => (
+                            <View key={index}>
+                                <Text style={{ color: 'grey', marginTop: 30 }}>{question}</Text>
+                                <TextInput style={STYLES.textcheck} />
+                            </View>
+                        ))
+                    ) : (
+                        questions.common.map((question, index) => (
+                            <View key={index}>
+                                <Text style={{ color: 'grey', marginTop: 30 }}>{question}</Text>
+                                <TextInput style={STYLES.textcheck} />
+                            </View>
+                        ))
+                    )}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        {currentStage > 0 && (
+                            <TouchableOpacity onPress={handleBackClick}>
+                                <Text>Back</Text>
+                            </TouchableOpacity>
+                        )}
+                        <TouchableOpacity onPress={handleNextClick}>
+                            <Text>{currentStage === 4 ? 'Check-In' : 'Next'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
             )}
 
             {/* {showCheckIn && (

@@ -54,9 +54,6 @@ const Login = ({ navigation }) => {
 
     }
 
-
-
-
     return (
 
         <SafeAreaView
@@ -64,7 +61,7 @@ const Login = ({ navigation }) => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ flexDirection: 'row', marginTop: 40 }}>
 
-                    <Image style={{ width: 65, height: 16 }} source={require('../assets/venzo.png')} />
+                    <Image style={{ width: ('30%'), height: hp('3') }} source={require('../assets/venzo.png')} />
 
                 </View>
                 <View style={{ marginTop: 70 }}>
