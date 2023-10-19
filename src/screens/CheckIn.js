@@ -34,7 +34,13 @@ const Checkin = ({ navigation }) => {
     const [responses, setResponses] = useState([]);
     const [CheckData, setCheckData] = useState([]);
     // const [groupedResponses, setGroupedResponses] = useState({});
-
+    const [stageData, setStageData] = useState({
+        'Work - Highs': [],
+        'Work - Lows': [],
+        'Personal - Highs': [],
+        'Personal - Lows': [],
+        'Discoveries & Presentations': [],
+    });
     const stages = ['Work Highs ', 'Work Lows ', 'Personal Highs ', 'Personal Lows', 'Discoveries&Presentations'];
     const questions = {
         common: [
@@ -61,6 +67,18 @@ const Checkin = ({ navigation }) => {
 
     const handleNextClick = () => {
         if (currentStage < stages.length - 1) {
+            const currentStageTitle = stages[currentStage];
+            const inputData = {
+                title: currentStageTitle,
+                content: questions.common.map((question, index) => ({
+                    question,
+                    response: stageData[currentStageTitle][index] || '',
+                })),
+            };
+            setStageData((prevData) => ({
+                ...prevData,
+                [currentStageTitle]: inputData.content,
+            }));
             setCurrentStage(currentStage + 1);
         }
     };
@@ -73,6 +91,7 @@ const Checkin = ({ navigation }) => {
     };
 
     const apiresponse = 'https://walrus-app-v5mk9.ondigitalocean.app/getRowData';
+
     const ViewResponse = async () => {
         try {
             let ViewData = {
@@ -103,7 +122,7 @@ const Checkin = ({ navigation }) => {
                 // );
                 // setResponses(responseData.checkin[0].content);
 
-                // console.log('View Response:', response.data.rowData.checkin.content.question);
+                console.log('View Response:', response.data.rowData.checkin.content.question);
 
                 // console.log('View Response:', response.data.rowData[0].checkin[0].content);
 
@@ -126,92 +145,13 @@ const Checkin = ({ navigation }) => {
 
     const checkin = async () => {
         try {
-            let checkinData = {
-                "checkin": [
-                    {
-                        "title": "Work - Highs",
-                        "content": [
-                            {
-                                "question": "Situation: What are the most important things that happened?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Impact: What impact did it have on you?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                                "response": "test"
-                            }
-                        ]
-                    },
-                    {
-                        "title": "Work - Lows",
-                        "content": [
-                            {
-                                "question": "Situation: What are the most important things that happened?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Impact: What impact did it have on you?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                                "response": "test"
-                            }
-                        ]
-                    },
-                    {
-                        "title": "Personal - Highs",
-                        "content": [
-                            {
-                                "question": "Situation: What are the most important things that happened?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Impact: What impact did it have on you?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                                "response": "test"
-                            }
-                        ]
-                    },
-                    {
-                        "title": "Personal - Lows",
-                        "content": [
-                            {
-                                "question": "Situation: What are the most important things that happened?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Impact: What impact did it have on you?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Feelings: Any feelings associated with this (3 feelings)?",
-                                "response": "test"
-                            }
-                        ]
-                    },
-                    {
-                        "title": "Discoveries & Presentations",
-                        "content": [
-                            {
-                                "question": "Any interesting article, book, new technology or something interesting the group might benefit from?",
-                                "response": "test"
-                            },
-                            {
-                                "question": "Select one topic that you would like to present to the group and would like their input on",
-                                "response": "test"
-                            }
-                        ]
-                    }
-                ],
+            const checkinData = {
+                checkin: Object.keys(stageData).map((title) => ({
+                    title,
+                    content: stageData[title],
+                })),
                 "email": global.email,
-                "month": 9,
+                "month": 10,
                 "year": 2023
             }
 

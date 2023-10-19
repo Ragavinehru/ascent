@@ -282,9 +282,11 @@ const HomeScreen = () => {
     // };
     const currentDate = new Date();
 
+
+
     const upcomingEvents = eventData?.events?.filter((event) => {
         const eventDatetime = new Date(`${event.date}T${event.startHour}`);
-        return eventDatetime > currentDate;
+        return eventDatetime <= currentDate;
     }) || [];
 
 
@@ -359,6 +361,7 @@ const HomeScreen = () => {
                             {upcomingEvents.length === 0 && (
                                 <Text style={{ marginLeft: 19, marginTop: 10 }}>No upcoming events found !</Text>
                             )}
+
                         </ScrollView>
 
                     </View>
