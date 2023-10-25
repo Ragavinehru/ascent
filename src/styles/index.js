@@ -134,7 +134,7 @@ const STYLES = StyleSheet.create({
         backgroundColor: COLORS.light,
     },
     cardcheck: {
-        height: 430,
+        height: 530,
         width: 360,
         marginLeft: 17,
         marginTop: 20,

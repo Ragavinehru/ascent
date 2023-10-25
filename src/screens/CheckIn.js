@@ -11,7 +11,7 @@ import {
     ToastAndroid, Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+
 import COLORS from '../consts/color';
 import STYLES from '../styles';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -20,12 +20,7 @@ import axios from 'axios';
 
 
 
-// const Checkin = ({ navigation }) => {
-//     const [currentStage, setCurrentStage] = useState(0);
-//     const [showCheckIn, setShowCheckIn] = useState(true);
-//     const [showViewResponse, setShowViewResponse] = useState(false);
-//     const [responses, setResponses] = useState([]);
-//     const [CheckData, setCheckData] = useState([]);
+
 const Checkin = ({ navigation }) => {
     const [currentStage, setCurrentStage] = useState(0);
     const [showCheckIn, setShowCheckIn] = useState(false);
@@ -33,26 +28,24 @@ const Checkin = ({ navigation }) => {
     const [showViewResponse, setShowViewResponse] = useState(false);
     const [responses, setResponses] = useState([]);
     const [CheckData, setCheckData] = useState([]);
-    // const [groupedResponses, setGroupedResponses] = useState({});
-    const [stageData, setStageData] = useState({
-        'Work - Highs': [],
-        'Work - Lows': [],
-        'Personal - Highs': [],
-        'Personal - Lows': [],
-        'Discoveries & Presentations': [],
-    });
-    const stages = ['Work Highs ', 'Work Lows ', 'Personal Highs ', 'Personal Lows', 'Discoveries&Presentations'];
-    const questions = {
-        common: [
-            'Situation: What are the most important things that happened? *',
-            'Impact: What impact did it have on you? *',
-            'Feelings: Any feelings associated with this (3 feelings)? *',
-        ],
-        discoveries: [
-            'Any interesting article, book, new technology or something interesting the group might benefit from?*',
-            'Select one topic that you would like to present to the group and would like their input on? *',
-        ],
-    };
+    const [workhigh, setworkhigh] = useState('');
+    const [workhig,setworkhig]=useState('');
+    const [workhi,setworkhi]=useState('');
+    const [worklow, setworklow] = useState('');
+    const [worklo,setworklo]=useState('');
+    const [workl,setworkl]=useState('');
+    const [personal, setpersonal] = useState('');
+    const [persona, setpersona] = useState('');
+    const [person, setperson] = useState('');
+    const [personlows, setpersonlows] = useState('');
+    const [personlow, setpersonlow] = useState('');
+    const [personlo, setpersonlo] = useState('');
+    const [discovery, setdiscovery] = useState('');
+    const [discover, setdiscover] = useState('');
+
+
+
+    
 
     const handleCheckInClick = () => {
         setShowCheckIn(true);
@@ -65,32 +58,8 @@ const Checkin = ({ navigation }) => {
         ViewResponse();
     };
 
-    const handleNextClick = () => {
-        if (currentStage < stages.length - 1) {
-            const currentStageTitle = stages[currentStage];
-            const inputData = {
-                title: currentStageTitle,
-                content: questions.common.map((question, index) => ({
-                    question,
-                    response: stageData[currentStageTitle][index] || '',
-                })),
-            };
-            setStageData((prevData) => ({
-                ...prevData,
-                [currentStageTitle]: inputData.content,
-            }));
-            setCurrentStage(currentStage + 1);
-        }
-    };
-
-
-    const handleBackClick = () => {
-        if (currentStage > 0) {
-            setCurrentStage(currentStage - 1);
-        }
-    };
-
     const apiresponse = 'https://walrus-app-v5mk9.ondigitalocean.app/getRowData';
+    
 
     const ViewResponse = async () => {
         try {
@@ -113,7 +82,7 @@ const Checkin = ({ navigation }) => {
                 body: JSON.stringify(ViewData),
             });
             // console.log("happy", response.data.rowData[0].checkin[0]);
-            setCheckData(response);
+            setCheckData(response.data);
 
             if (response.status === 200) {
 
@@ -121,8 +90,9 @@ const Checkin = ({ navigation }) => {
                 //     (item) => item.checkin[0].title === stages[currentStage]
                 // );
                 // setResponses(responseData.checkin[0].content);
+       console.log("apparesponse",CheckData.rowData[0].checkin[0].content[0].response);
 
-                console.log('View Response:', response.data.rowData.checkin.content.question);
+                // console.log('View Response:', response.data.rowData.checkin.content.question);
 
                 // console.log('View Response:', response.data.rowData[0].checkin[0].content);
 
@@ -146,16 +116,95 @@ const Checkin = ({ navigation }) => {
     const checkin = async () => {
         try {
             const checkinData = {
-                checkin: Object.keys(stageData).map((title) => ({
-                    title,
-                    content: stageData[title],
-                })),
-                "email": global.email,
-                "month": 10,
-                "year": 2023
-            }
+                "checkin": [
+                    {
+                      "title": "Work - Highs",
+                      "content": [
+                        {
+                          "question": "Situation: What are the most important things that happened?",
+                          "response": workhigh
+                        },
+                        {
+                          "question": "Impact: What impact did it have on you?",
+                          "response": workhig
+                        },
+                        {
+                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                          "response": workhi
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Work - Lows",
+                      "content": [
+                        {
+                          "question": "Situation: What are the most important things that happened?",
+                          "response": worklow
+                        },
+                        {
+                          "question": "Impact: What impact did it have on you?",
+                          "response": worklo
+                        },
+                        {
+                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                          "response": workl
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Personal - Highs",
+                      "content": [
+                        {
+                          "question": "Situation: What are the most important things that happened?",
+                          "response": personal
+                        },
+                        {
+                          "question": "Impact: What impact did it have on you?",
+                          "response": persona
+                        },
+                        {
+                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                          "response":person
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Personal - Lows",
+                      "content": [
+                        {
+                          "question": "Situation: What are the most important things that happened?",
+                          "response": personlows
+                        },
+                        {
+                          "question": "Impact: What impact did it have on you?",
+                          "response":personlow
+                        },
+                        {
+                          "question": "Feelings: Any feelings associated with this (3 feelings)?",
+                          "response": personlo
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Discoveries & Presentations",
+                      "content": [
+                        {
+                          "question": "Any interesting article, book, new technology or something interesting the group might benefit from?",
+                          "response": discovery
+                        },
+                        {
+                          "question": "Select one topic that you would like to present to the group and would like their input on",
+                          "response": discover
+                        }
+                      ]
+                    }
+                  ],
+                  "email": global.gmail,
+                  "month": 9,
+                  "year": 2023
+                }
 
-
+            console.log("appa",checkinData);
             const response = await axios.post(apicheckin, checkinData, {
                 method: 'POST',
                 headers: {
@@ -167,6 +216,13 @@ const Checkin = ({ navigation }) => {
 
             if (response.status === 200) {
                 console.log('checkin created:', response.data);
+                
+                 setworkhigh('');setworkhig('');setworkhi('');
+                 setworklow('');setworklo('');setworkl('');
+                 setpersonal(''); setpersona(''); setperson('');
+                 setpersonlows('');setpersonlow('');setpersonlo('');
+                 setdiscovery('');setdiscover('');
+
 
             } else {
                 console.error('Failed to create check:', response.status, response.statusText);
@@ -201,7 +257,7 @@ const Checkin = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            {showCheckIn && (
+            {/* {showCheckIn && (
 
                 <View style={STYLES.cardcheck}>
                     <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
@@ -232,9 +288,10 @@ const Checkin = ({ navigation }) => {
                     </View>
                 </View>
 
-            )}
-
-            {/* {showCheckIn && (
+            )} */}
+            {/* try new  */}
+            
+            {showCheckIn && (
                 <View>
                     <View style={{
                         flexDirection: 'row',
@@ -245,7 +302,7 @@ const Checkin = ({ navigation }) => {
                         // marginTop: 5,
                         backgroundColor: 'white'
                     }}>
-                        {stages.map((stage, index) => (
+                        {/* {stages.map((stage, index) => (
                             <TouchableOpacity
                                 key={index}
                                 onPress={() => setCurrentStage(index)}
@@ -254,22 +311,104 @@ const Checkin = ({ navigation }) => {
                                     {stage}
                                 </Text>
                             </TouchableOpacity>
-                        ))}
+                        ))} */}
                     </View>
 
-                    <View style={STYLES.cardcheck}>
-
+                    <ScrollView style={STYLES.cardcheck}>
+             {/* <ScrollView> */}
                         <View>
-                            <Text style={{ color: 'black', fontSize: 22 }}>{stages[currentStage]}</Text>
+                            <Text style={{ color: 'black', fontSize: 22 }}>Work Highs</Text>
                             <Text style={{ color: 'grey', marginTop: 30 }}>Situation: What are the most important things that happened? *</Text>
-                            <TextInput style={STYLES.textcheck} />
+                            <TextInput style={STYLES.textcheck} 
+                            onChangeText={(text) => setworkhigh(text)}
+                            value={workhigh} />
+
                             <Text style={{ color: 'grey' }}>Impact: What impact did it have on you? *</Text>
-                            <TextInput style={STYLES.textcheck} />
+                            <TextInput style={STYLES.textcheck} 
+                             onChangeText={(text) => setworkhig(text)}
+                            value={workhig} />
+                            
                             <Text style={{ color: 'grey' }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
-                            <TextInput style={STYLES.textcheck} />
+                            <TextInput style={STYLES.textcheck}
+                             onChangeText={(text) => setworkhi(text)}
+                             value={workhi} />
+                            
                         </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22 }}>Work Lows</Text>
+                            <Text style={{ color: 'grey', marginTop: 30 }}>Situation: What are the most important things that happened? *</Text>
+                            <TextInput style={STYLES.textcheck}
+                             onChangeText={(text) => setworklow(text)}
+                             value={worklow} />
+                            <Text style={{ color: 'grey' }}>Impact: What impact did it have on you? *</Text>
+                            <TextInput style={STYLES.textcheck} 
+                             onChangeText={(text) => setworklo(text)}
+                            value={worklo} />
+                            <Text style={{ color: 'grey' }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
+                            <TextInput style={STYLES.textcheck} 
+                             onChangeText={(text) => setworkl(text)}
+                            value={workl} />
+                        </View>
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22 }}>Personal Highs</Text>
+                            <Text style={{ color: 'grey', marginTop: 30 }}>Situation: What are the most important things that happened? *</Text>
+                            <TextInput style={STYLES.textcheck}  
+                            onChangeText={(text) => setpersonal(text)}
+                            value={personal} />
+
+                            <Text style={{ color: 'grey' }}>Impact: What impact did it have on you? *</Text>
+                           
+                            <TextInput style={STYLES.textcheck} 
+                             onChangeText={(text) => setpersona(text)}
+                            value={persona} />
+
+                            <Text style={{ color: 'grey' }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
+                           
+                            <TextInput style={STYLES.textcheck} 
+                             onChangeText={(text) => setperson(text)}
+                            value={person} />
+
+                        </View>
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22 }}>Personal Lows</Text>
+                            <Text style={{ color: 'grey', marginTop: 30 }}>Situation: What are the most important things that happened? *</Text>
+                            
+                            <TextInput style={STYLES.textcheck}  
+                            onChangeText={(text) => setpersonlows(text)}
+                            value={personlows} />
+
+                            <Text style={{ color: 'grey' }}>Impact: What impact did it have on you? *</Text>
+                            <TextInput style={STYLES.textcheck}  
+                            onChangeText={(text) => setpersonlow(text)}
+                            value={personlow} />
+
+                            <Text style={{ color: 'grey' }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
+                            <TextInput style={STYLES.textcheck} 
+                            onChangeText={(text) => setpersonlo(text)}
+                            value={personlo} />
+
+                        </View>
+                       
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22 }}>Discoveries&Presentations</Text>
+                            {/* <TextInput style={STYLES.textcheck} /> */}
+                            <Text style={{ color: 'grey' }}> 'Any interesting article, book, new technology or something interesting the group might benefit from?*'</Text>
+                            <TextInput style={STYLES.textcheck} 
+                            onChangeText={(text) => setdiscovery(text)}
+                            value={discovery} />
+
+                            <Text style={{ color: 'grey' }}>Select one topic that you would like to present to the group and would like their input on? *</Text>
+                            <TextInput style={STYLES.textcheck} 
+                            onChangeText={(text) => setdiscover(text)}
+                            value={discover} />
+
+                        </View>
+                        <TouchableOpacity>
+                    <Text style={{ color: 'blue', marginLeft: 160,marginTop:15 }} onPress={checkin}>CheckIN</Text> 
+                    </TouchableOpacity>
+                    </ScrollView>
+       {/* </ScrollView> */}
+                    {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <TouchableOpacity onPress={handleBackClick}>
                             <Text>Back</Text>
                         </TouchableOpacity>
@@ -277,11 +416,11 @@ const Checkin = ({ navigation }) => {
                             <Text>Next</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ color: 'blue', marginLeft: 170 }}>CheckIN</Text>
+                    <Text style={{ color: 'blue', marginLeft: 170 }}>CheckIN</Text> */}
 
                 </View>
 
-            )} */}
+            )}
 
             {showViewResponse && (
                 <View>
@@ -325,40 +464,49 @@ const Checkin = ({ navigation }) => {
 
                         </ScrollView> */}
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Highs</Text>
+                           
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
-                                {/* <Text style={{ marginTop: 20, position: 'absolute', marginLeft: 200 }}>{CheckData.data.rowData[0].checkin[0].content[0].response}</Text> */}
+                                <Text style={{ marginTop: 20, position: 'absolute', marginLeft: 200 }}>{CheckData.rowData[0].checkin[0].content[0].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
-                                {/* <Text style={{ marginTop: 80, position: 'absolute', marginLeft: 200 }}>{CheckData.data.rowData[0].checkin[0].content[1].response}</Text> */}
+                                <Text style={{ marginTop: 80, position: 'absolute', marginLeft: 200 }}>{CheckData.rowData[0].checkin[0].content[1].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
-                                {/* <Text style={{ marginTop: 130, position: 'absolute', marginLeft: 200 }}>{CheckData.data.rowData[0].checkin[0].content[2].response}</Text> */}
+                                <Text style={{ marginTop: 130, position: 'absolute', marginLeft: 200 }}>{CheckData.rowData[0].checkin[0].content[2].response}</Text>
                             </View>
+                               
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Work Lows</Text>
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
-                                {/* <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[1].content[0].response}</Text> */}
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[1].content[0].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
-                                {/* <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[1].content[1].response}</Text> */}
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[1].content[1].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
-                                {/* <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.data.rowData[0].checkin[1].content[2].response}</Text> */}
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[1].content[2].response}</Text>
                             </View>
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Personal Highs</Text>
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[2].content[0].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[2].content[1].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[2].content[2].response}</Text>
                             </View>
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Personal Lows</Text>
                             <View >
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[3].content[0].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[3].content[1].response}</Text>
                                 <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[3].content[2].response}</Text>
                             </View>
                             <Text style={{ color: 'black', marginLeft: 10, marginTop: 10 }}>Discoveries & Presentations</Text>
                             <View >
-                                <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Situation: What are the most important things that happened? *</Text>
-                                <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Impact: What impact did it have on you? *</Text>
-                                <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Feelings: Any feelings associated with this (3 feelings)? *</Text>
+                                <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}> Any interesting article, book, new technology or something interesting the group might benefit from?*</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[4].content[0].response}</Text>
+                                <Text style={{ color: 'grey', marginTop: 10, width: 150, marginLeft: 17 }}>Select one topic that you would like to present to the group and would like their input on? *</Text>
+                                <Text style={{ marginTop: 20,position:'absolute',marginLeft: 200}}>{CheckData.rowData[0].checkin[4].content[1].response}</Text>
                             </View>
                         </ScrollView>
                     </View>
