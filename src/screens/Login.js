@@ -9,6 +9,7 @@ import {
     Button,
     ToastAndroid, Alert, KeyboardAvoidingView
 } from 'react-native';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from '../consts/color';
 import STYLES from '../styles';
